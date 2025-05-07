@@ -66,6 +66,22 @@
           # For some reason flutter_rust_bridge unit tests are failing
           doCheck = false;
         };
+
+        # cargo-ndk binary
+        cargo-ndk = pkgs.rustPlatform.buildRustPackage rec {
+          pname = "cargo-ndk";
+          version = "3.5.7";
+
+          src = pkgs.fetchFromGitHub {
+            owner = "bbqsrc";
+            repo = "cargo-ndk";
+            rev = "v${version}";
+            sha256 = "sha256-tzjiq1jjluWqTl+8MhzFs47VRp3jIRJ7EOLhUP8ydbM=";
+          };
+
+          cargoHash = "sha256-Kt4GLvbGK42RjivLpL5W5z5YBfDP5B83mCulWz6Bisw=";
+          doCheck = false;
+        };
       in {
         devShells = {
           # You can expose all or specific shells from the original flake
@@ -75,6 +91,7 @@
               pkgs.just
               pkgs.zlib
               flutter_rust_bridge_codegen
+              cargo-ndk
               pkgs.cargo-expand
               pkgs.jdk17
 
