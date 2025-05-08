@@ -1,0 +1,173 @@
+2025-05-08T18:15:48.805-0500 [INFO] [org.gradle.internal.nativeintegration.services.NativeServices] Initialized native services in: /home/jumoell/.gradle/native
+2025-05-08T18:15:48.860-0500 [INFO] [org.gradle.internal.nativeintegration.services.NativeServices] Initialized jansi services in: /home/jumoell/.gradle/native
+2025-05-08T18:15:48.897-0500 [LIFECYCLE] [org.gradle.launcher.cli.DebugLoggerWarningAction] 
+#############################################################################
+   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+   Debug level logging will leak security sensitive information!
+
+   For more details, please refer to https://docs.gradle.org/8.10.2/userguide/logging.html#sec:debug_security in the Gradle documentation.
+#############################################################################
+
+2025-05-08T18:15:48.999-0500 [INFO] [org.gradle.internal.jvm.inspection.DefaultJvmMetadataDetector] Received JVM installation metadata from '/nix/store/5yii18di89wpxcffk3cihpzfdrzw54gl-openjdk-21.0.7+6/lib/openjdk': {JAVA_HOME=/nix/store/5yii18di89wpxcffk3cihpzfdrzw54gl-openjdk-21.0.7+6/lib/openjdk, JAVA_VERSION=21.0.7, JAVA_VENDOR=N/A, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.7+6-nixos, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.7+6-nixos, VM_VENDOR=Oracle Corporation, OS_ARCH=amd64}
+2025-05-08T18:15:49.178-0500 [DEBUG] [org.gradle.launcher.daemon.client.DaemonClient] Executing build 5325b196-cad3-43a8-81e2-feb9b8c50451 in daemon client {pid=4124532}
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding IP addresses for network interface wg0-mullvad
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Is this a loopback interface? false
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding remote address /10.137.200.101
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding IP addresses for network interface virbr0
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Is this a loopback interface? false
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding remote address /192.168.122.1
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding IP addresses for network interface enp5s0
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Is this a loopback interface? false
+2025-05-08T18:15:49.182-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding remote address /fe80:0:0:0:df55:22ca:300d:5fda%enp5s0
+2025-05-08T18:15:49.183-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding remote address /192.168.50.133
+2025-05-08T18:15:49.183-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding IP addresses for network interface lo
+2025-05-08T18:15:49.183-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Is this a loopback interface? true
+2025-05-08T18:15:49.183-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding loopback address /0:0:0:0:0:0:0:1%lo
+2025-05-08T18:15:49.183-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.InetAddresses] Adding loopback address /127.0.0.1
+2025-05-08T18:15:49.200-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire shared lock on daemon addresses registry.
+2025-05-08T18:15:49.205-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on daemon addresses registry.
+2025-05-08T18:15:49.212-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on daemon addresses registry.
+2025-05-08T18:15:49.216-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.TcpOutgoingConnector] Attempting to connect to [60efc4ee-6da3-4b2a-bd46-23dab9e07612 port:38925, addresses:[/127.0.0.1]].
+2025-05-08T18:15:49.216-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.TcpOutgoingConnector] Trying to connect to address /127.0.0.1.
+2025-05-08T18:15:49.220-0500 [DEBUG] [org.gradle.internal.remote.internal.inet.TcpOutgoingConnector] Connected to address /127.0.0.1:38925.
+2025-05-08T18:15:49.235-0500 [DEBUG] [org.gradle.launcher.daemon.client.DaemonClient] Connected to daemon DaemonInfo{pid=4121281, address=[60efc4ee-6da3-4b2a-bd46-23dab9e07612 port:38925, addresses:[/127.0.0.1]], state=Idle, lastBusy=1746746134225, context=DefaultDaemonContext[uid=38093c39-2c2a-417f-8be9-921b47f1324f,javaHome=/nix/store/5yii18di89wpxcffk3cihpzfdrzw54gl-openjdk-21.0.7+6/lib/openjdk,javaVersion=21,javaVendor=N/A,daemonRegistryDir=/home/jumoell/.gradle/daemon,pid=4121281,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=4G,-XX:ReservedCodeCacheSize=512m,-XX:+HeapDumpOnOutOfMemoryError,--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx8G,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]}. Dispatching request Build{id=5325b196-cad3-43a8-81e2-feb9b8c50451, currentDir=/home/jumoell/Projects/fedimint-app/android}.
+2025-05-08T18:15:49.235-0500 [DEBUG] [org.gradle.launcher.daemon.client.DaemonClientConnection] thread 1: dispatching class org.gradle.launcher.daemon.protocol.Build
+2025-05-08T18:15:49.258-0500 [DEBUG] [org.gradle.launcher.daemon.client.DaemonClient] Received result org.gradle.launcher.daemon.protocol.BuildStarted@bff34c6 from daemon DaemonInfo{pid=4121281, address=[60efc4ee-6da3-4b2a-bd46-23dab9e07612 port:38925, addresses:[/127.0.0.1]], state=Idle, lastBusy=1746746134225, context=DefaultDaemonContext[uid=38093c39-2c2a-417f-8be9-921b47f1324f,javaHome=/nix/store/5yii18di89wpxcffk3cihpzfdrzw54gl-openjdk-21.0.7+6/lib/openjdk,javaVersion=21,javaVendor=N/A,daemonRegistryDir=/home/jumoell/.gradle/daemon,pid=4121281,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=4G,-XX:ReservedCodeCacheSize=512m,-XX:+HeapDumpOnOutOfMemoryError,--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx8G,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]} (build should be starting).
+2025-05-08T18:15:49.260-0500 [INFO] [org.gradle.launcher.daemon.server.exec.LogToClient] The client will now receive all logging from the daemon (pid: 4121281). The daemon log file: /home/jumoell/.gradle/daemon/8.10.2/daemon-4121281.out.log
+2025-05-08T18:15:49.261-0500 [INFO] [org.gradle.launcher.daemon.server.exec.LogAndCheckHealth] Starting 3rd build in daemon [uptime: 2 mins 5.411 secs, performance: 99%, GC rate: 0.00/s, heap usage: 0% of 8 GiB, non-heap usage: 0% of 4 GiB]
+2025-05-08T18:15:49.261-0500 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has started executing the build.
+2025-05-08T18:15:49.261-0500 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] Executing build with daemon context: DefaultDaemonContext[uid=38093c39-2c2a-417f-8be9-921b47f1324f,javaHome=/nix/store/5yii18di89wpxcffk3cihpzfdrzw54gl-openjdk-21.0.7+6/lib/openjdk,javaVersion=21,javaVendor=N/A,daemonRegistryDir=/home/jumoell/.gradle/daemon,pid=4121281,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=4G,-XX:ReservedCodeCacheSize=512m,-XX:+HeapDumpOnOutOfMemoryError,--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx8G,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
+2025-05-08T18:15:49.264-0500 [INFO] [org.gradle.internal.work.DefaultWorkerLeaseService] Using 16 worker leases.
+2025-05-08T18:15:49.264-0500 [DEBUG] [org.gradle.internal.resources.AbstractTrackedResourceLock] Daemon worker Thread 2: acquired lock on worker lease
+2025-05-08T18:15:49.265-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Run build' started
+2025-05-08T18:15:49.272-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for fileHashes, path /home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/fileHashes/fileHashes.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@280c698a
+2025-05-08T18:15:49.273-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Acquiring file lock for file hash cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/fileHashes)
+2025-05-08T18:15:49.273-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on file hash cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/fileHashes).
+2025-05-08T18:15:49.274-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on file hash cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/fileHashes).
+2025-05-08T18:15:49.275-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for outputFiles, path /home/jumoell/Projects/fedimint-app/android/.gradle/buildOutputCleanup/outputFiles.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@1f34872b
+2025-05-08T18:15:49.275-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Acquiring file lock for Build Output Cleanup Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/buildOutputCleanup)
+2025-05-08T18:15:49.275-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on Build Output Cleanup Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/buildOutputCleanup).
+2025-05-08T18:15:49.276-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on Build Output Cleanup Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/buildOutputCleanup).
+2025-05-08T18:15:49.277-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for resourceHashesCache, path /home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/fileHashes/resourceHashesCache.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@280c698a
+2025-05-08T18:15:49.280-0500 [INFO] [org.gradle.internal.watch.registry.impl.WatchableHierarchies] Now considering [/home/jumoell/Projects/fedimint-app/android] as hierarchies to watch
+2025-05-08T18:15:49.281-0500 [INFO] [org.gradle.tooling.internal.provider.FileSystemWatchingBuildActionRunner] Watching the file system is configured to be enabled if available
+2025-05-08T18:15:49.282-0500 [DEBUG] [org.gradle.tooling.internal.provider.FileSystemWatchingBuildActionRunner] Watching the file system computed to be enabled if available
+2025-05-08T18:15:49.282-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Build started for file system watching' started
+2025-05-08T18:15:49.282-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected sysfs: /sys from sysfs (remote: false)
+2025-05-08T18:15:49.283-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected proc: /proc from proc (remote: false)
+2025-05-08T18:15:49.283-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected devtmpfs: /dev from udev (remote: false)
+2025-05-08T18:15:49.283-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected devpts: /dev/pts from devpts (remote: false)
+2025-05-08T18:15:49.283-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected tmpfs: /run from tmpfs (remote: false)
+2025-05-08T18:15:49.283-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected efivarfs: /sys/firmware/efi/efivars from efivarfs (remote: false)
+2025-05-08T18:15:49.283-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected ext4: / from /dev/mapper/data-root (remote: false)
+2025-05-08T18:15:49.284-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected securityfs: /sys/kernel/security from securityfs (remote: false)
+2025-05-08T18:15:49.284-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected tmpfs: /dev/shm from tmpfs (remote: false)
+2025-05-08T18:15:49.284-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected tmpfs: /run/lock from tmpfs (remote: false)
+2025-05-08T18:15:49.284-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected cgroup2: /sys/fs/cgroup from cgroup2 (remote: false)
+2025-05-08T18:15:49.284-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected pstore: /sys/fs/pstore from pstore (remote: false)
+2025-05-08T18:15:49.284-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected bpf: /sys/fs/bpf from bpf (remote: false)
+2025-05-08T18:15:49.284-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected autofs: /proc/sys/fs/binfmt_misc from systemd-1 (remote: false)
+2025-05-08T18:15:49.284-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected mqueue: /dev/mqueue from mqueue (remote: false)
+2025-05-08T18:15:49.285-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected hugetlbfs: /dev/hugepages from hugetlbfs (remote: false)
+2025-05-08T18:15:49.285-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected debugfs: /sys/kernel/debug from debugfs (remote: false)
+2025-05-08T18:15:49.285-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected tracefs: /sys/kernel/tracing from tracefs (remote: false)
+2025-05-08T18:15:49.286-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected fusectl: /sys/fs/fuse/connections from fusectl (remote: false)
+2025-05-08T18:15:49.286-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected configfs: /sys/kernel/config from configfs (remote: false)
+2025-05-08T18:15:49.286-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected ramfs: /run/credentials/systemd-sysusers.service from ramfs (remote: false)
+2025-05-08T18:15:49.286-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected vfat: /boot/efi from /dev/nvme0n1p1 (remote: false)
+2025-05-08T18:15:49.286-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected vfat: /recovery from /dev/nvme0n1p2 (remote: false)
+2025-05-08T18:15:49.286-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected tmpfs: /run/qemu from tmpfs (remote: false)
+2025-05-08T18:15:49.287-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected binfmt_misc: /proc/sys/fs/binfmt_misc from binfmt_misc (remote: false)
+2025-05-08T18:15:49.287-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected cgroup: /sys/fs/cgroup/net_cls from net_cls (remote: false)
+2025-05-08T18:15:49.287-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected tmpfs: /run/user/111 from tmpfs (remote: false)
+2025-05-08T18:15:49.287-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected tmpfs: /run/user/1000 from tmpfs (remote: false)
+2025-05-08T18:15:49.287-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected fuse.gvfsd-fuse: /run/user/1000/gvfs from gvfsd-fuse (remote: false)
+2025-05-08T18:15:49.287-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected fuse.portal: /run/user/1000/doc from portal (remote: false)
+2025-05-08T18:15:49.287-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected vfat: /media/jumoell/PASS from /dev/sdb1 (remote: false)
+2025-05-08T18:15:49.287-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected vfat: /media/jumoell/424E-3135 from /dev/sdd1 (remote: false)
+2025-05-08T18:15:49.288-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected iso9660: /media/jumoell/CD489A1 from /dev/sr0 (remote: false)
+2025-05-08T18:15:49.288-0500 [DEBUG] [org.gradle.internal.watch.vfs.impl.DefaultWatchableFileSystemDetector] Detected ntfs3: /media/jumoell/JUMOELLWIN from /dev/sda2 (remote: false)
+2025-05-08T18:15:49.289-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Completing Build operation 'Build started for file system watching'
+2025-05-08T18:15:49.289-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Build started for file system watching' completed
+2025-05-08T18:15:49.289-0500 [INFO] [org.gradle.tooling.internal.provider.FileSystemWatchingBuildActionRunner] File system watching is active
+2025-05-08T18:15:49.290-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Load build' started
+2025-05-08T18:15:49.291-0500 [DEBUG] [org.gradle.initialization.properties.DefaultProjectPropertiesLoader] Found env project properties: []
+2025-05-08T18:15:49.291-0500 [DEBUG] [org.gradle.initialization.properties.DefaultProjectPropertiesLoader] Found system project properties: []
+2025-05-08T18:15:49.292-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Evaluate settings' started
+2025-05-08T18:15:49.294-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for workingDirs, path /home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/vcsMetadata/workingDirs.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@44db7ab3
+2025-05-08T18:15:49.295-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for md5-checksums, path /home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums/md5-checksums.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@175624ef
+2025-05-08T18:15:49.296-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Acquiring file lock for checksums cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums)
+2025-05-08T18:15:49.296-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on checksums cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums).
+2025-05-08T18:15:49.297-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on checksums cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums).
+2025-05-08T18:15:49.297-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for sha1-checksums, path /home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums/sha1-checksums.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@175624ef
+2025-05-08T18:15:49.297-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for sha256-checksums, path /home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums/sha256-checksums.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@175624ef
+2025-05-08T18:15:49.297-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for sha512-checksums, path /home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums/sha512-checksums.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@175624ef
+2025-05-08T18:15:49.298-0500 [DEBUG] [org.gradle.api.internal.artifacts.mvnsettings.DefaultLocalMavenRepositoryLocator] No local repository in Settings file defined. Using default path: /home/jumoell/.m2/repository
+2025-05-08T18:15:49.300-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for md-rule, path /home/jumoell/.gradle/caches/8.10.2/md-rule/md-rule.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@9ed29a7
+2025-05-08T18:15:49.300-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Acquiring file lock for cache directory md-rule (/home/jumoell/.gradle/caches/8.10.2/md-rule)
+2025-05-08T18:15:49.300-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on cache directory md-rule (/home/jumoell/.gradle/caches/8.10.2/md-rule).
+2025-05-08T18:15:49.301-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on cache directory md-rule (/home/jumoell/.gradle/caches/8.10.2/md-rule).
+2025-05-08T18:15:49.302-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Creating new cache for md-supplier, path /home/jumoell/.gradle/caches/8.10.2/md-supplier/md-supplier.bin, access org.gradle.cache.internal.DefaultCacheCoordinator@48b5be96
+2025-05-08T18:15:49.303-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Acquiring file lock for cache directory md-supplier (/home/jumoell/.gradle/caches/8.10.2/md-supplier)
+2025-05-08T18:15:49.303-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Waiting to acquire exclusive lock on cache directory md-supplier (/home/jumoell/.gradle/caches/8.10.2/md-supplier).
+2025-05-08T18:15:49.303-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Lock acquired on cache directory md-supplier (/home/jumoell/.gradle/caches/8.10.2/md-supplier).
+2025-05-08T18:15:49.304-0500 [DEBUG] [org.gradle.internal.locking.LockFileReaderWriter] Lockfiles root: /home/jumoell/Projects/fedimint-app/android/gradle/dependency-locks
+2025-05-08T18:15:49.306-0500 [INFO] [org.gradle.internal.buildevents.BuildLogger] Starting Build
+2025-05-08T18:15:49.306-0500 [DEBUG] [org.gradle.internal.buildevents.BuildLogger] Gradle user home: /home/jumoell/.gradle
+2025-05-08T18:15:49.306-0500 [DEBUG] [org.gradle.internal.buildevents.BuildLogger] Current dir: /home/jumoell/Projects/fedimint-app/android
+2025-05-08T18:15:49.306-0500 [DEBUG] [org.gradle.internal.buildevents.BuildLogger] Settings file: null
+2025-05-08T18:15:49.306-0500 [DEBUG] [org.gradle.internal.buildevents.BuildLogger] Build file: null
+2025-05-08T18:15:49.309-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Apply settings file 'settings.gradle.kts' to settings 'android'' started
+2025-05-08T18:15:49.309-0500 [DEBUG] [org.gradle.kotlin.dsl.provider.KotlinScriptPlugin] Applying Kotlin script to settings 'android'
+2025-05-08T18:15:49.320-0500 [INFO] [org.gradle.internal.watch.registry.impl.WatchableHierarchies] Now considering [/nix/store/91m0561ikfipdjvszvllyj4q8qis2743-flutter-wrapped-3.29.3-sdk-links/packages/flutter_tools/gradle, /home/jumoell/Projects/fedimint-app/android] as hierarchies to watch
+2025-05-08T18:15:49.323-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Completing Build operation 'Apply settings file 'settings.gradle.kts' to settings 'android''
+2025-05-08T18:15:49.323-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Apply settings file 'settings.gradle.kts' to settings 'android'' completed
+2025-05-08T18:15:49.323-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Completing Build operation 'Evaluate settings'
+2025-05-08T18:15:49.323-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Evaluate settings' completed
+2025-05-08T18:15:49.323-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Completing Build operation 'Load build'
+2025-05-08T18:15:49.323-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Load build' completed
+2025-05-08T18:15:49.323-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Finish root build tree' started
+2025-05-08T18:15:49.324-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Completing Build operation 'Finish root build tree'
+2025-05-08T18:15:49.324-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Finish root build tree' completed
+2025-05-08T18:15:49.325-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Build finished for file system watching' started
+2025-05-08T18:15:49.325-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Completing Build operation 'Build finished for file system watching'
+2025-05-08T18:15:49.326-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Build finished for file system watching' completed
+2025-05-08T18:15:49.326-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Releasing file lock for cache directory md-supplier (/home/jumoell/.gradle/caches/8.10.2/md-supplier)
+2025-05-08T18:15:49.327-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on cache directory md-supplier (/home/jumoell/.gradle/caches/8.10.2/md-supplier).
+2025-05-08T18:15:49.327-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Releasing file lock for Build Output Cleanup Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/buildOutputCleanup)
+2025-05-08T18:15:49.327-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on Build Output Cleanup Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/buildOutputCleanup).
+2025-05-08T18:15:49.328-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Releasing file lock for cache directory md-rule (/home/jumoell/.gradle/caches/8.10.2/md-rule)
+2025-05-08T18:15:49.328-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on cache directory md-rule (/home/jumoell/.gradle/caches/8.10.2/md-rule).
+2025-05-08T18:15:49.328-0500 [DEBUG] [org.gradle.api.internal.artifacts.ivyservice.resolveengine.store.ResolutionResultsStoreFactory] Deleted 0 resolution results binary files in 0.0 secs
+2025-05-08T18:15:49.328-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Completing Build operation 'Run build'
+2025-05-08T18:15:49.329-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Run build' completed
+2025-05-08T18:15:49.329-0500 [DEBUG] [org.gradle.internal.resources.AbstractTrackedResourceLock] Daemon worker Thread 2: released lock on worker lease
+2025-05-08T18:15:49.345-0500 [DEBUG] [org.gradle.deployment.internal.DefaultDeploymentRegistry] Stopping 0 deployment handles
+2025-05-08T18:15:49.345-0500 [DEBUG] [org.gradle.deployment.internal.DefaultDeploymentRegistry] Stopped deployment handles
+2025-05-08T18:15:49.346-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Releasing file lock for file hash cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/fileHashes)
+2025-05-08T18:15:49.346-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on file hash cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/fileHashes).
+2025-05-08T18:15:49.347-0500 [DEBUG] [org.gradle.cache.internal.LockOnDemandCrossProcessCacheAccess] Releasing file lock for checksums cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums)
+2025-05-08T18:15:49.347-0500 [DEBUG] [org.gradle.cache.internal.DefaultFileLockManager] Releasing lock on checksums cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/checksums).
+2025-05-08T18:15:49.347-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCleanupExecutor] VCS Checkout Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/vcs-1) has last been fully cleaned up 7 hours ago
+2025-05-08T18:15:49.347-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCleanupExecutor] Skipping cleanup for VCS Checkout Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/vcs-1) as it is not yet due
+2025-05-08T18:15:49.348-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Cache VCS Checkout Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/vcs-1) was closed 0 times.
+2025-05-08T18:15:49.348-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Cache VCS metadata (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/vcsMetadata) was closed 0 times.
+2025-05-08T18:15:49.348-0500 [DEBUG] [org.gradle.cache.internal.DefaultCacheCoordinator] Cache Compressed Files Expansion Cache (/home/jumoell/Projects/fedimint-app/android/.gradle/8.10.2/expanded) was closed 0 times.
+2025-05-08T18:15:49.348-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Deleting unused version-specific caches in /home/jumoell/Projects/fedimint-app/android/.gradle' started
+2025-05-08T18:15:49.348-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Completing Build operation 'Deleting unused version-specific caches in /home/jumoell/Projects/fedimint-app/android/.gradle'
+2025-05-08T18:15:49.348-0500 [DEBUG] [org.gradle.internal.operations.DefaultBuildOperationRunner] Build operation 'Deleting unused version-specific caches in /home/jumoell/Projects/fedimint-app/android/.gradle' completed
+2025-05-08T18:15:49.353-0500 [DEBUG] [org.gradle.launcher.daemon.server.exec.ExecuteBuild] The daemon has finished executing the build.
+2025-05-08T18:15:49.457-0500 [DEBUG] [org.gradle.launcher.daemon.client.DaemonClientConnection] thread 1: dispatching class org.gradle.launcher.daemon.protocol.CloseInput
+2025-05-08T18:15:49.457-0500 [DEBUG] [org.gradle.launcher.daemon.client.DaemonClient] Received result Success[value=org.gradle.launcher.exec.BuildActionResult@5f031ebd] from daemon DaemonInfo{pid=4121281, address=[60efc4ee-6da3-4b2a-bd46-23dab9e07612 port:38925, addresses:[/127.0.0.1]], state=Idle, lastBusy=1746746134225, context=DefaultDaemonContext[uid=38093c39-2c2a-417f-8be9-921b47f1324f,javaHome=/nix/store/5yii18di89wpxcffk3cihpzfdrzw54gl-openjdk-21.0.7+6/lib/openjdk,javaVersion=21,javaVendor=N/A,daemonRegistryDir=/home/jumoell/.gradle/daemon,pid=4121281,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-XX:MaxMetaspaceSize=4G,-XX:ReservedCodeCacheSize=512m,-XX:+HeapDumpOnOutOfMemoryError,--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx8G,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]} (build should be done).
+2025-05-08T18:15:49.458-0500 [DEBUG] [org.gradle.launcher.daemon.client.DaemonClientConnection] thread 1: dispatching class org.gradle.launcher.daemon.protocol.Finished
+2025-05-08T18:15:49.458-0500 [DEBUG] [org.gradle.launcher.daemon.client.DaemonClientConnection] thread 1: connection stop
+2025-05-08T18:15:49.460-0500 [LIFECYCLE] [org.gradle.launcher.cli.DebugLoggerWarningAction] 
+#############################################################################
+   WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+
+   Debug level logging will leak security sensitive information!
+
+   For more details, please refer to https://docs.gradle.org/8.10.2/userguide/logging.html#sec:debug_security in the Gradle documentation.
+#############################################################################
+
