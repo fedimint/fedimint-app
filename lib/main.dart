@@ -8,10 +8,13 @@ import 'package:carbine/theme.dart';
 import 'package:carbine/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RustLib.init();
+  final dir = await getApplicationDocumentsDirectory();
+  await initMultimint(path: dir.path);
   runApp(const MyApp());
 }
 

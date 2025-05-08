@@ -4,10 +4,9 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixgl.url = "github:guibou/nixGL";
-    android.url = "github:tadfisher/android-nixpkgs";
   };
 
-  outputs = { self, fedimint, flake-utils, nixpkgs, nixgl, android, ... }:
+  outputs = { self, fedimint, flake-utils, nixpkgs, nixgl, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         inherit (nixpkgs) lib;
@@ -15,36 +14,7 @@
           inherit system;
           config.allowUnfree = true;
         };
-        androidPkgs = {
-          android-sdk = android.sdk.${system} (sdkPkgs: with sdkPkgs; [
-            # Useful packages for building and testing.
-            build-tools-34-0-0
-            cmdline-tools-latest
-            emulator
-            platform-tools
-            platforms-android-34
-
-            # Other useful packages for a development environment.
-            #ndk-26-1-10909125
-            ndk-27-0-12077973
-            # skiaparser-3
-            # sources-android-34
-          ]
-          ++ lib.optionals (system == "aarch64-darwin") [
-            # system-images-android-34-google-apis-arm64-v8a
-            # system-images-android-34-google-apis-playstore-arm64-v8a
-          ]
-          ++ lib.optionals (system == "x86_64-darwin" || system == "x86_64-linux") [
-            # system-images-android-34-google-apis-x86-64
-            # system-images-android-34-google-apis-playstore-x86-64
-          ]);
-        } // lib.optionalAttrs (system == "x86_64-linux") {
-          # Android Studio in nixpkgs is currently packaged for x86_64-linux only.
-          android-studio = pkgs.androidStudioPackages.stable;
-          # android-studio = pkgs.androidStudioPackages.beta;
-          # android-studio = pkgs.androidStudioPackages.preview;
-          # android-studio = pkgs.androidStudioPackage.canary;
-        };
+        
         nixglPkgs = import nixgl { inherit system; };
 
         # Import the `devShells` from the fedimint flake
@@ -85,7 +55,7 @@
       in {
         devShells = {
           # You can expose all or specific shells from the original flake
-          default = devShells.default.overrideAttrs (old: {
+          default = devShells.cross.overrideAttrs (old: {
             nativeBuildInputs = old.nativeBuildInputs or [] ++ [
               pkgs.flutter
               pkgs.just
@@ -94,10 +64,6 @@
               cargo-ndk
               pkgs.cargo-expand
               pkgs.jdk17
-
-              androidPkgs.android-sdk
-            ] ++ pkgs.lib.optionals (pkgs.stdenv.system == "x86_64-linux") [
-              androidPkgs.android-studio
             ];
 
 	    shellHook = ''
@@ -106,9 +72,6 @@
               export LD_LIBRARY_PATH="${pkgs.zlib}/lib:$LD_LIBRARY_PATH"
               export NIXPKGS_ALLOW_UNFREE=1
               export ROOT="$PWD"
-              export ANDROID_SDK_ROOT=${androidPkgs.android-sdk}/share/android-sdk
-              export PATH=$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/tools/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH
-              export JAVA_HOME=${pkgs.jdk17}
 	    '';
           });
         };

@@ -13,6 +13,7 @@ use fedimint_meta_client::MetaClientInit;
 use flutter_rust_bridge::frb;
 use tokio::sync::{OnceCell, RwLock};
 
+use std::path::PathBuf;
 use std::time::UNIX_EPOCH;
 use std::{collections::BTreeMap, fmt::Display, str::FromStr, sync::Arc, time::Duration};
 
@@ -71,14 +72,17 @@ const DEFAULT_EXPIRY_TIME_SECS: u32 = 86400;
 
 static MULTIMINT: OnceCell<Arc<RwLock<Multimint>>> = OnceCell::const_new();
 
-async fn init_global() -> Arc<RwLock<Multimint>> {
-    Arc::new(RwLock::new(
-        Multimint::new().await.expect("Could not create multimint"),
-    ))
+async fn get_multimint() -> Arc<RwLock<Multimint>> {
+    MULTIMINT.get().expect("Multimint not initialized").clone()
 }
 
-async fn get_multimint() -> Arc<RwLock<Multimint>> {
-    MULTIMINT.get_or_init(init_global).await.clone()
+#[frb]
+pub async fn init_multimint(path: String) {
+    MULTIMINT.get_or_init(|| async {
+        Arc::new(RwLock::new(
+            Multimint::new(path).await.expect("Could not create multimint"),
+        ))
+    }).await;
 }
 
 #[frb]
@@ -428,9 +432,9 @@ pub struct Transaction {
 }
 
 impl Multimint {
-    pub async fn new() -> anyhow::Result<Self> {
-        // TODO: Need android-safe path here
-        let db: Database = RocksDb::open("client.db").await?.into();
+    pub async fn new(path: String) -> anyhow::Result<Self> {
+        let db_path = PathBuf::from_str(&path)?.join("client.db");
+        let db: Database = RocksDb::open(db_path).await?.into();
 
         let mnemonic =
             if let Ok(entropy) = Client::load_decodable_client_secret::<Vec<u8>>(&db).await {
