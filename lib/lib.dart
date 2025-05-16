@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'lib.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `add_relay`, `await_ecash_reissue`, `await_ecash_send`, `await_receive_lnv1`, `await_receive_lnv2`, `await_send_lnv1`, `await_send_lnv2`, `build_client`, `create_nostr_client`, `derive_federation_secret`, `get_client_database`, `get_federation_meta`, `get_multimint`, `has_federation`, `lnv1_select_gateway`, `lnv1_update_gateway_cache`, `lnv2_select_gateway`, `load_clients`, `parse_content`, `parse_ecash`, `parse_federation_id`, `parse_federation_name`, `parse_invite_codes`, `parse_modules`, `parse_network`, `parse_picture`, `pay_lnv1`, `pay_lnv2`, `receive_lnv1`, `receive_lnv2`, `reissue_ecash`, `select_receive_gateway`, `select_send_gateway`, `send_ecash`, `transactions`
+// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `ClientType`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `try_from`
 
 Future<void> createNewMultimint({required String path}) =>
@@ -30,8 +31,13 @@ Future<bool> walletExists({required String path}) =>
 
 Future<List<String>> getMnemonic() => RustLib.instance.api.crateGetMnemonic();
 
-Future<FederationSelector> joinFederation({required String inviteCode}) =>
-    RustLib.instance.api.crateJoinFederation(inviteCode: inviteCode);
+Future<FederationSelector> joinFederation({
+  required String inviteCode,
+  required bool recover,
+}) => RustLib.instance.api.crateJoinFederation(
+  inviteCode: inviteCode,
+  recover: recover,
+);
 
 Future<List<FederationSelector>> federations() =>
     RustLib.instance.api.crateFederations();
@@ -219,7 +225,10 @@ abstract class Multimint implements RustOpaqueInterface {
 
   Future<List<String>> getMnemonic();
 
-  Future<FederationSelector> joinFederation({required String invite});
+  Future<FederationSelector> joinFederation({
+    required String invite,
+    required bool recover,
+  });
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<Multimint> newInstance({

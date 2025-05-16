@@ -1281,6 +1281,7 @@ fn wire__crate__Multimint_join_federation_impl(
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Multimint>,
             >>::sse_decode(&mut deserializer);
             let api_invite = <String>::sse_decode(&mut deserializer);
+            let api_recover = <bool>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
@@ -1302,9 +1303,12 @@ fn wire__crate__Multimint_join_federation_impl(
                             }
                         }
                         let mut api_that_guard = api_that_guard.unwrap();
-                        let output_ok =
-                            crate::Multimint::join_federation(&mut *api_that_guard, api_invite)
-                                .await?;
+                        let output_ok = crate::Multimint::join_federation(
+                            &mut *api_that_guard,
+                            api_invite,
+                            api_recover,
+                        )
+                        .await?;
                         Ok(output_ok)
                     })()
                     .await,
@@ -2746,11 +2750,13 @@ fn wire__crate__join_federation_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_invite_code = <String>::sse_decode(&mut deserializer);
+            let api_recover = <bool>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || async move {
-                        let output_ok = crate::join_federation(api_invite_code).await?;
+                        let output_ok =
+                            crate::join_federation(api_invite_code, api_recover).await?;
                         Ok(output_ok)
                     })()
                     .await,

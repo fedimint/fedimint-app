@@ -50,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
             subtitle: 'View or export your seed phrase',
             onTap: () async {
               final words = await getMnemonic();
-              print("Mnemonic: ${words}");
+              print("Mnemonic: $words");
             },
           ),
         ],

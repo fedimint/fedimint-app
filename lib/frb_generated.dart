@@ -181,6 +181,7 @@ abstract class RustLibApi extends BaseApi {
   Future<FederationSelector> crateMultimintJoinFederation({
     required Multimint that,
     required String invite,
+    required bool recover,
   });
 
   Future<Multimint> crateMultimintNew({
@@ -305,7 +306,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<List<String>> crateGetMnemonic();
 
-  Future<FederationSelector> crateJoinFederation({required String inviteCode});
+  Future<FederationSelector> crateJoinFederation({
+    required String inviteCode,
+    required bool recover,
+  });
 
   Future<List<PublicFederation>> crateListFederationsFromNostr({
     required bool forceUpdate,
@@ -1306,6 +1310,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Future<FederationSelector> crateMultimintJoinFederation({
     required Multimint that,
     required String invite,
+    required bool recover,
   }) {
     return handler.executeNormal(
       NormalTask(
@@ -1316,6 +1321,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_String(invite, serializer);
+          sse_encode_bool(recover, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
@@ -1329,7 +1335,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: sse_decode_AnyhowException,
         ),
         constMeta: kCrateMultimintJoinFederationConstMeta,
-        argValues: [that, invite],
+        argValues: [that, invite, recover],
         apiImpl: this,
       ),
     );
@@ -1338,7 +1344,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateMultimintJoinFederationConstMeta =>
       const TaskConstMeta(
         debugName: "Multimint_join_federation",
-        argNames: ["that", "invite"],
+        argNames: ["that", "invite", "recover"],
       );
 
   @override
@@ -2315,12 +2321,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_mnemonic", argNames: []);
 
   @override
-  Future<FederationSelector> crateJoinFederation({required String inviteCode}) {
+  Future<FederationSelector> crateJoinFederation({
+    required String inviteCode,
+    required bool recover,
+  }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(inviteCode, serializer);
+          sse_encode_bool(recover, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
@@ -2334,7 +2344,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData: sse_decode_AnyhowException,
         ),
         constMeta: kCrateJoinFederationConstMeta,
-        argValues: [inviteCode],
+        argValues: [inviteCode, recover],
         apiImpl: this,
       ),
     );
@@ -2342,7 +2352,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateJoinFederationConstMeta => const TaskConstMeta(
     debugName: "join_federation",
-    argNames: ["inviteCode"],
+    argNames: ["inviteCode", "recover"],
   );
 
   @override
@@ -5438,10 +5448,14 @@ class MultimintImpl extends RustOpaque implements Multimint {
   Future<List<String>> getMnemonic() =>
       RustLib.instance.api.crateMultimintGetMnemonic(that: this);
 
-  Future<FederationSelector> joinFederation({required String invite}) => RustLib
-      .instance
-      .api
-      .crateMultimintJoinFederation(that: this, invite: invite);
+  Future<FederationSelector> joinFederation({
+    required String invite,
+    required bool recover,
+  }) => RustLib.instance.api.crateMultimintJoinFederation(
+    that: this,
+    invite: invite,
+    recover: recover,
+  );
 
   Future<(Bolt11Invoice, OperationId)> receive({
     required FederationId federationId,

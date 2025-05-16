@@ -36,7 +36,10 @@ class _FederationPreviewState extends State<FederationPreview> {
         isJoining = true;
       });
       try {
-        final fed = await joinFederation(inviteCode: widget.inviteCode);
+        final fed = await joinFederation(
+          inviteCode: widget.inviteCode,
+          recover: false,
+        );
         print('Successfully joined federation');
         if (mounted) {
           Navigator.of(context).pop(fed);
@@ -182,6 +185,51 @@ class _FederationPreviewState extends State<FederationPreview> {
                           ),
                 ),
               ),
+
+              // Recover button
+              if (widget.joinable && !isJoining) ...[
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      setState(() {
+                        isJoining = true;
+                      });
+                      try {
+                        final fed = await joinFederation(
+                          inviteCode: widget.inviteCode,
+                          recover: true,
+                        );
+                        if (mounted) {
+                          Navigator.of(context).pop(fed);
+                        }
+                      } catch (e) {
+                        print('Could not recover federation $e');
+                        setState(() {
+                          isJoining = false;
+                        });
+                      }
+                    },
+                    icon: const Icon(Icons.history),
+                    label: const Text('Recover'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: theme.colorScheme.secondary,
+                      side: BorderSide(
+                        color: theme.colorScheme.secondary.withOpacity(0.5),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
 
               // Guardian list
               if (widget.guardians != null && widget.guardians!.isNotEmpty) ...[
