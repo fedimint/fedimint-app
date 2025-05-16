@@ -5,12 +5,20 @@
 
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
+part 'lib.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `add_relay`, `await_ecash_reissue`, `await_ecash_send`, `await_receive_lnv1`, `await_receive_lnv2`, `await_send_lnv1`, `await_send_lnv2`, `build_client`, `create_nostr_client`, `derive_federation_secret`, `get_client_database`, `get_federation_meta`, `get_multimint`, `has_federation`, `lnv1_select_gateway`, `lnv1_update_gateway_cache`, `lnv2_select_gateway`, `load_clients`, `parse_content`, `parse_ecash`, `parse_federation_id`, `parse_federation_name`, `parse_invite_codes`, `parse_modules`, `parse_network`, `parse_picture`, `pay_lnv1`, `pay_lnv2`, `receive_lnv1`, `receive_lnv2`, `reissue_ecash`, `select_receive_gateway`, `select_send_gateway`, `send_ecash`, `transactions`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `try_from`
 
-Future<void> initMultimint({required String path}) =>
-    RustLib.instance.api.crateInitMultimint(path: path);
+Future<void> createNewMultimint({required String path}) =>
+    RustLib.instance.api.crateCreateNewMultimint(path: path);
+
+Future<void> loadMultimint({required String path}) =>
+    RustLib.instance.api.crateLoadMultimint(path: path);
+
+Future<bool> walletExists({required String path}) =>
+    RustLib.instance.api.crateWalletExists(path: path);
 
 Future<FederationSelector> joinFederation({required String inviteCode}) =>
     RustLib.instance.api.crateJoinFederation(inviteCode: inviteCode);
@@ -202,8 +210,13 @@ abstract class Multimint implements RustOpaqueInterface {
   Future<FederationSelector> joinFederation({required String invite});
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<Multimint> newInstance({required String path}) =>
-      RustLib.instance.api.crateMultimintNew(path: path);
+  static Future<Multimint> newInstance({
+    required String path,
+    required MultimintCreation creationType,
+  }) => RustLib.instance.api.crateMultimintNew(
+    path: path,
+    creationType: creationType,
+  );
 
   Future<(Bolt11Invoice, OperationId)> receive({
     required FederationId federationId,
@@ -295,6 +308,17 @@ class Guardian {
           runtimeType == other.runtimeType &&
           name == other.name &&
           version == other.version;
+}
+
+@freezed
+sealed class MultimintCreation with _$MultimintCreation {
+  const MultimintCreation._();
+
+  const factory MultimintCreation.new_() = MultimintCreation_New;
+  const factory MultimintCreation.loadExisting() =
+      MultimintCreation_LoadExisting;
+  const factory MultimintCreation.newFromMnemonic({required String words}) =
+      MultimintCreation_NewFromMnemonic;
 }
 
 class PaymentPreview {

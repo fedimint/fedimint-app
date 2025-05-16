@@ -64,10 +64,7 @@ class _EcashSendState extends State<EcashSend> {
         operationId: opId,
       );
       if (mounted) {
-        Navigator.of(
-          context,
-          rootNavigator: true,
-        ).popUntil((route) => route.isFirst);
+        Navigator.of(context).popUntil((route) => route.isFirst);
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('✅ Ecash reclaimed')));
@@ -101,10 +98,7 @@ class _EcashSendState extends State<EcashSend> {
 
   void _copyEcash() {
     Clipboard.setData(ClipboardData(text: _ecash!));
-    Navigator.of(
-      context,
-      rootNavigator: true,
-    ).popUntil((route) => route.isFirst);
+    Navigator.of(context).popUntil((route) => route.isFirst);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('✅ Ecash copied to clipboard')),
     );

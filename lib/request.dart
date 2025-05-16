@@ -85,10 +85,7 @@ class _RequestState extends State<Request> with SingleTickerProviderStateMixin {
     );
     await Future.delayed(const Duration(seconds: 4));
     if (mounted) {
-      Navigator.of(
-        context,
-        rootNavigator: true,
-      ).popUntil((route) => route.isFirst);
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
 

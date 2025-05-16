@@ -22,7 +22,7 @@ use std::{collections::BTreeMap, fmt::Display, str::FromStr, sync::Arc, time::Du
 
 use anyhow::{anyhow, bail};
 use fedimint_api_client::api::net::Connector;
-use fedimint_bip39::{Bip39RootSecretStrategy, Mnemonic};
+use fedimint_bip39::{Bip39RootSecretStrategy, Language, Mnemonic};
 use fedimint_client::{
     module_init::ClientModuleInitRegistry, secret::RootSecretStrategy, Client, ClientHandleArc,
     OperationId,
@@ -80,16 +80,40 @@ async fn get_multimint() -> Arc<RwLock<Multimint>> {
 }
 
 #[frb]
-pub async fn init_multimint(path: String) {
+pub async fn create_new_multimint(path: String) {
     MULTIMINT
         .get_or_init(|| async {
             Arc::new(RwLock::new(
-                Multimint::new(path)
+                Multimint::new(path, MultimintCreation::New)
                     .await
                     .expect("Could not create multimint"),
             ))
         })
         .await;
+}
+
+#[frb]
+pub async fn load_multimint(path: String) {
+    MULTIMINT
+        .get_or_init(|| async {
+            Arc::new(RwLock::new(
+                Multimint::new(path, MultimintCreation::LoadExisting)
+                    .await
+                    .expect("Could not create multimint"),
+            ))
+        })
+        .await;
+}
+
+#[frb]
+pub async fn wallet_exists(path: String) -> anyhow::Result<bool> {
+    let db_path = PathBuf::from_str(&path)?.join("client.db");
+    let db: Database = RocksDb::open(db_path).await?.into();
+    if let Ok(_) = Client::load_decodable_client_secret::<Vec<u8>>(&db).await {
+        Ok(true)
+    } else {
+        Ok(false)
+    }
 }
 
 #[frb]
@@ -509,20 +533,33 @@ pub struct Transaction {
     operation_id: Vec<u8>,
 }
 
+enum MultimintCreation {
+    New,
+    LoadExisting,
+    NewFromMnemonic {
+        words: String,
+    },
+}
+
 impl Multimint {
-    pub async fn new(path: String) -> anyhow::Result<Self> {
+    pub async fn new(path: String, creation_type: MultimintCreation) -> anyhow::Result<Self> {
         let db_path = PathBuf::from_str(&path)?.join("client.db");
         let db: Database = RocksDb::open(db_path).await?.into();
 
-        let mnemonic =
-            if let Ok(entropy) = Client::load_decodable_client_secret::<Vec<u8>>(&db).await {
-                Mnemonic::from_entropy(&entropy)?
-            } else {
+        let mnemonic = match creation_type {
+            MultimintCreation::New => {
                 let mnemonic = Bip39RootSecretStrategy::<12>::random(&mut thread_rng());
-
                 Client::store_encodable_client_secret(&db, mnemonic.to_entropy()).await?;
                 mnemonic
-            };
+            }
+            MultimintCreation::LoadExisting => {
+                let entropy = Client::load_decodable_client_secret::<Vec<u8>>(&db).await.expect("Could not load existing secret");
+                Mnemonic::from_entropy(&entropy)?
+            }
+            MultimintCreation::NewFromMnemonic{ words } => {
+                Mnemonic::parse_in_normalized(Language::English, words.as_str())?
+            }
+        };
 
         let mut modules = ClientModuleInitRegistry::new();
         modules.attach(LightningClientInit::default());
