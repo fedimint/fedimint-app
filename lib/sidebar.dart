@@ -5,12 +5,12 @@ import 'package:carbine/theme.dart';
 import 'package:flutter/material.dart';
 
 class FederationSidebar extends StatelessWidget {
-  final Future<List<FederationSelector>> federationsFuture;
+  final List<FederationSelector> feds;
   final void Function(FederationSelector) onFederationSelected;
 
   const FederationSidebar({
     super.key,
-    required this.federationsFuture,
+    required this.feds,
     required this.onFederationSelected,
   });
 
@@ -24,55 +24,42 @@ class FederationSidebar extends StatelessWidget {
             BoxShadow(color: Colors.black.withOpacity(0.6), blurRadius: 12),
           ],
         ),
-        child: FutureBuilder<List<FederationSelector>>(
-          future: federationsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('No federations found'));
-            }
-
-            final federations = snapshot.data;
-            return ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                Container(
-                  height: 80,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color:
-                        Colors
-                            .grey[900], // Slightly lighter for header contrast
-                    border: Border(
-                      bottom: BorderSide(color: Colors.grey.shade800),
+        child:
+            feds.isEmpty
+                ? const Center(child: Text('No federations found'))
+                : ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    Container(
+                      height: 80,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey.shade800),
+                        ),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        'Federations',
+                        style: TextStyle(
+                          color: Colors.greenAccent,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Federations',
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                    ...feds.map(
+                      (selector) => FederationListItem(
+                        fed: selector,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          onFederationSelected(selector);
+                        },
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                ...federations!.map(
-                  (selector) => FederationListItem(
-                    fed: selector,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      onFederationSelected(selector);
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
       ),
     );
   }

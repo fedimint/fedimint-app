@@ -52,17 +52,11 @@ class _EcashRedeemPromptState extends State<EcashRedeemPrompt> {
         ),
       );
       await Future.delayed(const Duration(seconds: 4));
-      Navigator.of(
-        context,
-        rootNavigator: true,
-      ).popUntil((route) => route.isFirst);
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (_) {
       // Could not reissue ecash
       print("Could not reissue ecash");
-      Navigator.of(
-        context,
-        rootNavigator: true,
-      ).popUntil((route) => route.isFirst);
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
 

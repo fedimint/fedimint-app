@@ -22,7 +22,7 @@ use std::{collections::BTreeMap, fmt::Display, str::FromStr, sync::Arc, time::Du
 
 use anyhow::{anyhow, bail};
 use fedimint_api_client::api::net::Connector;
-use fedimint_bip39::{Bip39RootSecretStrategy, Mnemonic};
+use fedimint_bip39::{Bip39RootSecretStrategy, Language, Mnemonic};
 use fedimint_client::{
     module_init::ClientModuleInitRegistry, secret::RootSecretStrategy, Client, ClientHandleArc,
     OperationId,
@@ -80,11 +80,11 @@ async fn get_multimint() -> Arc<RwLock<Multimint>> {
 }
 
 #[frb]
-pub async fn init_multimint(path: String) {
+pub async fn create_new_multimint(path: String) {
     MULTIMINT
         .get_or_init(|| async {
             Arc::new(RwLock::new(
-                Multimint::new(path)
+                Multimint::new(path, MultimintCreation::New)
                     .await
                     .expect("Could not create multimint"),
             ))
@@ -93,10 +93,57 @@ pub async fn init_multimint(path: String) {
 }
 
 #[frb]
-pub async fn join_federation(invite_code: String) -> anyhow::Result<FederationSelector> {
+pub async fn load_multimint(path: String) {
+    MULTIMINT
+        .get_or_init(|| async {
+            Arc::new(RwLock::new(
+                Multimint::new(path, MultimintCreation::LoadExisting)
+                    .await
+                    .expect("Could not create multimint"),
+            ))
+        })
+        .await;
+}
+
+#[frb]
+pub async fn create_multimint_from_words(path: String, words: Vec<String>) {
+    MULTIMINT
+        .get_or_init(|| async {
+            Arc::new(RwLock::new(
+                Multimint::new(path, MultimintCreation::NewFromMnemonic { words })
+                    .await
+                    .expect("Could not create multimint"),
+            ))
+        })
+        .await;
+}
+
+#[frb]
+pub async fn wallet_exists(path: String) -> anyhow::Result<bool> {
+    let db_path = PathBuf::from_str(&path)?.join("client.db");
+    let db: Database = RocksDb::open(db_path).await?.into();
+    if let Ok(_) = Client::load_decodable_client_secret::<Vec<u8>>(&db).await {
+        Ok(true)
+    } else {
+        Ok(false)
+    }
+}
+
+#[frb]
+pub async fn get_mnemonic() -> Vec<String> {
+    let multimint = get_multimint().await;
+    let mm = multimint.read().await;
+    mm.get_mnemonic()
+}
+
+#[frb]
+pub async fn join_federation(
+    invite_code: String,
+    recover: bool,
+) -> anyhow::Result<FederationSelector> {
     let multimint = get_multimint().await;
     let mut mm = multimint.write().await;
-    mm.join_federation(invite_code).await
+    mm.join_federation(invite_code, recover).await
 }
 
 #[frb]
@@ -152,13 +199,19 @@ pub async fn select_receive_gateway(
 }
 
 #[frb]
-pub async fn send_lnaddress(federation_id: &FederationId, amount_msats: u64, address: String) -> anyhow::Result<OperationId> {
+pub async fn send_lnaddress(
+    federation_id: &FederationId,
+    amount_msats: u64,
+    address: String,
+) -> anyhow::Result<OperationId> {
     let lnurl = lnurl::lightning_address::LightningAddress::from_str(&address)?.lnurl();
     let async_client = lnurl::AsyncClient::from_client(reqwest::Client::new());
     let response = async_client.make_request(&lnurl.url).await?;
     match response {
         lnurl::LnUrlResponse::LnUrlPayResponse(response) => {
-            let invoice = async_client.get_invoice(&response, amount_msats, None, None).await?;
+            let invoice = async_client
+                .get_invoice(&response, amount_msats, None, None)
+                .await?;
 
             let multimint = get_multimint().await;
             let mm = multimint.read().await;
@@ -212,7 +265,10 @@ pub async fn list_federations_from_nostr(force_update: bool) -> Vec<PublicFedera
 }
 
 #[frb]
-pub async fn payment_preview(federation_id: &FederationId, bolt11: String) -> anyhow::Result<PaymentPreview> {
+pub async fn payment_preview(
+    federation_id: &FederationId,
+    bolt11: String,
+) -> anyhow::Result<PaymentPreview> {
     let invoice = Bolt11Invoice::from_str(&bolt11)?;
     let amount_msats = invoice
         .amount_milli_satoshis()
@@ -222,7 +278,9 @@ pub async fn payment_preview(federation_id: &FederationId, bolt11: String) -> an
 
     let multimint = get_multimint().await;
     let mm = multimint.read().await;
-    let (gateway, fee_base, fee_ppm, fed_fee) = mm.select_send_gateway(federation_id, Amount::from_msats(amount_msats)).await?;
+    let (gateway, fee_base, fee_ppm, fed_fee) = mm
+        .select_send_gateway(federation_id, Amount::from_msats(amount_msats))
+        .await?;
 
     Ok(PaymentPreview {
         amount_msats,
@@ -279,10 +337,7 @@ pub async fn await_ecash_send(
 }
 
 #[frb]
-pub async fn parse_ecash(
-    federation_id: &FederationId,
-    ecash: String,
-) -> anyhow::Result<u64> {
+pub async fn parse_ecash(federation_id: &FederationId, ecash: String) -> anyhow::Result<u64> {
     let multimint = get_multimint().await;
     let mm = multimint.read().await;
     mm.parse_ecash(federation_id, ecash).await
@@ -509,20 +564,40 @@ pub struct Transaction {
     operation_id: Vec<u8>,
 }
 
+pub enum MultimintCreation {
+    New,
+    LoadExisting,
+    NewFromMnemonic { words: Vec<String> },
+}
+
+pub enum ClientType {
+    New,
+    Temporary,
+    Recovery { client_config: ClientConfig },
+}
+
 impl Multimint {
-    pub async fn new(path: String) -> anyhow::Result<Self> {
+    pub async fn new(path: String, creation_type: MultimintCreation) -> anyhow::Result<Self> {
         let db_path = PathBuf::from_str(&path)?.join("client.db");
         let db: Database = RocksDb::open(db_path).await?.into();
 
-        let mnemonic =
-            if let Ok(entropy) = Client::load_decodable_client_secret::<Vec<u8>>(&db).await {
-                Mnemonic::from_entropy(&entropy)?
-            } else {
+        let mnemonic = match creation_type {
+            MultimintCreation::New => {
                 let mnemonic = Bip39RootSecretStrategy::<12>::random(&mut thread_rng());
-
                 Client::store_encodable_client_secret(&db, mnemonic.to_entropy()).await?;
                 mnemonic
-            };
+            }
+            MultimintCreation::LoadExisting => {
+                let entropy = Client::load_decodable_client_secret::<Vec<u8>>(&db)
+                    .await
+                    .expect("Could not load existing secret");
+                Mnemonic::from_entropy(&entropy)?
+            }
+            MultimintCreation::NewFromMnemonic { words } => {
+                let all_words = words.join(" ");
+                Mnemonic::parse_in_normalized(Language::English, all_words.as_str())?
+            }
+        };
 
         let mut modules = ClientModuleInitRegistry::new();
         modules.attach(LightningClientInit::default());
@@ -553,7 +628,12 @@ impl Multimint {
             .await;
         for (id, config) in configs {
             let client = self
-                .build_client(&id.id, &config.invite_code, config.connector, false)
+                .build_client(
+                    &id.id,
+                    &config.invite_code,
+                    config.connector,
+                    ClientType::New,
+                )
                 .await?;
             self.clients.insert(id.id, client);
         }
@@ -626,7 +706,12 @@ impl Multimint {
             client
         } else {
             &self
-                .build_client(&federation_id, &invite_code, Connector::Tcp, true)
+                .build_client(
+                    &federation_id,
+                    &invite_code,
+                    Connector::Tcp,
+                    ClientType::Temporary,
+                )
                 .await?
         };
 
@@ -704,21 +789,56 @@ impl Multimint {
         ))
     }
 
-    // TODO: Implement recovery
-    pub async fn join_federation(&mut self, invite: String) -> anyhow::Result<FederationSelector> {
+    pub fn get_mnemonic(&self) -> Vec<String> {
+        self.mnemonic
+            .words()
+            .map(std::string::ToString::to_string)
+            .collect::<Vec<_>>()
+    }
+
+    pub async fn join_federation(
+        &mut self,
+        invite: String,
+        recover: bool,
+    ) -> anyhow::Result<FederationSelector> {
         let invite_code = InviteCode::from_str(&invite)?;
         let federation_id = invite_code.federation_id();
         if self.has_federation(&federation_id).await {
             bail!("Already joined federation")
         }
 
-        let client = self
-            .build_client(&federation_id, &invite_code, Connector::Tcp, false)
-            .await?;
-
         let client_config = Connector::default()
             .download_from_invite_code(&invite_code)
             .await?;
+
+        let client = if recover {
+            self.build_client(
+                &federation_id,
+                &invite_code,
+                Connector::Tcp,
+                ClientType::Recovery {
+                    client_config: client_config.clone(),
+                },
+            )
+            .await?;
+            println!("Building new client after recovery...");
+            self.build_client(
+                &federation_id,
+                &invite_code,
+                Connector::Tcp,
+                ClientType::New,
+            )
+            .await?
+        } else {
+            self.build_client(
+                &federation_id,
+                &invite_code,
+                Connector::Tcp,
+                ClientType::New,
+            )
+            .await?
+        };
+
         let federation_name = client_config
             .global
             .federation_name()
@@ -766,13 +886,13 @@ impl Multimint {
         federation_id: &FederationId,
         invite_code: &InviteCode,
         connector: Connector,
-        is_temporary: bool,
+        client_type: ClientType,
     ) -> anyhow::Result<ClientHandleArc> {
-        let client_db = if is_temporary {
-            MemDatabase::new().into()
-        } else {
-            self.get_client_database(&federation_id)
+        let client_db = match client_type {
+            ClientType::Temporary => MemDatabase::new().into(),
+            _ => self.get_client_database(&federation_id),
         };
+
         println!("Getting derivation secret");
         let secret = Self::derive_federation_secret(&self.mnemonic, &federation_id);
         println!("Got derivation secret");
@@ -782,19 +902,38 @@ impl Multimint {
         client_builder.with_primary_module_kind(fedimint_mint_client::KIND);
         println!("Created client builder");
 
-        let client = if Client::is_initialized(client_builder.db_no_decoders()).await {
-            client_builder.open(secret).await
-        } else {
-            let client_config = connector.download_from_invite_code(&invite_code).await?;
-            client_builder
-                .join(secret, client_config.clone(), invite_code.api_secret())
-                .await
-        }
-        .map(Arc::new)?;
-        println!("Opened client");
+        let client = match client_type {
+            ClientType::Recovery { client_config } => {
+                let backup = client_builder
+                    .download_backup_from_federation(
+                        &secret,
+                        &client_config,
+                        invite_code.api_secret(),
+                    )
+                    .await?;
+                let client = client_builder
+                    .recover(secret, client_config, invite_code.api_secret(), backup)
+                    .await
+                    .map(Arc::new)?;
+                // TODO: move this so it is async
+                client.wait_for_all_recoveries().await?;
+                client
+            }
+            _ => {
+                let client = if Client::is_initialized(client_builder.db_no_decoders()).await {
+                    client_builder.open(secret).await
+                } else {
+                    let client_config = connector.download_from_invite_code(&invite_code).await?;
+                    client_builder
+                        .join(secret, client_config.clone(), invite_code.api_secret())
+                        .await
+                }
+                .map(Arc::new)?;
+                client
+            }
+        };
 
         self.lnv1_update_gateway_cache(&client).await?;
-        println!("Updated gateway cache");
         Ok(client)
     }
 
@@ -908,7 +1047,9 @@ impl Multimint {
             .clients
             .get(federation_id)
             .expect("No federation exists");
-        if let Ok((url, receive_fee, fed_fee)) = Self::lnv2_select_gateway(client, amount, true).await {
+        if let Ok((url, receive_fee, fed_fee)) =
+            Self::lnv2_select_gateway(client, amount, true).await
+        {
             return Ok((
                 url.to_string(),
                 receive_fee.base.msats,
@@ -933,7 +1074,8 @@ impl Multimint {
             .clients
             .get(federation_id)
             .expect("No federation exists");
-        if let Ok((url, send_fee, fed_fee)) = Self::lnv2_select_gateway(client, amount, false).await {
+        if let Ok((url, send_fee, fed_fee)) = Self::lnv2_select_gateway(client, amount, false).await
+        {
             return Ok((
                 url.to_string(),
                 send_fee.base.msats,
@@ -946,7 +1088,12 @@ impl Multimint {
         let gateway = Self::lnv1_select_gateway(client)
             .await
             .ok_or(anyhow!("No available gateways"))?;
-        Ok((gateway.api.to_string(), gateway.fees.base_msat as u64, gateway.fees.proportional_millionths as u64, 0))
+        Ok((
+            gateway.api.to_string(),
+            gateway.fees.base_msat as u64,
+            gateway.fees.proportional_millionths as u64,
+            0,
+        ))
     }
 
     pub async fn send(
@@ -1219,14 +1366,16 @@ impl Multimint {
         // TODO: Lnv2 currently has no exposed way of querying gateways
         // Just add placeholder here
         let (url, fee) = if is_receive {
-            let url = SafeUrl::parse("https://mutinynet.mplsfed.xyz").expect("could not parse SafeUrl");
+            let url =
+                SafeUrl::parse("https://mutinynet.mplsfed.xyz").expect("could not parse SafeUrl");
             let receive_fee = PaymentFee {
                 base: Amount::from_msats(0),
                 parts_per_million: 0,
             };
             (url, receive_fee)
         } else {
-            let url = SafeUrl::parse("https://mutinynet.mplsfed.xyz").expect("could not parse SafeUrl");
+            let url =
+                SafeUrl::parse("https://mutinynet.mplsfed.xyz").expect("could not parse SafeUrl");
             let send_fee = PaymentFee {
                 base: Amount::from_msats(0),
                 parts_per_million: 0,

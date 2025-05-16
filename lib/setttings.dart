@@ -48,8 +48,9 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.vpn_key,
             title: 'Mnemonic',
             subtitle: 'View or export your seed phrase',
-            onTap: () {
-              // Handle Mnemonic tap
+            onTap: () async {
+              final words = await getMnemonic();
+              print("Mnemonic: $words");
             },
           ),
         ],
