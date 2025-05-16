@@ -106,6 +106,19 @@ pub async fn load_multimint(path: String) {
 }
 
 #[frb]
+pub async fn create_multimint_from_words(path: String, words: Vec<String>) {
+    MULTIMINT
+        .get_or_init(|| async {
+            Arc::new(RwLock::new(
+                Multimint::new(path, MultimintCreation::NewFromMnemonic { words })
+                    .await
+                    .expect("Could not create multimint"),
+            ))
+        })
+        .await;
+}
+
+#[frb]
 pub async fn wallet_exists(path: String) -> anyhow::Result<bool> {
     let db_path = PathBuf::from_str(&path)?.join("client.db");
     let db: Database = RocksDb::open(db_path).await?.into();
@@ -114,6 +127,13 @@ pub async fn wallet_exists(path: String) -> anyhow::Result<bool> {
     } else {
         Ok(false)
     }
+}
+
+#[frb]
+pub async fn get_mnemonic() -> Vec<String> {
+    let multimint = get_multimint().await;
+    let mm = multimint.read().await;
+    mm.get_mnemonic()
 }
 
 #[frb]
@@ -533,11 +553,11 @@ pub struct Transaction {
     operation_id: Vec<u8>,
 }
 
-enum MultimintCreation {
+pub enum MultimintCreation {
     New,
     LoadExisting,
     NewFromMnemonic {
-        words: String,
+        words: Vec<String>,
     },
 }
 
@@ -557,7 +577,8 @@ impl Multimint {
                 Mnemonic::from_entropy(&entropy)?
             }
             MultimintCreation::NewFromMnemonic{ words } => {
-                Mnemonic::parse_in_normalized(Language::English, words.as_str())?
+                let all_words = words.join(" ");
+                Mnemonic::parse_in_normalized(Language::English, all_words.as_str())?
             }
         };
 
@@ -739,6 +760,10 @@ impl Multimint {
             },
             selector,
         ))
+    }
+
+    pub fn get_mnemonic(&self) -> Vec<String> {
+        self.mnemonic.words().map(std::string::ToString::to_string).collect::<Vec<_>>()
     }
 
     // TODO: Implement recovery

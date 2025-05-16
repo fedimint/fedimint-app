@@ -110,10 +110,16 @@ String toString() {
 
 
 class MultimintCreation_NewFromMnemonic extends MultimintCreation {
-  const MultimintCreation_NewFromMnemonic({required this.words}): super._();
+  const MultimintCreation_NewFromMnemonic({required final  List<String> words}): _words = words,super._();
   
 
- final  String words;
+ final  List<String> _words;
+ List<String> get words {
+  if (_words is EqualUnmodifiableListView) return _words;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_words);
+}
+
 
 /// Create a copy of MultimintCreation
 /// with the given fields replaced by the non-null parameter values.
@@ -125,12 +131,12 @@ $MultimintCreation_NewFromMnemonicCopyWith<MultimintCreation_NewFromMnemonic> ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintCreation_NewFromMnemonic&&(identical(other.words, words) || other.words == words));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintCreation_NewFromMnemonic&&const DeepCollectionEquality().equals(other._words, _words));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,words);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_words));
 
 @override
 String toString() {
@@ -145,7 +151,7 @@ abstract mixin class $MultimintCreation_NewFromMnemonicCopyWith<$Res> implements
   factory $MultimintCreation_NewFromMnemonicCopyWith(MultimintCreation_NewFromMnemonic value, $Res Function(MultimintCreation_NewFromMnemonic) _then) = _$MultimintCreation_NewFromMnemonicCopyWithImpl;
 @useResult
 $Res call({
- String words
+ List<String> words
 });
 
 
@@ -164,8 +170,8 @@ class _$MultimintCreation_NewFromMnemonicCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? words = null,}) {
   return _then(MultimintCreation_NewFromMnemonic(
-words: null == words ? _self.words : words // ignore: cast_nullable_to_non_nullable
-as String,
+words: null == words ? _self._words : words // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

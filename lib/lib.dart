@@ -17,8 +17,18 @@ Future<void> createNewMultimint({required String path}) =>
 Future<void> loadMultimint({required String path}) =>
     RustLib.instance.api.crateLoadMultimint(path: path);
 
+Future<void> createMultimintFromWords({
+  required String path,
+  required List<String> words,
+}) => RustLib.instance.api.crateCreateMultimintFromWords(
+  path: path,
+  words: words,
+);
+
 Future<bool> walletExists({required String path}) =>
     RustLib.instance.api.crateWalletExists(path: path);
+
+Future<List<String>> getMnemonic() => RustLib.instance.api.crateGetMnemonic();
 
 Future<FederationSelector> joinFederation({required String inviteCode}) =>
     RustLib.instance.api.crateJoinFederation(inviteCode: inviteCode);
@@ -207,6 +217,8 @@ abstract class Multimint implements RustOpaqueInterface {
 
   Future<List<FederationSelector>> federations();
 
+  Future<List<String>> getMnemonic();
+
   Future<FederationSelector> joinFederation({required String invite});
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
@@ -317,8 +329,9 @@ sealed class MultimintCreation with _$MultimintCreation {
   const factory MultimintCreation.new_() = MultimintCreation_New;
   const factory MultimintCreation.loadExisting() =
       MultimintCreation_LoadExisting;
-  const factory MultimintCreation.newFromMnemonic({required String words}) =
-      MultimintCreation_NewFromMnemonic;
+  const factory MultimintCreation.newFromMnemonic({
+    required List<String> words,
+  }) = MultimintCreation_NewFromMnemonic;
 }
 
 class PaymentPreview {
