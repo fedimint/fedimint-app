@@ -9,6 +9,7 @@ crate-type = ["cdylib"]
 [dependencies]
 anyhow = "1.0.97"
 async-trait = "0.1.88"
+bitcoin = { version = "0.32.5", features = ["serde"] }
 fedimint-api-client = "0.7.0"
 fedimint-bip39 = "0.7.0"
 fedimint-core = "0.7.0"

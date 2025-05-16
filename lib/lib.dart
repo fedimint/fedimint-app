@@ -135,6 +135,9 @@ Future<ReissueExternalNotesState> awaitEcashReissue({
   operationId: operationId,
 );
 
+Future<(String, BigInt)> refund({required FederationId federationId}) =>
+    RustLib.instance.api.crateRefund(federationId: federationId);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Bolt11Invoice>>
 abstract class Bolt11Invoice implements RustOpaqueInterface {}
 
@@ -202,6 +205,12 @@ abstract class Multimint implements RustOpaqueInterface {
     required BigInt amountMsatsWithFees,
     required BigInt amountMsatsWithoutFees,
   });
+
+  /// Refund the full balance on-chain to the Mutinynet faucet.
+  ///
+  /// This is a temporary method that assists with development and should
+  /// be removed before supporting mainnet.
+  Future<(String, BigInt)> refund({required FederationId federationId});
 
   Future<OperationId> send({
     required FederationId federationId,
