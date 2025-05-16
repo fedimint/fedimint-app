@@ -4,6 +4,7 @@ import 'package:carbine/number_pad.dart';
 import 'package:carbine/payment_selector.dart';
 import 'package:carbine/scan.dart';
 import 'package:carbine/theme.dart';
+import 'package:carbine/refund.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
@@ -171,6 +172,22 @@ class _DashboardState extends State<Dashboard> {
     _loadTransactions();
   }
 
+  void _onRefundPressed() async {
+    await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder:
+            (_) => RefundConfirmationPage(
+              fed: widget.fed,
+              balanceMsats: balanceMsats!,
+            ),
+      ),
+    );
+
+    _loadBalance();
+    _loadTransactions();
+  }
+
   @override
   Widget build(BuildContext context) {
     final name = widget.fed.federationName;
@@ -198,12 +215,20 @@ class _DashboardState extends State<Dashboard> {
             onTap: () => _scheduleAction(_onReceivePressed),
           ),
           if (balanceMsats != null && balanceMsats! > BigInt.zero)
-            SpeedDialChild(
-              child: const Icon(Icons.upload),
-              label: 'Send',
-              backgroundColor: Colors.blue,
-              onTap: () => _scheduleAction(_onSendPressed),
-            ),
+            if (_selectedPaymentType == PaymentType.onchain)
+              SpeedDialChild(
+                child: const Icon(Icons.reply),
+                label: 'Refund',
+                backgroundColor: Colors.orange,
+                onTap: () => _scheduleAction(_onRefundPressed),
+              )
+            else
+              SpeedDialChild(
+                child: const Icon(Icons.upload),
+                label: 'Send',
+                backgroundColor: Colors.blue,
+                onTap: () => _scheduleAction(_onSendPressed),
+              ),
         ],
       ),
       body: SingleChildScrollView(

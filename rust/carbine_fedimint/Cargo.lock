@@ -769,6 +769,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "async-trait",
+ "bitcoin",
  "fedimint-api-client",
  "fedimint-bip39",
  "fedimint-client",

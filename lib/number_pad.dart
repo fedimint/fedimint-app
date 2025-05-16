@@ -135,26 +135,36 @@ class _NumberPadState extends State<NumberPad> {
       }
 
       String digit = '';
-      if (key == LogicalKeyboardKey.digit0 || key == LogicalKeyboardKey.numpad0)
+      if (key == LogicalKeyboardKey.digit0 || key == LogicalKeyboardKey.numpad0) {
         digit = '0';
-      if (key == LogicalKeyboardKey.digit1 || key == LogicalKeyboardKey.numpad1)
+      }
+      if (key == LogicalKeyboardKey.digit1 || key == LogicalKeyboardKey.numpad1) {
         digit = '1';
-      if (key == LogicalKeyboardKey.digit2 || key == LogicalKeyboardKey.numpad2)
+      }
+      if (key == LogicalKeyboardKey.digit2 || key == LogicalKeyboardKey.numpad2) {
         digit = '2';
-      if (key == LogicalKeyboardKey.digit3 || key == LogicalKeyboardKey.numpad3)
+      }
+      if (key == LogicalKeyboardKey.digit3 || key == LogicalKeyboardKey.numpad3) {
         digit = '3';
-      if (key == LogicalKeyboardKey.digit4 || key == LogicalKeyboardKey.numpad4)
+      }
+      if (key == LogicalKeyboardKey.digit4 || key == LogicalKeyboardKey.numpad4) {
         digit = '4';
-      if (key == LogicalKeyboardKey.digit5 || key == LogicalKeyboardKey.numpad5)
+      }
+      if (key == LogicalKeyboardKey.digit5 || key == LogicalKeyboardKey.numpad5) {
         digit = '5';
-      if (key == LogicalKeyboardKey.digit6 || key == LogicalKeyboardKey.numpad6)
+      }
+      if (key == LogicalKeyboardKey.digit6 || key == LogicalKeyboardKey.numpad6) {
         digit = '6';
-      if (key == LogicalKeyboardKey.digit7 || key == LogicalKeyboardKey.numpad7)
+      }
+      if (key == LogicalKeyboardKey.digit7 || key == LogicalKeyboardKey.numpad7) {
         digit = '7';
-      if (key == LogicalKeyboardKey.digit8 || key == LogicalKeyboardKey.numpad8)
+      }
+      if (key == LogicalKeyboardKey.digit8 || key == LogicalKeyboardKey.numpad8) {
         digit = '8';
-      if (key == LogicalKeyboardKey.digit9 || key == LogicalKeyboardKey.numpad9)
+      }
+      if (key == LogicalKeyboardKey.digit9 || key == LogicalKeyboardKey.numpad9) {
         digit = '9';
+      }
       if (key == LogicalKeyboardKey.backspace) {
         setState(() {
           if (_rawAmount.isNotEmpty) {
