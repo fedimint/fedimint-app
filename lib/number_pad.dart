@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:carbine/app.dart';
 import 'package:carbine/dashboard.dart';
 import 'package:carbine/ecash_send.dart';
 import 'package:carbine/lib.dart';
@@ -95,7 +96,8 @@ class _NumberPadState extends State<NumberPad> {
           gateway: gateway.$1,
           isLnv2: gateway.$3,
         );
-        showCarbineModalBottomSheet(
+        requestVisibleNotifier.value = true;
+        await showCarbineModalBottomSheet(
           context: context,
           child: Request(
             invoice: invoice.$1,
@@ -109,6 +111,7 @@ class _NumberPadState extends State<NumberPad> {
             expiry: invoice.$5,
           ),
         );
+        requestVisibleNotifier.value = false;
       } else if (widget.paymentType == PaymentType.ecash) {
         showCarbineModalBottomSheet(
           context: context,

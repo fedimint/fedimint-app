@@ -12,6 +12,8 @@ import 'package:carbine/utils.dart';
 import 'package:carbine/welcome.dart';
 import 'package:flutter/material.dart';
 
+final requestVisibleNotifier = ValueNotifier<bool>(false);
+
 class MyApp extends StatefulWidget {
   final List<(FederationSelector, bool)> initialFederations;
 
@@ -48,6 +50,11 @@ class _MyAppState extends State<MyApp> {
       if (event.eventKind is MultimintEventKind_Lightning) {
         final ln = event.eventKind as MultimintEventKind_Lightning;
         if (ln.field0 is LightningEvent_InvoicePaid) {
+          if (requestVisibleNotifier.value) {
+            AppLogger.instance.info("Request modal visible — skipping toast.");
+            return;
+          }
+
           final lnEvent = ln.field0 as LightningEvent_InvoicePaid;
           final amountMsats = lnEvent.field0.amountMsats;
           final amount = formatBalance(amountMsats, false);
@@ -66,6 +73,8 @@ class _MyAppState extends State<MyApp> {
             },
           );
 
+          // TODO: For some reason this doesnt always work
+          AppLogger.instance.info("Updating balance...");
           balanceUpdateNotifier.notify();
         }
       }
