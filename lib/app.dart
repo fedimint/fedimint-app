@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carbine/dashboard.dart';
 import 'package:carbine/lib.dart';
 import 'package:carbine/multimint.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/material.dart';
 
 class MyApp extends StatefulWidget {
   final List<(FederationSelector, bool)> initialFederations;
+
   const MyApp({super.key, required this.initialFederations});
 
   @override
@@ -24,6 +27,9 @@ class _MyAppState extends State<MyApp> {
   bool? _isRecovering;
   int _currentIndex = 0;
 
+  late Stream<LightningEvent> lnEvents;
+  late StreamSubscription<LightningEvent> _lnSubscription;
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +39,20 @@ class _MyAppState extends State<MyApp> {
       _selectedFederation = _feds.first.$1;
       _isRecovering = _feds.first.$2;
     }
+
+    lnEvents = subscribeLightningEvents().asBroadcastStream();
+    _lnSubscription = lnEvents.listen((event) {
+      if (event is LightningEvent_InvoicePaid) {
+        final amount = event.field0.amountMsats;
+        AppLogger.instance.info("Invoice has been paid! Amount: $amount");
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _lnSubscription.cancel();
+    super.dispose();
   }
 
   void _onJoinPressed(FederationSelector fed, bool recovering) {

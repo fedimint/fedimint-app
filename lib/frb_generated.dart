@@ -65,7 +65,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.9.0';
 
   @override
-  int get rustContentHash => -381752716;
+  int get rustContentHash => -2083986118;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -76,24 +76,6 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  DepositEventKind crateMultimintDepositEventAutoAccessorGetEventKind({
-    required DepositEvent that,
-  });
-
-  FederationId crateMultimintDepositEventAutoAccessorGetFederationId({
-    required DepositEvent that,
-  });
-
-  void crateMultimintDepositEventAutoAccessorSetEventKind({
-    required DepositEvent that,
-    required DepositEventKind eventKind,
-  });
-
-  void crateMultimintDepositEventAutoAccessorSetFederationId({
-    required DepositEvent that,
-    required FederationId federationId,
-  });
-
   ClientConfig crateDbFederationConfigAutoAccessorGetClientConfig({
     required FederationConfig that,
   });
@@ -175,6 +157,24 @@ abstract class RustLibApi extends BaseApi {
     String? network,
   });
 
+  MultimintEventKind crateMultimintMultimintEventAutoAccessorGetEventKind({
+    required MultimintEvent that,
+  });
+
+  FederationId crateMultimintMultimintEventAutoAccessorGetFederationId({
+    required MultimintEvent that,
+  });
+
+  void crateMultimintMultimintEventAutoAccessorSetEventKind({
+    required MultimintEvent that,
+    required MultimintEventKind eventKind,
+  });
+
+  void crateMultimintMultimintEventAutoAccessorSetFederationId({
+    required MultimintEvent that,
+    required FederationId federationId,
+  });
+
   Future<void> crateMultimintMultimintAckSeedPhrase({required Multimint that});
 
   Future<String> crateMultimintMultimintAllocateDepositAddress({
@@ -194,7 +194,8 @@ abstract class RustLibApi extends BaseApi {
     required OperationId operationId,
   });
 
-  Future<FinalReceiveOperationState> crateMultimintMultimintAwaitReceive({
+  Future<(FinalReceiveOperationState, BigInt)>
+  crateMultimintMultimintAwaitReceive({
     required Multimint that,
     required FederationId federationId,
     required OperationId operationId,
@@ -309,6 +310,10 @@ abstract class RustLibApi extends BaseApi {
     required FederationId federationId,
   });
 
+  Stream<LightningEvent> crateMultimintMultimintSubscribeLightningEvents({
+    required Multimint that,
+  });
+
   Future<List<Transaction>> crateMultimintMultimintTransactions({
     required Multimint that,
     required FederationId federationId,
@@ -421,7 +426,7 @@ abstract class RustLibApi extends BaseApi {
     required OperationId operationId,
   });
 
-  Future<FinalReceiveOperationState> crateAwaitReceive({
+  Future<(FinalReceiveOperationState, BigInt)> crateAwaitReceive({
     required FederationId federationId,
     required OperationId operationId,
   });
@@ -528,6 +533,8 @@ abstract class RustLibApi extends BaseApi {
     required FederationId federationId,
   });
 
+  Stream<LightningEvent> crateSubscribeLightningEvents();
+
   Future<List<Transaction>> crateTransactions({
     required FederationId federationId,
     BigInt? timestamp,
@@ -579,14 +586,6 @@ abstract class RustLibApi extends BaseApi {
   get rust_arc_decrement_strong_count_Database;
 
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_DatabasePtr;
-
-  RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_DepositEvent;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_DepositEvent;
-
-  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_DepositEventPtr;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_FederationConfig;
@@ -649,6 +648,15 @@ abstract class RustLibApi extends BaseApi {
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_MultimintPtr;
 
   RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_MultimintEvent;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_MultimintEvent;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_MultimintEventPtr;
+
+  RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_NostrClient;
 
   RustArcDecrementStrongCountFnType
@@ -707,144 +715,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  DepositEventKind crateMultimintDepositEventAutoAccessorGetEventKind({
-    required DepositEvent that,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-            that,
-            serializer,
-          );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_deposit_event_kind,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateMultimintDepositEventAutoAccessorGetEventKindConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kCrateMultimintDepositEventAutoAccessorGetEventKindConstMeta =>
-      const TaskConstMeta(
-        debugName: "DepositEvent_auto_accessor_get_event_kind",
-        argNames: ["that"],
-      );
-
-  @override
-  FederationId crateMultimintDepositEventAutoAccessorGetFederationId({
-    required DepositEvent that,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-            that,
-            serializer,
-          );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData:
-              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationId,
-          decodeErrorData: null,
-        ),
-        constMeta:
-            kCrateMultimintDepositEventAutoAccessorGetFederationIdConstMeta,
-        argValues: [that],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kCrateMultimintDepositEventAutoAccessorGetFederationIdConstMeta =>
-      const TaskConstMeta(
-        debugName: "DepositEvent_auto_accessor_get_federation_id",
-        argNames: ["that"],
-      );
-
-  @override
-  void crateMultimintDepositEventAutoAccessorSetEventKind({
-    required DepositEvent that,
-    required DepositEventKind eventKind,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-            that,
-            serializer,
-          );
-          sse_encode_deposit_event_kind(eventKind, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta: kCrateMultimintDepositEventAutoAccessorSetEventKindConstMeta,
-        argValues: [that, eventKind],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kCrateMultimintDepositEventAutoAccessorSetEventKindConstMeta =>
-      const TaskConstMeta(
-        debugName: "DepositEvent_auto_accessor_set_event_kind",
-        argNames: ["that", "eventKind"],
-      );
-
-  @override
-  void crateMultimintDepositEventAutoAccessorSetFederationId({
-    required DepositEvent that,
-    required FederationId federationId,
-  }) {
-    return handler.executeSync(
-      SyncTask(
-        callFfi: () {
-          final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-            that,
-            serializer,
-          );
-          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationId(
-            federationId,
-            serializer,
-          );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
-        },
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_unit,
-          decodeErrorData: null,
-        ),
-        constMeta:
-            kCrateMultimintDepositEventAutoAccessorSetFederationIdConstMeta,
-        argValues: [that, federationId],
-        apiImpl: this,
-      ),
-    );
-  }
-
-  TaskConstMeta
-  get kCrateMultimintDepositEventAutoAccessorSetFederationIdConstMeta =>
-      const TaskConstMeta(
-        debugName: "DepositEvent_auto_accessor_set_federation_id",
-        argNames: ["that", "federationId"],
-      );
-
-  @override
   ClientConfig crateDbFederationConfigAutoAccessorGetClientConfig({
     required FederationConfig that,
   }) {
@@ -856,7 +726,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
         },
         codec: SseCodec(
           decodeSuccessData:
@@ -889,7 +759,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
         },
         codec: SseCodec(
           decodeSuccessData:
@@ -921,7 +791,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -954,7 +824,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
         },
         codec: SseCodec(
           decodeSuccessData:
@@ -987,7 +857,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -1023,7 +893,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             clientConfig,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1060,7 +930,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             connector,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1093,7 +963,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_String(federationName, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1131,7 +1001,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             inviteCode,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1165,7 +1035,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_String(network, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1196,7 +1066,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
         },
         codec: SseCodec(
           decodeSuccessData:
@@ -1230,7 +1100,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -1263,7 +1133,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -1296,7 +1166,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -1334,7 +1204,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             federationId,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1369,7 +1239,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_String(federationName, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1404,7 +1274,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_String(inviteCode, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1439,7 +1309,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_String(network, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -1458,6 +1328,146 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(
         debugName: "FederationSelector_auto_accessor_set_network",
         argNames: ["that", "network"],
+      );
+
+  @override
+  MultimintEventKind crateMultimintMultimintEventAutoAccessorGetEventKind({
+    required MultimintEvent that,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+            that,
+            serializer,
+          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_multimint_event_kind,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kCrateMultimintMultimintEventAutoAccessorGetEventKindConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateMultimintMultimintEventAutoAccessorGetEventKindConstMeta =>
+      const TaskConstMeta(
+        debugName: "MultimintEvent_auto_accessor_get_event_kind",
+        argNames: ["that"],
+      );
+
+  @override
+  FederationId crateMultimintMultimintEventAutoAccessorGetFederationId({
+    required MultimintEvent that,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+            that,
+            serializer,
+          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationId,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kCrateMultimintMultimintEventAutoAccessorGetFederationIdConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateMultimintMultimintEventAutoAccessorGetFederationIdConstMeta =>
+      const TaskConstMeta(
+        debugName: "MultimintEvent_auto_accessor_get_federation_id",
+        argNames: ["that"],
+      );
+
+  @override
+  void crateMultimintMultimintEventAutoAccessorSetEventKind({
+    required MultimintEvent that,
+    required MultimintEventKind eventKind,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+            that,
+            serializer,
+          );
+          sse_encode_multimint_event_kind(eventKind, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kCrateMultimintMultimintEventAutoAccessorSetEventKindConstMeta,
+        argValues: [that, eventKind],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateMultimintMultimintEventAutoAccessorSetEventKindConstMeta =>
+      const TaskConstMeta(
+        debugName: "MultimintEvent_auto_accessor_set_event_kind",
+        argNames: ["that", "eventKind"],
+      );
+
+  @override
+  void crateMultimintMultimintEventAutoAccessorSetFederationId({
+    required MultimintEvent that,
+    required FederationId federationId,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+            that,
+            serializer,
+          );
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationId(
+            federationId,
+            serializer,
+          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kCrateMultimintMultimintEventAutoAccessorSetFederationIdConstMeta,
+        argValues: [that, federationId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateMultimintMultimintEventAutoAccessorSetFederationIdConstMeta =>
+      const TaskConstMeta(
+        debugName: "MultimintEvent_auto_accessor_set_federation_id",
+        argNames: ["that", "federationId"],
       );
 
   @override
@@ -1630,7 +1640,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<FinalReceiveOperationState> crateMultimintMultimintAwaitReceive({
+  Future<(FinalReceiveOperationState, BigInt)>
+  crateMultimintMultimintAwaitReceive({
     required Multimint that,
     required FederationId federationId,
     required OperationId operationId,
@@ -1660,7 +1671,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         },
         codec: SseCodec(
           decodeSuccessData:
-              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalReceiveOperationState,
+              sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_receive_operation_state_u_64,
           decodeErrorData: sse_decode_AnyhowException,
         ),
         constMeta: kCrateMultimintMultimintAwaitReceiveConstMeta,
@@ -2482,10 +2493,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               federationId,
               serializer,
             );
-            sse_encode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent_Sse(
-              sink,
-              serializer,
-            );
+            sse_encode_StreamSink_deposit_event_Sse(sink, serializer);
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
@@ -2495,7 +2503,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           },
           codec: SseCodec(
             decodeSuccessData: sse_decode_unit,
-            decodeErrorData: sse_decode_AnyhowException,
+            decodeErrorData: null,
           ),
           constMeta: kCrateMultimintMultimintSubscribeDepositsConstMeta,
           argValues: [that, federationId, sink],
@@ -2510,6 +2518,47 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(
         debugName: "Multimint_subscribe_deposits",
         argNames: ["that", "federationId", "sink"],
+      );
+
+  @override
+  Stream<LightningEvent> crateMultimintMultimintSubscribeLightningEvents({
+    required Multimint that,
+  }) {
+    final sink = RustStreamSink<LightningEvent>();
+    unawaited(
+      handler.executeNormal(
+        NormalTask(
+          callFfi: (port_) {
+            final serializer = SseSerializer(generalizedFrbRustBinding);
+            sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimint(
+              that,
+              serializer,
+            );
+            sse_encode_StreamSink_lightning_event_Sse(sink, serializer);
+            pdeCallFfi(
+              generalizedFrbRustBinding,
+              serializer,
+              funcId: 47,
+              port: port_,
+            );
+          },
+          codec: SseCodec(
+            decodeSuccessData: sse_decode_unit,
+            decodeErrorData: null,
+          ),
+          constMeta: kCrateMultimintMultimintSubscribeLightningEventsConstMeta,
+          argValues: [that, sink],
+          apiImpl: this,
+        ),
+      ),
+    );
+    return sink.stream;
+  }
+
+  TaskConstMeta get kCrateMultimintMultimintSubscribeLightningEventsConstMeta =>
+      const TaskConstMeta(
+        debugName: "Multimint_subscribe_lightning_events",
+        argNames: ["that", "sink"],
       );
 
   @override
@@ -2538,7 +2587,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 47,
+            funcId: 48,
             port: port_,
           );
         },
@@ -2582,7 +2631,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 48,
+            funcId: 49,
             port: port_,
           );
         },
@@ -2618,7 +2667,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 49,
+            funcId: 50,
             port: port_,
           );
         },
@@ -2657,7 +2706,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 50,
+            funcId: 51,
             port: port_,
           );
         },
@@ -2694,7 +2743,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 51,
+            funcId: 52,
             port: port_,
           );
         },
@@ -2728,7 +2777,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 52,
+            funcId: 53,
             port: port_,
           );
         },
@@ -2769,7 +2818,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 53,
+            funcId: 54,
             port: port_,
           );
         },
@@ -2802,7 +2851,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -2833,7 +2882,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56)!;
         },
         codec: SseCodec(
           decodeSuccessData:
@@ -2867,7 +2916,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -2900,7 +2949,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -2933,7 +2982,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -2965,7 +3014,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -2997,7 +3046,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -3031,7 +3080,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_String(about, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -3067,7 +3116,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             federationId,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -3102,7 +3151,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_String(federationName, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -3137,7 +3186,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_list_String(inviteCodes, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -3172,7 +3221,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_list_String(modules, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -3206,7 +3255,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_String(network, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -3240,7 +3289,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             serializer,
           );
           sse_encode_opt_String(picture, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -3269,7 +3318,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 68,
+            funcId: 69,
             port: port_,
           );
         },
@@ -3302,7 +3351,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 69,
+            funcId: 70,
             port: port_,
           );
         },
@@ -3343,7 +3392,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 70,
+            funcId: 71,
             port: port_,
           );
         },
@@ -3384,7 +3433,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 71,
+            funcId: 72,
             port: port_,
           );
         },
@@ -3406,7 +3455,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
-  Future<FinalReceiveOperationState> crateAwaitReceive({
+  Future<(FinalReceiveOperationState, BigInt)> crateAwaitReceive({
     required FederationId federationId,
     required OperationId operationId,
   }) {
@@ -3425,13 +3474,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 72,
+            funcId: 73,
             port: port_,
           );
         },
         codec: SseCodec(
           decodeSuccessData:
-              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalReceiveOperationState,
+              sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_receive_operation_state_u_64,
           decodeErrorData: sse_decode_AnyhowException,
         ),
         constMeta: kCrateAwaitReceiveConstMeta,
@@ -3466,7 +3515,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 73,
+            funcId: 74,
             port: port_,
           );
         },
@@ -3500,7 +3549,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 74,
+            funcId: 75,
             port: port_,
           );
         },
@@ -3532,7 +3581,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 75,
+            funcId: 76,
             port: port_,
           );
         },
@@ -3563,7 +3612,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 76,
+            funcId: 77,
             port: port_,
           );
         },
@@ -3592,7 +3641,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 77,
+            funcId: 78,
             port: port_,
           );
         },
@@ -3623,7 +3672,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 78,
+            funcId: 79,
             port: port_,
           );
         },
@@ -3653,7 +3702,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 79,
+            funcId: 80,
             port: port_,
           );
         },
@@ -3681,7 +3730,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 80,
+            funcId: 81,
             port: port_,
           );
         },
@@ -3709,7 +3758,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 81,
+            funcId: 82,
             port: port_,
           );
         },
@@ -3736,7 +3785,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 82,
+            funcId: 83,
             port: port_,
           );
         },
@@ -3768,7 +3817,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 83,
+            funcId: 84,
             port: port_,
           );
         },
@@ -3801,7 +3850,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 84,
+            funcId: 85,
             port: port_,
           );
         },
@@ -3833,7 +3882,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 85,
+            funcId: 86,
             port: port_,
           );
         },
@@ -3868,7 +3917,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 86,
+            funcId: 87,
             port: port_,
           );
         },
@@ -3905,7 +3954,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 87,
+            funcId: 88,
             port: port_,
           );
         },
@@ -3942,7 +3991,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 88,
+            funcId: 89,
             port: port_,
           );
         },
@@ -3985,7 +4034,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 89,
+            funcId: 90,
             port: port_,
           );
         },
@@ -4031,7 +4080,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 90,
+            funcId: 91,
             port: port_,
           );
         },
@@ -4066,7 +4115,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 91,
+            funcId: 92,
             port: port_,
           );
         },
@@ -4104,7 +4153,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 92,
+            funcId: 93,
             port: port_,
           );
         },
@@ -4145,7 +4194,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 93,
+            funcId: 94,
             port: port_,
           );
         },
@@ -4183,7 +4232,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 94,
+            funcId: 95,
             port: port_,
           );
         },
@@ -4223,7 +4272,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 95,
+            funcId: 96,
             port: port_,
           );
         },
@@ -4261,7 +4310,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 96,
+            funcId: 97,
             port: port_,
           );
         },
@@ -4291,10 +4340,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         NormalTask(
           callFfi: (port_) {
             final serializer = SseSerializer(generalizedFrbRustBinding);
-            sse_encode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent_Sse(
-              sink,
-              serializer,
-            );
+            sse_encode_StreamSink_deposit_event_Sse(sink, serializer);
             sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationId(
               federationId,
               serializer,
@@ -4302,13 +4348,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
-              funcId: 97,
+              funcId: 98,
               port: port_,
             );
           },
           codec: SseCodec(
             decodeSuccessData: sse_decode_unit,
-            decodeErrorData: sse_decode_AnyhowException,
+            decodeErrorData: null,
           ),
           constMeta: kCrateSubscribeDepositsConstMeta,
           argValues: [sink, federationId],
@@ -4323,6 +4369,41 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     debugName: "subscribe_deposits",
     argNames: ["sink", "federationId"],
   );
+
+  @override
+  Stream<LightningEvent> crateSubscribeLightningEvents() {
+    final sink = RustStreamSink<LightningEvent>();
+    unawaited(
+      handler.executeNormal(
+        NormalTask(
+          callFfi: (port_) {
+            final serializer = SseSerializer(generalizedFrbRustBinding);
+            sse_encode_StreamSink_lightning_event_Sse(sink, serializer);
+            pdeCallFfi(
+              generalizedFrbRustBinding,
+              serializer,
+              funcId: 99,
+              port: port_,
+            );
+          },
+          codec: SseCodec(
+            decodeSuccessData: sse_decode_unit,
+            decodeErrorData: null,
+          ),
+          constMeta: kCrateSubscribeLightningEventsConstMeta,
+          argValues: [sink],
+          apiImpl: this,
+        ),
+      ),
+    );
+    return sink.stream;
+  }
+
+  TaskConstMeta get kCrateSubscribeLightningEventsConstMeta =>
+      const TaskConstMeta(
+        debugName: "subscribe_lightning_events",
+        argNames: ["sink"],
+      );
 
   @override
   Future<List<Transaction>> crateTransactions({
@@ -4345,7 +4426,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 98,
+            funcId: 100,
             port: port_,
           );
         },
@@ -4377,7 +4458,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 99,
+            funcId: 101,
             port: port_,
           );
         },
@@ -4408,7 +4489,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 100,
+            funcId: 102,
             port: port_,
           );
         },
@@ -4435,7 +4516,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 101,
+            funcId: 103,
             port: port_,
           );
         },
@@ -4494,14 +4575,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase;
 
   RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_DepositEvent =>
-      wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_DepositEvent =>
-      wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent;
-
-  RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_FederationConfig =>
       wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig;
 
@@ -4556,6 +4629,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RustArcDecrementStrongCountFnType
   get rust_arc_decrement_strong_count_Multimint =>
       wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimint;
+
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_MultimintEvent =>
+      wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_MultimintEvent =>
+      wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_NostrClient =>
@@ -4657,15 +4738,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  DepositEvent
-  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return DepositEventImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   FederationConfig
   dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     dynamic raw,
@@ -4733,6 +4805,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MultimintEvent
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return MultimintEventImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   NostrClient
   dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     dynamic raw,
@@ -4789,15 +4870,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  DepositEvent
-  dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return DepositEventImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   FederationConfig
   dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     dynamic raw,
@@ -4825,6 +4897,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MultimintEvent
+  dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return MultimintEventImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   NostrClient
   dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     dynamic raw,
@@ -4840,15 +4921,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return PublicFederationImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  DepositEvent
-  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return DepositEventImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -4885,6 +4957,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return MultimintImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  MultimintEvent
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return MultimintEventImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -4948,15 +5029,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return DatabaseImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
-  DepositEvent
-  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return DepositEventImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -5027,6 +5099,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MultimintEvent
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return MultimintEventImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   NostrClient
   dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     dynamic raw,
@@ -5083,8 +5164,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RustStreamSink<DepositEvent>
-  dco_decode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent_Sse(
+  RustStreamSink<DepositEvent> dco_decode_StreamSink_deposit_event_Sse(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    throw UnimplementedError();
+  }
+
+  @protected
+  RustStreamSink<LightningEvent> dco_decode_StreamSink_lightning_event_Sse(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -5136,6 +5224,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  DepositEvent dco_decode_box_autoadd_deposit_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_deposit_event(raw);
+  }
+
+  @protected
+  InvoicePaidEvent dco_decode_box_autoadd_invoice_paid_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_invoice_paid_event(raw);
+  }
+
+  @protected
+  LightningEvent dco_decode_box_autoadd_lightning_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_lightning_event(raw);
+  }
+
+  @protected
   MempoolEvent dco_decode_box_autoadd_mempool_event(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_mempool_event(raw);
@@ -5178,23 +5284,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  DepositEventKind dco_decode_deposit_event_kind(dynamic raw) {
+  DepositEvent dco_decode_deposit_event(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     switch (raw[0]) {
       case 0:
-        return DepositEventKind_Mempool(
+        return DepositEvent_Mempool(
           dco_decode_box_autoadd_mempool_event(raw[1]),
         );
       case 1:
-        return DepositEventKind_AwaitingConfs(
+        return DepositEvent_AwaitingConfs(
           dco_decode_box_autoadd_awaiting_confs_event(raw[1]),
         );
       case 2:
-        return DepositEventKind_Confirmed(
+        return DepositEvent_Confirmed(
           dco_decode_box_autoadd_confirmed_event(raw[1]),
         );
       case 3:
-        return DepositEventKind_Claimed(
+        return DepositEvent_Claimed(
           dco_decode_box_autoadd_claimed_event(raw[1]),
         );
       default:
@@ -5225,6 +5331,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       name: dco_decode_String(arr[0]),
       version: dco_decode_opt_String(arr[1]),
     );
+  }
+
+  @protected
+  InvoicePaidEvent dco_decode_invoice_paid_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return InvoicePaidEvent(amountMsats: dco_decode_u_64(arr[0]));
+  }
+
+  @protected
+  LightningEvent dco_decode_lightning_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return LightningEvent_InvoicePaid(
+          dco_decode_box_autoadd_invoice_paid_event(raw[1]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
   }
 
   @protected
@@ -5313,6 +5441,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 2:
         return MultimintCreation_NewFromMnemonic(
           words: dco_decode_list_String(raw[1]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  MultimintEventKind dco_decode_multimint_event_kind(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return MultimintEventKind_Deposit(
+          dco_decode_box_autoadd_deposit_event(raw[1]),
+        );
+      case 1:
+        return MultimintEventKind_Lightning(
+          dco_decode_box_autoadd_lightning_event(raw[1]),
         );
       default:
         throw Exception("unreachable");
@@ -5420,6 +5565,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         arr[0],
       ),
       dco_decode_nwc_connection_info(arr[1]),
+    );
+  }
+
+  @protected
+  (FinalReceiveOperationState, BigInt)
+  dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_receive_operation_state_u_64(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) {
+      throw Exception('Expected 2 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalReceiveOperationState(
+        arr[0],
+      ),
+      dco_decode_u_64(arr[1]),
     );
   }
 
@@ -5630,18 +5793,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  DepositEvent
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return DepositEventImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
   FederationConfig
   sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     SseDeserializer deserializer,
@@ -5726,6 +5877,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MultimintEvent
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MultimintEventImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
   NostrClient
   sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     SseDeserializer deserializer,
@@ -5798,18 +5961,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  DepositEvent
-  sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return DepositEventImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
   FederationConfig
   sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     SseDeserializer deserializer,
@@ -5846,6 +5997,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MultimintEvent
+  sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MultimintEventImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
   NostrClient
   sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     SseDeserializer deserializer,
@@ -5864,18 +6027,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return PublicFederationImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
-  DepositEvent
-  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return DepositEventImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -5924,6 +6075,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return MultimintImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  MultimintEvent
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MultimintEventImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -6014,18 +6177,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  DepositEvent
-  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return DepositEventImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
   FederationConfig
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     SseDeserializer deserializer,
@@ -6110,6 +6261,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MultimintEvent
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MultimintEventImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
   NostrClient
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     SseDeserializer deserializer,
@@ -6182,8 +6345,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RustStreamSink<DepositEvent>
-  sse_decode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent_Sse(
+  RustStreamSink<DepositEvent> sse_decode_StreamSink_deposit_event_Sse(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    throw UnimplementedError('Unreachable ()');
+  }
+
+  @protected
+  RustStreamSink<LightningEvent> sse_decode_StreamSink_lightning_event_Sse(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -6245,6 +6415,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  DepositEvent sse_decode_box_autoadd_deposit_event(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_deposit_event(deserializer));
+  }
+
+  @protected
+  InvoicePaidEvent sse_decode_box_autoadd_invoice_paid_event(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_invoice_paid_event(deserializer));
+  }
+
+  @protected
+  LightningEvent sse_decode_box_autoadd_lightning_event(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_lightning_event(deserializer));
+  }
+
+  @protected
   MempoolEvent sse_decode_box_autoadd_mempool_event(
     SseDeserializer deserializer,
   ) {
@@ -6283,25 +6477,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  DepositEventKind sse_decode_deposit_event_kind(SseDeserializer deserializer) {
+  DepositEvent sse_decode_deposit_event(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
     var tag_ = sse_decode_i_32(deserializer);
     switch (tag_) {
       case 0:
         var var_field0 = sse_decode_box_autoadd_mempool_event(deserializer);
-        return DepositEventKind_Mempool(var_field0);
+        return DepositEvent_Mempool(var_field0);
       case 1:
         var var_field0 = sse_decode_box_autoadd_awaiting_confs_event(
           deserializer,
         );
-        return DepositEventKind_AwaitingConfs(var_field0);
+        return DepositEvent_AwaitingConfs(var_field0);
       case 2:
         var var_field0 = sse_decode_box_autoadd_confirmed_event(deserializer);
-        return DepositEventKind_Confirmed(var_field0);
+        return DepositEvent_Confirmed(var_field0);
       case 3:
         var var_field0 = sse_decode_box_autoadd_claimed_event(deserializer);
-        return DepositEventKind_Claimed(var_field0);
+        return DepositEvent_Claimed(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -6326,6 +6520,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_name = sse_decode_String(deserializer);
     var var_version = sse_decode_opt_String(deserializer);
     return Guardian(name: var_name, version: var_version);
+  }
+
+  @protected
+  InvoicePaidEvent sse_decode_invoice_paid_event(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_amountMsats = sse_decode_u_64(deserializer);
+    return InvoicePaidEvent(amountMsats: var_amountMsats);
+  }
+
+  @protected
+  LightningEvent sse_decode_lightning_event(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_field0 = sse_decode_box_autoadd_invoice_paid_event(
+          deserializer,
+        );
+        return LightningEvent_InvoicePaid(var_field0);
+      default:
+        throw UnimplementedError('');
+    }
   }
 
   @protected
@@ -6457,6 +6674,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MultimintEventKind sse_decode_multimint_event_kind(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_field0 = sse_decode_box_autoadd_deposit_event(deserializer);
+        return MultimintEventKind_Deposit(var_field0);
+      case 1:
+        var var_field0 = sse_decode_box_autoadd_lightning_event(deserializer);
+        return MultimintEventKind_Lightning(var_field0);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
   NWCConnectionInfo sse_decode_nwc_connection_info(
     SseDeserializer deserializer,
   ) {
@@ -6567,6 +6803,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           deserializer,
         );
     var var_field1 = sse_decode_nwc_connection_info(deserializer);
+    return (var_field0, var_field1);
+  }
+
+  @protected
+  (FinalReceiveOperationState, BigInt)
+  sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_receive_operation_state_u_64(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 =
+        sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalReceiveOperationState(
+          deserializer,
+        );
+    var var_field1 = sse_decode_u_64(deserializer);
     return (var_field0, var_field1);
   }
 
@@ -6771,19 +7021,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    DepositEvent self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as DepositEventImpl).frbInternalSseEncode(move: true),
-      serializer,
-    );
-  }
-
-  @protected
-  void
   sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     FederationConfig self,
     SseSerializer serializer,
@@ -6875,6 +7112,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    MultimintEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as MultimintEventImpl).frbInternalSseEncode(move: true),
+      serializer,
+    );
+  }
+
+  @protected
+  void
   sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     NostrClient self,
     SseSerializer serializer,
@@ -6953,19 +7203,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-  sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    DepositEvent self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as DepositEventImpl).frbInternalSseEncode(move: false),
-      serializer,
-    );
-  }
-
-  @protected
-  void
   sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     FederationConfig self,
     SseSerializer serializer,
@@ -7005,6 +7242,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+  sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    MultimintEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as MultimintEventImpl).frbInternalSseEncode(move: false),
+      serializer,
+    );
+  }
+
+  @protected
+  void
   sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     NostrClient self,
     SseSerializer serializer,
@@ -7025,19 +7275,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as PublicFederationImpl).frbInternalSseEncode(move: false),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    DepositEvent self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as DepositEventImpl).frbInternalSseEncode(move: false),
       serializer,
     );
   }
@@ -7090,6 +7327,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as MultimintImpl).frbInternalSseEncode(move: false),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    MultimintEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as MultimintEventImpl).frbInternalSseEncode(move: false),
       serializer,
     );
   }
@@ -7187,19 +7437,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    DepositEvent self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as DepositEventImpl).frbInternalSseEncode(move: null),
-      serializer,
-    );
-  }
-
-  @protected
-  void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     FederationConfig self,
     SseSerializer serializer,
@@ -7291,6 +7528,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent(
+    MultimintEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as MultimintEventImpl).frbInternalSseEncode(move: null),
+      serializer,
+    );
+  }
+
+  @protected
+  void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerNostrClient(
     NostrClient self,
     SseSerializer serializer,
@@ -7368,8 +7618,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void
-  sse_encode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent_Sse(
+  void sse_encode_StreamSink_deposit_event_Sse(
     RustStreamSink<DepositEvent> self,
     SseSerializer serializer,
   ) {
@@ -7377,8 +7626,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(
       self.setupAndSerialize(
         codec: SseCodec(
-          decodeSuccessData:
-              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent,
+          decodeSuccessData: sse_decode_deposit_event,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+      ),
+      serializer,
+    );
+  }
+
+  @protected
+  void sse_encode_StreamSink_lightning_event_Sse(
+    RustStreamSink<LightningEvent> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(
+      self.setupAndSerialize(
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_lightning_event,
           decodeErrorData: sse_decode_AnyhowException,
         ),
       ),
@@ -7438,6 +7703,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_deposit_event(
+    DepositEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_deposit_event(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_invoice_paid_event(
+    InvoicePaidEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_invoice_paid_event(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_lightning_event(
+    LightningEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_lightning_event(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_mempool_event(
     MempoolEvent self,
     SseSerializer serializer,
@@ -7479,22 +7771,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_deposit_event_kind(
-    DepositEventKind self,
-    SseSerializer serializer,
-  ) {
+  void sse_encode_deposit_event(DepositEvent self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     switch (self) {
-      case DepositEventKind_Mempool(field0: final field0):
+      case DepositEvent_Mempool(field0: final field0):
         sse_encode_i_32(0, serializer);
         sse_encode_box_autoadd_mempool_event(field0, serializer);
-      case DepositEventKind_AwaitingConfs(field0: final field0):
+      case DepositEvent_AwaitingConfs(field0: final field0):
         sse_encode_i_32(1, serializer);
         sse_encode_box_autoadd_awaiting_confs_event(field0, serializer);
-      case DepositEventKind_Confirmed(field0: final field0):
+      case DepositEvent_Confirmed(field0: final field0):
         sse_encode_i_32(2, serializer);
         sse_encode_box_autoadd_confirmed_event(field0, serializer);
-      case DepositEventKind_Claimed(field0: final field0):
+      case DepositEvent_Claimed(field0: final field0):
         sse_encode_i_32(3, serializer);
         sse_encode_box_autoadd_claimed_event(field0, serializer);
     }
@@ -7516,6 +7805,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.name, serializer);
     sse_encode_opt_String(self.version, serializer);
+  }
+
+  @protected
+  void sse_encode_invoice_paid_event(
+    InvoicePaidEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_64(self.amountMsats, serializer);
+  }
+
+  @protected
+  void sse_encode_lightning_event(
+    LightningEvent self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case LightningEvent_InvoicePaid(field0: final field0):
+        sse_encode_i_32(0, serializer);
+        sse_encode_box_autoadd_invoice_paid_event(field0, serializer);
+    }
   }
 
   @protected
@@ -7631,6 +7942,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_multimint_event_kind(
+    MultimintEventKind self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case MultimintEventKind_Deposit(field0: final field0):
+        sse_encode_i_32(0, serializer);
+        sse_encode_box_autoadd_deposit_event(field0, serializer);
+      case MultimintEventKind_Lightning(field0: final field0):
+        sse_encode_i_32(1, serializer);
+        sse_encode_box_autoadd_lightning_event(field0, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_nwc_connection_info(
     NWCConnectionInfo self,
     SseSerializer serializer,
@@ -7732,6 +8059,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       serializer,
     );
     sse_encode_nwc_connection_info(self.$2, serializer);
+  }
+
+  @protected
+  void
+  sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_receive_operation_state_u_64(
+    (FinalReceiveOperationState, BigInt) self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalReceiveOperationState(
+      self.$1,
+      serializer,
+    );
+    sse_encode_u_64(self.$2, serializer);
   }
 
   @protected
@@ -7953,44 +8294,6 @@ class DatabaseImpl extends RustOpaque implements Database {
     rustArcDecrementStrongCountPtr:
         RustLib.instance.api.rust_arc_decrement_strong_count_DatabasePtr,
   );
-}
-
-@sealed
-class DepositEventImpl extends RustOpaque implements DepositEvent {
-  // Not to be used by end users
-  DepositEventImpl.frbInternalDcoDecode(List<dynamic> wire)
-    : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  DepositEventImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
-    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_DepositEvent,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_DepositEvent,
-    rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_DepositEventPtr,
-  );
-
-  DepositEventKind get eventKind => RustLib.instance.api
-      .crateMultimintDepositEventAutoAccessorGetEventKind(that: this);
-
-  FederationId get federationId => RustLib.instance.api
-      .crateMultimintDepositEventAutoAccessorGetFederationId(that: this);
-
-  set eventKind(DepositEventKind eventKind) =>
-      RustLib.instance.api.crateMultimintDepositEventAutoAccessorSetEventKind(
-        that: this,
-        eventKind: eventKind,
-      );
-
-  set federationId(FederationId federationId) => RustLib.instance.api
-      .crateMultimintDepositEventAutoAccessorSetFederationId(
-        that: this,
-        federationId: federationId,
-      );
 }
 
 @sealed
@@ -8231,6 +8534,44 @@ class InviteCodeImpl extends RustOpaque implements InviteCode {
 }
 
 @sealed
+class MultimintEventImpl extends RustOpaque implements MultimintEvent {
+  // Not to be used by end users
+  MultimintEventImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  MultimintEventImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RustLib.instance.api.rust_arc_increment_strong_count_MultimintEvent,
+    rustArcDecrementStrongCount:
+        RustLib.instance.api.rust_arc_decrement_strong_count_MultimintEvent,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_MultimintEventPtr,
+  );
+
+  MultimintEventKind get eventKind => RustLib.instance.api
+      .crateMultimintMultimintEventAutoAccessorGetEventKind(that: this);
+
+  FederationId get federationId => RustLib.instance.api
+      .crateMultimintMultimintEventAutoAccessorGetFederationId(that: this);
+
+  set eventKind(MultimintEventKind eventKind) =>
+      RustLib.instance.api.crateMultimintMultimintEventAutoAccessorSetEventKind(
+        that: this,
+        eventKind: eventKind,
+      );
+
+  set federationId(FederationId federationId) => RustLib.instance.api
+      .crateMultimintMultimintEventAutoAccessorSetFederationId(
+        that: this,
+        federationId: federationId,
+      );
+}
+
+@sealed
 class MultimintImpl extends RustOpaque implements Multimint {
   // Not to be used by end users
   MultimintImpl.frbInternalDcoDecode(List<dynamic> wire)
@@ -8276,7 +8617,7 @@ class MultimintImpl extends RustOpaque implements Multimint {
     operationId: operationId,
   );
 
-  Future<FinalReceiveOperationState> awaitReceive({
+  Future<(FinalReceiveOperationState, BigInt)> awaitReceive({
     required FederationId federationId,
     required OperationId operationId,
   }) => RustLib.instance.api.crateMultimintMultimintAwaitReceive(
@@ -8430,6 +8771,9 @@ class MultimintImpl extends RustOpaque implements Multimint {
     that: this,
     federationId: federationId,
   );
+
+  Stream<LightningEvent> subscribeLightningEvents() => RustLib.instance.api
+      .crateMultimintMultimintSubscribeLightningEvents(that: this);
 
   Future<List<Transaction>> transactions({
     required FederationId federationId,

@@ -98,7 +98,7 @@ Future<(FinalSendOperationState, String)> awaitSend({
   operationId: operationId,
 );
 
-Future<FinalReceiveOperationState> awaitReceive({
+Future<(FinalReceiveOperationState, BigInt)> awaitReceive({
   required FederationId federationId,
   required OperationId operationId,
 }) => RustLib.instance.api.crateAwaitReceive(
@@ -213,6 +213,9 @@ Future<NWCConnectionInfo> setNwcConnectionInfo({
 );
 
 Future<List<String>> getRelays() => RustLib.instance.api.crateGetRelays();
+
+Stream<LightningEvent> subscribeLightningEvents() =>
+    RustLib.instance.api.crateSubscribeLightningEvents();
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientConfig>>
 abstract class ClientConfig implements RustOpaqueInterface {}

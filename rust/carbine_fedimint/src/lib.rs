@@ -10,7 +10,7 @@ use fedimint_core::config::ClientConfig;
 /* AUTO INJECTED BY flutter_rust_bridge. This line may not be accurate, and you can change it according to your needs. */
 use flutter_rust_bridge::frb;
 use multimint::{
-    FederationMeta, FederationSelector, Multimint, MultimintCreation, PaymentPreview, Transaction,
+    FederationMeta, FederationSelector, LightningEvent, Multimint, MultimintCreation, PaymentPreview, Transaction
 };
 use nostr::{NWCConnectionInfo, NostrClient, PublicFederation};
 use tokio::sync::{OnceCell, RwLock};
@@ -262,7 +262,7 @@ pub async fn await_send(
 pub async fn await_receive(
     federation_id: &FederationId,
     operation_id: OperationId,
-) -> anyhow::Result<FinalReceiveOperationState> {
+) -> anyhow::Result<(FinalReceiveOperationState, u64)> {
     let multimint = get_multimint().await;
     multimint.await_receive(federation_id, operation_id).await
 }
@@ -412,7 +412,7 @@ pub async fn word_list() -> Vec<String> {
 pub async fn subscribe_deposits(
     sink: StreamSink<DepositEvent>,
     federation_id: FederationId,
-) -> anyhow::Result<()> {
+) {
     let multimint = get_multimint().await;
     multimint.subscribe_deposits(federation_id, sink).await
 }
@@ -456,4 +456,12 @@ pub async fn get_relays() -> Vec<String> {
     let nostr_client = get_nostr_client().await;
     let nostr = nostr_client.read().await;
     nostr.get_relays().await
+}
+
+#[frb]
+pub async fn subscribe_lightning_events(
+    sink: StreamSink<LightningEvent>,
+) {
+    let multimint = get_multimint().await;
+    multimint.subscribe_lightning_events(sink).await
 }

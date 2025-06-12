@@ -13,7 +13,7 @@ part of 'multimint.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$DepositEventKind {
+mixin _$DepositEvent {
 
  Object get field0;
 
@@ -21,7 +21,7 @@ mixin _$DepositEventKind {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEventKind&&const DeepCollectionEquality().equals(other.field0, field0));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEvent&&const DeepCollectionEquality().equals(other.field0, field0));
 }
 
 
@@ -30,38 +30,38 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'DepositEventKind(field0: $field0)';
+  return 'DepositEvent(field0: $field0)';
 }
 
 
 }
 
 /// @nodoc
-class $DepositEventKindCopyWith<$Res>  {
-$DepositEventKindCopyWith(DepositEventKind _, $Res Function(DepositEventKind) __);
+class $DepositEventCopyWith<$Res>  {
+$DepositEventCopyWith(DepositEvent _, $Res Function(DepositEvent) __);
 }
 
 
 /// @nodoc
 
 
-class DepositEventKind_Mempool extends DepositEventKind {
-  const DepositEventKind_Mempool(this.field0): super._();
+class DepositEvent_Mempool extends DepositEvent {
+  const DepositEvent_Mempool(this.field0): super._();
   
 
 @override final  MempoolEvent field0;
 
-/// Create a copy of DepositEventKind
+/// Create a copy of DepositEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$DepositEventKind_MempoolCopyWith<DepositEventKind_Mempool> get copyWith => _$DepositEventKind_MempoolCopyWithImpl<DepositEventKind_Mempool>(this, _$identity);
+$DepositEvent_MempoolCopyWith<DepositEvent_Mempool> get copyWith => _$DepositEvent_MempoolCopyWithImpl<DepositEvent_Mempool>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEventKind_Mempool&&(identical(other.field0, field0) || other.field0 == field0));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEvent_Mempool&&(identical(other.field0, field0) || other.field0 == field0));
 }
 
 
@@ -70,15 +70,15 @@ int get hashCode => Object.hash(runtimeType,field0);
 
 @override
 String toString() {
-  return 'DepositEventKind.mempool(field0: $field0)';
+  return 'DepositEvent.mempool(field0: $field0)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $DepositEventKind_MempoolCopyWith<$Res> implements $DepositEventKindCopyWith<$Res> {
-  factory $DepositEventKind_MempoolCopyWith(DepositEventKind_Mempool value, $Res Function(DepositEventKind_Mempool) _then) = _$DepositEventKind_MempoolCopyWithImpl;
+abstract mixin class $DepositEvent_MempoolCopyWith<$Res> implements $DepositEventCopyWith<$Res> {
+  factory $DepositEvent_MempoolCopyWith(DepositEvent_Mempool value, $Res Function(DepositEvent_Mempool) _then) = _$DepositEvent_MempoolCopyWithImpl;
 @useResult
 $Res call({
  MempoolEvent field0
@@ -89,17 +89,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$DepositEventKind_MempoolCopyWithImpl<$Res>
-    implements $DepositEventKind_MempoolCopyWith<$Res> {
-  _$DepositEventKind_MempoolCopyWithImpl(this._self, this._then);
+class _$DepositEvent_MempoolCopyWithImpl<$Res>
+    implements $DepositEvent_MempoolCopyWith<$Res> {
+  _$DepositEvent_MempoolCopyWithImpl(this._self, this._then);
 
-  final DepositEventKind_Mempool _self;
-  final $Res Function(DepositEventKind_Mempool) _then;
+  final DepositEvent_Mempool _self;
+  final $Res Function(DepositEvent_Mempool) _then;
 
-/// Create a copy of DepositEventKind
+/// Create a copy of DepositEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
-  return _then(DepositEventKind_Mempool(
+  return _then(DepositEvent_Mempool(
 null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
 as MempoolEvent,
   ));
@@ -111,23 +111,23 @@ as MempoolEvent,
 /// @nodoc
 
 
-class DepositEventKind_AwaitingConfs extends DepositEventKind {
-  const DepositEventKind_AwaitingConfs(this.field0): super._();
+class DepositEvent_AwaitingConfs extends DepositEvent {
+  const DepositEvent_AwaitingConfs(this.field0): super._();
   
 
 @override final  AwaitingConfsEvent field0;
 
-/// Create a copy of DepositEventKind
+/// Create a copy of DepositEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$DepositEventKind_AwaitingConfsCopyWith<DepositEventKind_AwaitingConfs> get copyWith => _$DepositEventKind_AwaitingConfsCopyWithImpl<DepositEventKind_AwaitingConfs>(this, _$identity);
+$DepositEvent_AwaitingConfsCopyWith<DepositEvent_AwaitingConfs> get copyWith => _$DepositEvent_AwaitingConfsCopyWithImpl<DepositEvent_AwaitingConfs>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEventKind_AwaitingConfs&&(identical(other.field0, field0) || other.field0 == field0));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEvent_AwaitingConfs&&(identical(other.field0, field0) || other.field0 == field0));
 }
 
 
@@ -136,15 +136,15 @@ int get hashCode => Object.hash(runtimeType,field0);
 
 @override
 String toString() {
-  return 'DepositEventKind.awaitingConfs(field0: $field0)';
+  return 'DepositEvent.awaitingConfs(field0: $field0)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $DepositEventKind_AwaitingConfsCopyWith<$Res> implements $DepositEventKindCopyWith<$Res> {
-  factory $DepositEventKind_AwaitingConfsCopyWith(DepositEventKind_AwaitingConfs value, $Res Function(DepositEventKind_AwaitingConfs) _then) = _$DepositEventKind_AwaitingConfsCopyWithImpl;
+abstract mixin class $DepositEvent_AwaitingConfsCopyWith<$Res> implements $DepositEventCopyWith<$Res> {
+  factory $DepositEvent_AwaitingConfsCopyWith(DepositEvent_AwaitingConfs value, $Res Function(DepositEvent_AwaitingConfs) _then) = _$DepositEvent_AwaitingConfsCopyWithImpl;
 @useResult
 $Res call({
  AwaitingConfsEvent field0
@@ -155,17 +155,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$DepositEventKind_AwaitingConfsCopyWithImpl<$Res>
-    implements $DepositEventKind_AwaitingConfsCopyWith<$Res> {
-  _$DepositEventKind_AwaitingConfsCopyWithImpl(this._self, this._then);
+class _$DepositEvent_AwaitingConfsCopyWithImpl<$Res>
+    implements $DepositEvent_AwaitingConfsCopyWith<$Res> {
+  _$DepositEvent_AwaitingConfsCopyWithImpl(this._self, this._then);
 
-  final DepositEventKind_AwaitingConfs _self;
-  final $Res Function(DepositEventKind_AwaitingConfs) _then;
+  final DepositEvent_AwaitingConfs _self;
+  final $Res Function(DepositEvent_AwaitingConfs) _then;
 
-/// Create a copy of DepositEventKind
+/// Create a copy of DepositEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
-  return _then(DepositEventKind_AwaitingConfs(
+  return _then(DepositEvent_AwaitingConfs(
 null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
 as AwaitingConfsEvent,
   ));
@@ -177,23 +177,23 @@ as AwaitingConfsEvent,
 /// @nodoc
 
 
-class DepositEventKind_Confirmed extends DepositEventKind {
-  const DepositEventKind_Confirmed(this.field0): super._();
+class DepositEvent_Confirmed extends DepositEvent {
+  const DepositEvent_Confirmed(this.field0): super._();
   
 
 @override final  ConfirmedEvent field0;
 
-/// Create a copy of DepositEventKind
+/// Create a copy of DepositEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$DepositEventKind_ConfirmedCopyWith<DepositEventKind_Confirmed> get copyWith => _$DepositEventKind_ConfirmedCopyWithImpl<DepositEventKind_Confirmed>(this, _$identity);
+$DepositEvent_ConfirmedCopyWith<DepositEvent_Confirmed> get copyWith => _$DepositEvent_ConfirmedCopyWithImpl<DepositEvent_Confirmed>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEventKind_Confirmed&&(identical(other.field0, field0) || other.field0 == field0));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEvent_Confirmed&&(identical(other.field0, field0) || other.field0 == field0));
 }
 
 
@@ -202,15 +202,15 @@ int get hashCode => Object.hash(runtimeType,field0);
 
 @override
 String toString() {
-  return 'DepositEventKind.confirmed(field0: $field0)';
+  return 'DepositEvent.confirmed(field0: $field0)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $DepositEventKind_ConfirmedCopyWith<$Res> implements $DepositEventKindCopyWith<$Res> {
-  factory $DepositEventKind_ConfirmedCopyWith(DepositEventKind_Confirmed value, $Res Function(DepositEventKind_Confirmed) _then) = _$DepositEventKind_ConfirmedCopyWithImpl;
+abstract mixin class $DepositEvent_ConfirmedCopyWith<$Res> implements $DepositEventCopyWith<$Res> {
+  factory $DepositEvent_ConfirmedCopyWith(DepositEvent_Confirmed value, $Res Function(DepositEvent_Confirmed) _then) = _$DepositEvent_ConfirmedCopyWithImpl;
 @useResult
 $Res call({
  ConfirmedEvent field0
@@ -221,17 +221,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$DepositEventKind_ConfirmedCopyWithImpl<$Res>
-    implements $DepositEventKind_ConfirmedCopyWith<$Res> {
-  _$DepositEventKind_ConfirmedCopyWithImpl(this._self, this._then);
+class _$DepositEvent_ConfirmedCopyWithImpl<$Res>
+    implements $DepositEvent_ConfirmedCopyWith<$Res> {
+  _$DepositEvent_ConfirmedCopyWithImpl(this._self, this._then);
 
-  final DepositEventKind_Confirmed _self;
-  final $Res Function(DepositEventKind_Confirmed) _then;
+  final DepositEvent_Confirmed _self;
+  final $Res Function(DepositEvent_Confirmed) _then;
 
-/// Create a copy of DepositEventKind
+/// Create a copy of DepositEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
-  return _then(DepositEventKind_Confirmed(
+  return _then(DepositEvent_Confirmed(
 null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
 as ConfirmedEvent,
   ));
@@ -243,23 +243,23 @@ as ConfirmedEvent,
 /// @nodoc
 
 
-class DepositEventKind_Claimed extends DepositEventKind {
-  const DepositEventKind_Claimed(this.field0): super._();
+class DepositEvent_Claimed extends DepositEvent {
+  const DepositEvent_Claimed(this.field0): super._();
   
 
 @override final  ClaimedEvent field0;
 
-/// Create a copy of DepositEventKind
+/// Create a copy of DepositEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$DepositEventKind_ClaimedCopyWith<DepositEventKind_Claimed> get copyWith => _$DepositEventKind_ClaimedCopyWithImpl<DepositEventKind_Claimed>(this, _$identity);
+$DepositEvent_ClaimedCopyWith<DepositEvent_Claimed> get copyWith => _$DepositEvent_ClaimedCopyWithImpl<DepositEvent_Claimed>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEventKind_Claimed&&(identical(other.field0, field0) || other.field0 == field0));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DepositEvent_Claimed&&(identical(other.field0, field0) || other.field0 == field0));
 }
 
 
@@ -268,15 +268,15 @@ int get hashCode => Object.hash(runtimeType,field0);
 
 @override
 String toString() {
-  return 'DepositEventKind.claimed(field0: $field0)';
+  return 'DepositEvent.claimed(field0: $field0)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $DepositEventKind_ClaimedCopyWith<$Res> implements $DepositEventKindCopyWith<$Res> {
-  factory $DepositEventKind_ClaimedCopyWith(DepositEventKind_Claimed value, $Res Function(DepositEventKind_Claimed) _then) = _$DepositEventKind_ClaimedCopyWithImpl;
+abstract mixin class $DepositEvent_ClaimedCopyWith<$Res> implements $DepositEventCopyWith<$Res> {
+  factory $DepositEvent_ClaimedCopyWith(DepositEvent_Claimed value, $Res Function(DepositEvent_Claimed) _then) = _$DepositEvent_ClaimedCopyWithImpl;
 @useResult
 $Res call({
  ClaimedEvent field0
@@ -287,19 +287,146 @@ $Res call({
 
 }
 /// @nodoc
-class _$DepositEventKind_ClaimedCopyWithImpl<$Res>
-    implements $DepositEventKind_ClaimedCopyWith<$Res> {
-  _$DepositEventKind_ClaimedCopyWithImpl(this._self, this._then);
+class _$DepositEvent_ClaimedCopyWithImpl<$Res>
+    implements $DepositEvent_ClaimedCopyWith<$Res> {
+  _$DepositEvent_ClaimedCopyWithImpl(this._self, this._then);
 
-  final DepositEventKind_Claimed _self;
-  final $Res Function(DepositEventKind_Claimed) _then;
+  final DepositEvent_Claimed _self;
+  final $Res Function(DepositEvent_Claimed) _then;
 
-/// Create a copy of DepositEventKind
+/// Create a copy of DepositEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
-  return _then(DepositEventKind_Claimed(
+  return _then(DepositEvent_Claimed(
 null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
 as ClaimedEvent,
+  ));
+}
+
+
+}
+
+/// @nodoc
+mixin _$LightningEvent {
+
+ InvoicePaidEvent get field0;
+/// Create a copy of LightningEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LightningEventCopyWith<LightningEvent> get copyWith => _$LightningEventCopyWithImpl<LightningEvent>(this as LightningEvent, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LightningEvent&&(identical(other.field0, field0) || other.field0 == field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,field0);
+
+@override
+String toString() {
+  return 'LightningEvent(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LightningEventCopyWith<$Res>  {
+  factory $LightningEventCopyWith(LightningEvent value, $Res Function(LightningEvent) _then) = _$LightningEventCopyWithImpl;
+@useResult
+$Res call({
+ InvoicePaidEvent field0
+});
+
+
+
+
+}
+/// @nodoc
+class _$LightningEventCopyWithImpl<$Res>
+    implements $LightningEventCopyWith<$Res> {
+  _$LightningEventCopyWithImpl(this._self, this._then);
+
+  final LightningEvent _self;
+  final $Res Function(LightningEvent) _then;
+
+/// Create a copy of LightningEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? field0 = null,}) {
+  return _then(_self.copyWith(
+field0: null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
+as InvoicePaidEvent,
+  ));
+}
+
+}
+
+
+/// @nodoc
+
+
+class LightningEvent_InvoicePaid extends LightningEvent {
+  const LightningEvent_InvoicePaid(this.field0): super._();
+  
+
+@override final  InvoicePaidEvent field0;
+
+/// Create a copy of LightningEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LightningEvent_InvoicePaidCopyWith<LightningEvent_InvoicePaid> get copyWith => _$LightningEvent_InvoicePaidCopyWithImpl<LightningEvent_InvoicePaid>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LightningEvent_InvoicePaid&&(identical(other.field0, field0) || other.field0 == field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,field0);
+
+@override
+String toString() {
+  return 'LightningEvent.invoicePaid(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LightningEvent_InvoicePaidCopyWith<$Res> implements $LightningEventCopyWith<$Res> {
+  factory $LightningEvent_InvoicePaidCopyWith(LightningEvent_InvoicePaid value, $Res Function(LightningEvent_InvoicePaid) _then) = _$LightningEvent_InvoicePaidCopyWithImpl;
+@override @useResult
+$Res call({
+ InvoicePaidEvent field0
+});
+
+
+
+
+}
+/// @nodoc
+class _$LightningEvent_InvoicePaidCopyWithImpl<$Res>
+    implements $LightningEvent_InvoicePaidCopyWith<$Res> {
+  _$LightningEvent_InvoicePaidCopyWithImpl(this._self, this._then);
+
+  final LightningEvent_InvoicePaid _self;
+  final $Res Function(LightningEvent_InvoicePaid) _then;
+
+/// Create a copy of LightningEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
+  return _then(LightningEvent_InvoicePaid(
+null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
+as InvoicePaidEvent,
   ));
 }
 
@@ -470,6 +597,186 @@ as List<String>,
 }
 
 
+}
+
+/// @nodoc
+mixin _$MultimintEventKind {
+
+ Object get field0;
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEventKind&&const DeepCollectionEquality().equals(other.field0, field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(field0));
+
+@override
+String toString() {
+  return 'MultimintEventKind(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+class $MultimintEventKindCopyWith<$Res>  {
+$MultimintEventKindCopyWith(MultimintEventKind _, $Res Function(MultimintEventKind) __);
+}
+
+
+/// @nodoc
+
+
+class MultimintEventKind_Deposit extends MultimintEventKind {
+  const MultimintEventKind_Deposit(this.field0): super._();
+  
+
+@override final  DepositEvent field0;
+
+/// Create a copy of MultimintEventKind
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MultimintEventKind_DepositCopyWith<MultimintEventKind_Deposit> get copyWith => _$MultimintEventKind_DepositCopyWithImpl<MultimintEventKind_Deposit>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEventKind_Deposit&&(identical(other.field0, field0) || other.field0 == field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,field0);
+
+@override
+String toString() {
+  return 'MultimintEventKind.deposit(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MultimintEventKind_DepositCopyWith<$Res> implements $MultimintEventKindCopyWith<$Res> {
+  factory $MultimintEventKind_DepositCopyWith(MultimintEventKind_Deposit value, $Res Function(MultimintEventKind_Deposit) _then) = _$MultimintEventKind_DepositCopyWithImpl;
+@useResult
+$Res call({
+ DepositEvent field0
+});
+
+
+$DepositEventCopyWith<$Res> get field0;
+
+}
+/// @nodoc
+class _$MultimintEventKind_DepositCopyWithImpl<$Res>
+    implements $MultimintEventKind_DepositCopyWith<$Res> {
+  _$MultimintEventKind_DepositCopyWithImpl(this._self, this._then);
+
+  final MultimintEventKind_Deposit _self;
+  final $Res Function(MultimintEventKind_Deposit) _then;
+
+/// Create a copy of MultimintEventKind
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
+  return _then(MultimintEventKind_Deposit(
+null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
+as DepositEvent,
+  ));
+}
+
+/// Create a copy of MultimintEventKind
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DepositEventCopyWith<$Res> get field0 {
+  
+  return $DepositEventCopyWith<$Res>(_self.field0, (value) {
+    return _then(_self.copyWith(field0: value));
+  });
+}
+}
+
+/// @nodoc
+
+
+class MultimintEventKind_Lightning extends MultimintEventKind {
+  const MultimintEventKind_Lightning(this.field0): super._();
+  
+
+@override final  LightningEvent field0;
+
+/// Create a copy of MultimintEventKind
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MultimintEventKind_LightningCopyWith<MultimintEventKind_Lightning> get copyWith => _$MultimintEventKind_LightningCopyWithImpl<MultimintEventKind_Lightning>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEventKind_Lightning&&(identical(other.field0, field0) || other.field0 == field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,field0);
+
+@override
+String toString() {
+  return 'MultimintEventKind.lightning(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MultimintEventKind_LightningCopyWith<$Res> implements $MultimintEventKindCopyWith<$Res> {
+  factory $MultimintEventKind_LightningCopyWith(MultimintEventKind_Lightning value, $Res Function(MultimintEventKind_Lightning) _then) = _$MultimintEventKind_LightningCopyWithImpl;
+@useResult
+$Res call({
+ LightningEvent field0
+});
+
+
+$LightningEventCopyWith<$Res> get field0;
+
+}
+/// @nodoc
+class _$MultimintEventKind_LightningCopyWithImpl<$Res>
+    implements $MultimintEventKind_LightningCopyWith<$Res> {
+  _$MultimintEventKind_LightningCopyWithImpl(this._self, this._then);
+
+  final MultimintEventKind_Lightning _self;
+  final $Res Function(MultimintEventKind_Lightning) _then;
+
+/// Create a copy of MultimintEventKind
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
+  return _then(MultimintEventKind_Lightning(
+null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
+as LightningEvent,
+  ));
+}
+
+/// Create a copy of MultimintEventKind
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LightningEventCopyWith<$Res> get field0 {
+  
+  return $LightningEventCopyWith<$Res>(_self.field0, (value) {
+    return _then(_self.copyWith(field0: value));
+  });
+}
 }
 
 // dart format on

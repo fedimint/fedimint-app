@@ -60,7 +60,7 @@ class _DashboardState extends State<Dashboard> {
           federationId: widget.fed.federationId,
         ).asBroadcastStream();
     _claimSubscription = depositEvents.listen((event) {
-      if (event.eventKind is DepositEventKind_Claimed) {
+      if (event is DepositEvent_Claimed) {
         if (!mounted) return;
         _loadBalance();
         // this timeout is necessary to ensure the claimed on-chain deposit
@@ -74,17 +74,17 @@ class _DashboardState extends State<Dashboard> {
 
     _depositSubscription = depositEvents.listen((event) {
       String txid;
-      switch (event.eventKind) {
-        case DepositEventKind_Mempool(field0: final mempoolEvt):
+      switch (event) {
+        case DepositEvent_Mempool(field0: final mempoolEvt):
           txid = mempoolEvt.txid;
           break;
-        case DepositEventKind_AwaitingConfs(field0: final awaitEvt):
+        case DepositEvent_AwaitingConfs(field0: final awaitEvt):
           txid = awaitEvt.txid;
           break;
-        case DepositEventKind_Confirmed(field0: final confirmedEvt):
+        case DepositEvent_Confirmed(field0: final confirmedEvt):
           txid = confirmedEvt.txid;
           break;
-        case DepositEventKind_Claimed(field0: final claimedEvt):
+        case DepositEvent_Claimed(field0: final claimedEvt):
           txid = claimedEvt.txid;
           break;
       }
@@ -453,21 +453,17 @@ class _DashboardState extends State<Dashboard> {
               adjustedIndex < pendingCount) {
             final events =
                 _depositMap.values.toList()..sort((a, b) {
-                  final aMempool = a.eventKind is DepositEventKind_Mempool;
-                  final bMempool = b.eventKind is DepositEventKind_Mempool;
+                  final aMempool = a is DepositEvent_Mempool;
+                  final bMempool = b is DepositEvent_Mempool;
                   if (aMempool && !bMempool) return -1;
                   if (!aMempool && bMempool) return 1;
                   final BigInt na =
-                      a.eventKind is DepositEventKind_AwaitingConfs
-                          ? (a.eventKind as DepositEventKind_AwaitingConfs)
-                              .field0
-                              .needed
+                      a is DepositEvent_AwaitingConfs
+                          ? a.field0.needed
                           : BigInt.zero;
                   final BigInt nb =
-                      b.eventKind is DepositEventKind_AwaitingConfs
-                          ? (b.eventKind as DepositEventKind_AwaitingConfs)
-                              .field0
-                              .needed
+                      b is DepositEvent_AwaitingConfs
+                          ? b.field0.needed
                           : BigInt.zero;
                   return nb.compareTo(na);
                 });
@@ -475,21 +471,21 @@ class _DashboardState extends State<Dashboard> {
 
             String msg;
             BigInt amount;
-            switch (event.eventKind) {
-              case DepositEventKind_Mempool(field0: final e):
+            switch (event) {
+              case DepositEvent_Mempool(field0: final e):
                 msg = 'Tx in mempool';
                 amount = e.amount;
                 break;
-              case DepositEventKind_AwaitingConfs(field0: final e):
+              case DepositEvent_AwaitingConfs(field0: final e):
                 msg =
                     'Tx included in block ${e.blockHeight}. Remaining confs: ${e.needed}';
                 amount = e.amount;
                 break;
-              case DepositEventKind_Confirmed(field0: final e):
+              case DepositEvent_Confirmed(field0: final e):
                 msg = 'Tx confirmed, claiming ecash';
                 amount = e.amount;
                 break;
-              case DepositEventKind_Claimed():
+              case DepositEvent_Claimed():
                 return const SizedBox.shrink();
             }
 
