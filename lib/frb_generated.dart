@@ -65,7 +65,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.9.0';
 
   @override
-  int get rustContentHash => -2083986118;
+  int get rustContentHash => 1791919409;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -310,7 +310,7 @@ abstract class RustLibApi extends BaseApi {
     required FederationId federationId,
   });
 
-  Stream<LightningEvent> crateMultimintMultimintSubscribeLightningEvents({
+  Stream<MultimintEvent> crateMultimintMultimintSubscribeLightningEvents({
     required Multimint that,
   });
 
@@ -533,7 +533,7 @@ abstract class RustLibApi extends BaseApi {
     required FederationId federationId,
   });
 
-  Stream<LightningEvent> crateSubscribeLightningEvents();
+  Stream<MultimintEvent> crateSubscribeMultimintEvents();
 
   Future<List<Transaction>> crateTransactions({
     required FederationId federationId,
@@ -2521,10 +2521,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Stream<LightningEvent> crateMultimintMultimintSubscribeLightningEvents({
+  Stream<MultimintEvent> crateMultimintMultimintSubscribeLightningEvents({
     required Multimint that,
   }) {
-    final sink = RustStreamSink<LightningEvent>();
+    final sink = RustStreamSink<MultimintEvent>();
     unawaited(
       handler.executeNormal(
         NormalTask(
@@ -2534,7 +2534,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               that,
               serializer,
             );
-            sse_encode_StreamSink_lightning_event_Sse(sink, serializer);
+            sse_encode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent_Sse(
+              sink,
+              serializer,
+            );
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
@@ -4371,14 +4374,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
-  Stream<LightningEvent> crateSubscribeLightningEvents() {
-    final sink = RustStreamSink<LightningEvent>();
+  Stream<MultimintEvent> crateSubscribeMultimintEvents() {
+    final sink = RustStreamSink<MultimintEvent>();
     unawaited(
       handler.executeNormal(
         NormalTask(
           callFfi: (port_) {
             final serializer = SseSerializer(generalizedFrbRustBinding);
-            sse_encode_StreamSink_lightning_event_Sse(sink, serializer);
+            sse_encode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent_Sse(
+              sink,
+              serializer,
+            );
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
@@ -4390,7 +4396,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             decodeSuccessData: sse_decode_unit,
             decodeErrorData: null,
           ),
-          constMeta: kCrateSubscribeLightningEventsConstMeta,
+          constMeta: kCrateSubscribeMultimintEventsConstMeta,
           argValues: [sink],
           apiImpl: this,
         ),
@@ -4399,9 +4405,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return sink.stream;
   }
 
-  TaskConstMeta get kCrateSubscribeLightningEventsConstMeta =>
+  TaskConstMeta get kCrateSubscribeMultimintEventsConstMeta =>
       const TaskConstMeta(
-        debugName: "subscribe_lightning_events",
+        debugName: "subscribe_multimint_events",
         argNames: ["sink"],
       );
 
@@ -5164,7 +5170,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RustStreamSink<DepositEvent> dco_decode_StreamSink_deposit_event_Sse(
+  RustStreamSink<MultimintEvent>
+  dco_decode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent_Sse(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -5172,7 +5179,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RustStreamSink<LightningEvent> dco_decode_StreamSink_lightning_event_Sse(
+  RustStreamSink<DepositEvent> dco_decode_StreamSink_deposit_event_Sse(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -5337,9 +5344,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InvoicePaidEvent dco_decode_invoice_paid_event(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 1)
-      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
-    return InvoicePaidEvent(amountMsats: dco_decode_u_64(arr[0]));
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return InvoicePaidEvent(
+      amountMsats: dco_decode_u_64(arr[0]),
+      federationName: dco_decode_String(arr[1]),
+    );
   }
 
   @protected
@@ -6345,7 +6355,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RustStreamSink<DepositEvent> sse_decode_StreamSink_deposit_event_Sse(
+  RustStreamSink<MultimintEvent>
+  sse_decode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent_Sse(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -6353,7 +6364,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  RustStreamSink<LightningEvent> sse_decode_StreamSink_lightning_event_Sse(
+  RustStreamSink<DepositEvent> sse_decode_StreamSink_deposit_event_Sse(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -6526,7 +6537,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   InvoicePaidEvent sse_decode_invoice_paid_event(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_amountMsats = sse_decode_u_64(deserializer);
-    return InvoicePaidEvent(amountMsats: var_amountMsats);
+    var var_federationName = sse_decode_String(deserializer);
+    return InvoicePaidEvent(
+      amountMsats: var_amountMsats,
+      federationName: var_federationName,
+    );
   }
 
   @protected
@@ -7618,6 +7633,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void
+  sse_encode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent_Sse(
+    RustStreamSink<MultimintEvent> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(
+      self.setupAndSerialize(
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+      ),
+      serializer,
+    );
+  }
+
+  @protected
   void sse_encode_StreamSink_deposit_event_Sse(
     RustStreamSink<DepositEvent> self,
     SseSerializer serializer,
@@ -7627,23 +7661,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       self.setupAndSerialize(
         codec: SseCodec(
           decodeSuccessData: sse_decode_deposit_event,
-          decodeErrorData: sse_decode_AnyhowException,
-        ),
-      ),
-      serializer,
-    );
-  }
-
-  @protected
-  void sse_encode_StreamSink_lightning_event_Sse(
-    RustStreamSink<LightningEvent> self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(
-      self.setupAndSerialize(
-        codec: SseCodec(
-          decodeSuccessData: sse_decode_lightning_event,
           decodeErrorData: sse_decode_AnyhowException,
         ),
       ),
@@ -7814,6 +7831,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_u_64(self.amountMsats, serializer);
+    sse_encode_String(self.federationName, serializer);
   }
 
   @protected
@@ -8772,7 +8790,7 @@ class MultimintImpl extends RustOpaque implements Multimint {
     federationId: federationId,
   );
 
-  Stream<LightningEvent> subscribeLightningEvents() => RustLib.instance.api
+  Stream<MultimintEvent> subscribeLightningEvents() => RustLib.instance.api
       .crateMultimintMultimintSubscribeLightningEvents(that: this);
 
   Future<List<Transaction>> transactions({

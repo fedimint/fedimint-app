@@ -7,6 +7,7 @@ import 'package:carbine/scan.dart';
 import 'package:carbine/setttings.dart';
 import 'package:carbine/sidebar.dart';
 import 'package:carbine/theme.dart';
+import 'package:carbine/toast.dart';
 import 'package:carbine/utils.dart';
 import 'package:carbine/welcome.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,10 @@ class _MyAppState extends State<MyApp> {
   bool? _isRecovering;
   int _currentIndex = 0;
 
-  late Stream<LightningEvent> lnEvents;
-  late StreamSubscription<LightningEvent> _lnSubscription;
+  late Stream<MultimintEvent> events;
+  late StreamSubscription<MultimintEvent> _subscription;
+
+  final GlobalKey<NavigatorState> _navigatorKey = ToastService().navigatorKey;
 
   @override
   void initState() {
@@ -40,18 +43,34 @@ class _MyAppState extends State<MyApp> {
       _isRecovering = _feds.first.$2;
     }
 
-    lnEvents = subscribeLightningEvents().asBroadcastStream();
-    _lnSubscription = lnEvents.listen((event) {
-      if (event is LightningEvent_InvoicePaid) {
-        final amount = event.field0.amountMsats;
-        AppLogger.instance.info("Invoice has been paid! Amount: $amount");
+    events = subscribeMultimintEvents().asBroadcastStream();
+    _subscription = events.listen((event) {
+      if (event.eventKind is MultimintEventKind_Lightning) {
+        final ln = event.eventKind as MultimintEventKind_Lightning;
+        if (ln.field0 is LightningEvent_InvoicePaid) {
+          final lnEvent = ln.field0 as LightningEvent_InvoicePaid;
+          final amountMsats = lnEvent.field0.amountMsats;
+          final amount = formatBalance(amountMsats, false);
+          _refreshFederations();
+          AppLogger.instance.info(
+            "${lnEvent.field0.federationName} received $amount",
+          );
+
+          ToastService().show(
+            message: "${lnEvent.field0.federationName} received $amount",
+            duration: const Duration(seconds: 5),
+            onTap: () {
+              AppLogger.instance.info("Toast tapped!");
+            },
+          );
+        }
       }
     });
   }
 
   @override
   void dispose() {
-    _lnSubscription.cancel();
+    _subscription.cancel();
     super.dispose();
   }
 
@@ -115,6 +134,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Carbine',
       debugShowCheckedModeBanner: false,
       theme: cypherpunkNinjaTheme,
+      navigatorKey: _navigatorKey,
       home: Builder(
         builder:
             (innerContext) => Scaffold(

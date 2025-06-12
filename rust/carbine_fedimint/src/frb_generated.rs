@@ -41,7 +41,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.9.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -2083986118;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1791919409;
 
 // Section: executor
 
@@ -2784,64 +2784,24 @@ fn wire__crate__multimint__Multimint_subscribe_lightning_events_impl(
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "Multimint_subscribe_lightning_events",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Multimint>,
-            >>::sse_decode(&mut deserializer);
-            let api_sink = <StreamSink<
-                crate::multimint::LightningEvent,
-                flutter_rust_bridge::for_generated::SseCodec,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, ()>(
-                    (move || async move {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "Multimint_subscribe_lightning_events", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Multimint>>>::sse_decode(&mut deserializer);
+let api_sink = <StreamSink<MultimintEvent,flutter_rust_bridge::for_generated::SseCodec>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse::<_, ()>((move || async move {
                         let mut api_that_guard = None;
-                        let decode_indices_ =
-                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
-                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, false,
-                                )],
-                            );
-                        for i in decode_indices_ {
-                            match i {
-                                0 => {
-                                    api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref().await)
-                                }
-                                _ => unreachable!(),
-                            }
-                        }
-                        let api_that_guard = api_that_guard.unwrap();
-                        let output_ok = Result::<_, ()>::Ok({
-                            crate::multimint::Multimint::subscribe_lightning_events(
-                                &*api_that_guard,
-                                api_sink,
-                            )
-                            .await;
-                        })?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
+let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_guard = Some(api_that.lockable_decode_async_ref().await),
+                _ => unreachable!(),
             }
-        },
-    )
+        }
+        let api_that_guard = api_that_guard.unwrap();
+ let output_ok = Result::<_,()>::Ok({ crate::multimint::Multimint::subscribe_lightning_events(&*api_that_guard, api_sink).await; })?;   Ok(output_ok)
+                    })().await)
+                } })
 }
 fn wire__crate__multimint__Multimint_transactions_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
@@ -5387,46 +5347,20 @@ fn wire__crate__subscribe_deposits_impl(
         },
     )
 }
-fn wire__crate__subscribe_lightning_events_impl(
+fn wire__crate__subscribe_multimint_events_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "subscribe_lightning_events",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_sink = <StreamSink<
-                crate::multimint::LightningEvent,
-                flutter_rust_bridge::for_generated::SseCodec,
-            >>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, ()>(
-                    (move || async move {
-                        let output_ok = Result::<_, ()>::Ok({
-                            crate::subscribe_lightning_events(api_sink).await;
-                        })?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "subscribe_multimint_events", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_sink = <StreamSink<MultimintEvent,flutter_rust_bridge::for_generated::SseCodec>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse::<_, ()>((move || async move {
+                         let output_ok = Result::<_,()>::Ok({ crate::subscribe_multimint_events(api_sink).await; })?;   Ok(output_ok)
+                    })().await)
+                } })
 }
 fn wire__crate__transactions_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
@@ -6056,9 +5990,7 @@ impl SseDecode
     }
 }
 
-impl SseDecode
-    for StreamSink<crate::multimint::DepositEvent, flutter_rust_bridge::for_generated::SseCodec>
-{
+impl SseDecode for StreamSink<MultimintEvent, flutter_rust_bridge::for_generated::SseCodec> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <String>::sse_decode(deserializer);
@@ -6067,7 +5999,7 @@ impl SseDecode
 }
 
 impl SseDecode
-    for StreamSink<crate::multimint::LightningEvent, flutter_rust_bridge::for_generated::SseCodec>
+    for StreamSink<crate::multimint::DepositEvent, flutter_rust_bridge::for_generated::SseCodec>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -6190,8 +6122,10 @@ impl SseDecode for crate::multimint::InvoicePaidEvent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_amountMsats = <u64>::sse_decode(deserializer);
+        let mut var_federationName = <String>::sse_decode(deserializer);
         return crate::multimint::InvoicePaidEvent {
             amount_msats: var_amountMsats,
+            federation_name: var_federationName,
         };
     }
 }
@@ -6731,7 +6665,7 @@ fn pde_ffi_dispatcher_primary_impl(
         96 => wire__crate__send_lnaddress_impl(port, ptr, rust_vec_len, data_len),
         97 => wire__crate__set_nwc_connection_info_impl(port, ptr, rust_vec_len, data_len),
         98 => wire__crate__subscribe_deposits_impl(port, ptr, rust_vec_len, data_len),
-        99 => wire__crate__subscribe_lightning_events_impl(port, ptr, rust_vec_len, data_len),
+        99 => wire__crate__subscribe_multimint_events_impl(port, ptr, rust_vec_len, data_len),
         100 => wire__crate__transactions_impl(port, ptr, rust_vec_len, data_len),
         101 => wire__crate__wait_for_recovery_impl(port, ptr, rust_vec_len, data_len),
         102 => wire__crate__wallet_exists_impl(port, ptr, rust_vec_len, data_len),
@@ -7376,7 +7310,11 @@ impl flutter_rust_bridge::IntoIntoDart<crate::multimint::Guardian> for crate::mu
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::multimint::InvoicePaidEvent {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [self.amount_msats.into_into_dart().into_dart()].into_dart()
+        [
+            self.amount_msats.into_into_dart().into_dart(),
+            self.federation_name.into_into_dart().into_dart(),
+        ]
+        .into_dart()
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
@@ -7924,9 +7862,7 @@ impl SseEncode
     }
 }
 
-impl SseEncode
-    for StreamSink<crate::multimint::DepositEvent, flutter_rust_bridge::for_generated::SseCodec>
-{
+impl SseEncode for StreamSink<MultimintEvent, flutter_rust_bridge::for_generated::SseCodec> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         unimplemented!("")
@@ -7934,7 +7870,7 @@ impl SseEncode
 }
 
 impl SseEncode
-    for StreamSink<crate::multimint::LightningEvent, flutter_rust_bridge::for_generated::SseCodec>
+    for StreamSink<crate::multimint::DepositEvent, flutter_rust_bridge::for_generated::SseCodec>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -8030,6 +7966,7 @@ impl SseEncode for crate::multimint::InvoicePaidEvent {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <u64>::sse_encode(self.amount_msats, serializer);
+        <String>::sse_encode(self.federation_name, serializer);
     }
 }
 

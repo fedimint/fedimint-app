@@ -174,6 +174,7 @@ pub enum MultimintEventKind {
 #[derive(Clone, Eq, PartialEq, Serialize, Debug)]
 pub struct InvoicePaidEvent {
     pub amount_msats: u64,
+    pub federation_name: String,
 }
 
 #[derive(Clone, Eq, PartialEq, Serialize, Debug)]
@@ -958,7 +959,8 @@ impl Multimint {
             .spawn_cancellable("await receive", async move {
                 match self_copy.await_receive(&federation_id, operation_id).await {
                     Ok((final_state, amount_msats)) => {
-                        let lightning_event = LightningEvent::InvoicePaid(InvoicePaidEvent { amount_msats });
+                        let selector = self_copy.federations().await.iter().find(|(fed, _)| fed.federation_id == federation_id).expect("Should be present").0.clone();
+                        let lightning_event = LightningEvent::InvoicePaid(InvoicePaidEvent { amount_msats, federation_name: selector.federation_name });
                         println!("Receive completed: {final_state:?} Publishing event...");
                         self_copy.event_bus.publish(MultimintEvent { federation_id, event_kind: MultimintEventKind::Lightning(lightning_event) }).await;
                     }
@@ -1908,14 +1910,12 @@ impl Multimint {
         }
     }
 
-    pub async fn subscribe_lightning_events(&self, sink: StreamSink<LightningEvent>) {
+    pub async fn subscribe_lightning_events(&self, sink: StreamSink<MultimintEvent>) {
         let mut stream = self.event_bus.subscribe();
 
-        while let Some(evt) = stream.next().await {
-            if let MultimintEventKind::Lightning(lightning) = evt.event_kind {
-                if sink.add(lightning).is_err() {
-                    break;
-                }
+        while let Some(mm_event) = stream.next().await {
+            if sink.add(mm_event).is_err() {
+                break;
             }
         }
     }

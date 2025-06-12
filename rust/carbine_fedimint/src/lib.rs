@@ -10,7 +10,7 @@ use fedimint_core::config::ClientConfig;
 /* AUTO INJECTED BY flutter_rust_bridge. This line may not be accurate, and you can change it according to your needs. */
 use flutter_rust_bridge::frb;
 use multimint::{
-    FederationMeta, FederationSelector, LightningEvent, Multimint, MultimintCreation, PaymentPreview, Transaction
+    FederationMeta, FederationSelector, Multimint, MultimintCreation, MultimintEvent, PaymentPreview, Transaction
 };
 use nostr::{NWCConnectionInfo, NostrClient, PublicFederation};
 use tokio::sync::{OnceCell, RwLock};
@@ -459,8 +459,8 @@ pub async fn get_relays() -> Vec<String> {
 }
 
 #[frb]
-pub async fn subscribe_lightning_events(
-    sink: StreamSink<LightningEvent>,
+pub async fn subscribe_multimint_events(
+    sink: StreamSink<MultimintEvent>,
 ) {
     let multimint = get_multimint().await;
     multimint.subscribe_lightning_events(sink).await

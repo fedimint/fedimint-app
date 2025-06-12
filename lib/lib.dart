@@ -214,8 +214,8 @@ Future<NWCConnectionInfo> setNwcConnectionInfo({
 
 Future<List<String>> getRelays() => RustLib.instance.api.crateGetRelays();
 
-Stream<LightningEvent> subscribeLightningEvents() =>
-    RustLib.instance.api.crateSubscribeLightningEvents();
+Stream<MultimintEvent> subscribeMultimintEvents() =>
+    RustLib.instance.api.crateSubscribeMultimintEvents();
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientConfig>>
 abstract class ClientConfig implements RustOpaqueInterface {}

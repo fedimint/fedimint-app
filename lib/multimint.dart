@@ -152,7 +152,7 @@ abstract class Multimint implements RustOpaqueInterface {
 
   Stream<DepositEvent> subscribeDeposits({required FederationId federationId});
 
-  Stream<LightningEvent> subscribeLightningEvents();
+  Stream<MultimintEvent> subscribeLightningEvents();
 
   Future<List<Transaction>> transactions({
     required FederationId federationId,
@@ -305,18 +305,23 @@ class Guardian {
 
 class InvoicePaidEvent {
   final BigInt amountMsats;
+  final String federationName;
 
-  const InvoicePaidEvent({required this.amountMsats});
+  const InvoicePaidEvent({
+    required this.amountMsats,
+    required this.federationName,
+  });
 
   @override
-  int get hashCode => amountMsats.hashCode;
+  int get hashCode => amountMsats.hashCode ^ federationName.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is InvoicePaidEvent &&
           runtimeType == other.runtimeType &&
-          amountMsats == other.amountMsats;
+          amountMsats == other.amountMsats &&
+          federationName == other.federationName;
 }
 
 @freezed

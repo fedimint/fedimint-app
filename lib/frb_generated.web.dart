@@ -403,12 +403,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  RustStreamSink<DepositEvent> dco_decode_StreamSink_deposit_event_Sse(
+  RustStreamSink<MultimintEvent>
+  dco_decode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent_Sse(
     dynamic raw,
   );
 
   @protected
-  RustStreamSink<LightningEvent> dco_decode_StreamSink_lightning_event_Sse(
+  RustStreamSink<DepositEvent> dco_decode_StreamSink_deposit_event_Sse(
     dynamic raw,
   );
 
@@ -902,12 +903,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  RustStreamSink<DepositEvent> sse_decode_StreamSink_deposit_event_Sse(
+  RustStreamSink<MultimintEvent>
+  sse_decode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent_Sse(
     SseDeserializer deserializer,
   );
 
   @protected
-  RustStreamSink<LightningEvent> sse_decode_StreamSink_lightning_event_Sse(
+  RustStreamSink<DepositEvent> sse_decode_StreamSink_deposit_event_Sse(
     SseDeserializer deserializer,
   );
 
@@ -1482,14 +1484,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_StreamSink_deposit_event_Sse(
-    RustStreamSink<DepositEvent> self,
+  void
+  sse_encode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMultimintEvent_Sse(
+    RustStreamSink<MultimintEvent> self,
     SseSerializer serializer,
   );
 
   @protected
-  void sse_encode_StreamSink_lightning_event_Sse(
-    RustStreamSink<LightningEvent> self,
+  void sse_encode_StreamSink_deposit_event_Sse(
+    RustStreamSink<DepositEvent> self,
     SseSerializer serializer,
   );
 
