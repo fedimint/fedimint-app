@@ -96,6 +96,8 @@ class _DashboardState extends State<Dashboard> {
     if (recovering) {
       _loadFederation();
     }
+
+    balanceUpdateNotifier.register(_loadFederation);
   }
 
   @override
@@ -103,6 +105,7 @@ class _DashboardState extends State<Dashboard> {
     _scrollController.dispose();
     _depositSubscription.cancel();
     _claimSubscription.cancel();
+    balanceUpdateNotifier.unregister();
 
     super.dispose();
   }
@@ -625,3 +628,19 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+
+class BalanceUpdateNotifier {
+  VoidCallback? _callback;
+
+  void register(VoidCallback cb) => _callback = cb;
+
+  void unregister() => _callback = null;
+
+  void notify() {
+    _callback?.call();
+  }
+
+  bool get isRegistered => _callback != null;
+}
+
+final balanceUpdateNotifier = BalanceUpdateNotifier();

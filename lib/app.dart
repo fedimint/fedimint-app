@@ -51,18 +51,22 @@ class _MyAppState extends State<MyApp> {
           final lnEvent = ln.field0 as LightningEvent_InvoicePaid;
           final amountMsats = lnEvent.field0.amountMsats;
           final amount = formatBalance(amountMsats, false);
-          _refreshFederations();
-          AppLogger.instance.info(
-            "${lnEvent.field0.federationName} received $amount",
-          );
+          final name = lnEvent.field0.federationName;
+
+          AppLogger.instance.info("$name received $amount");
 
           ToastService().show(
-            message: "${lnEvent.field0.federationName} received $amount",
-            duration: const Duration(seconds: 5),
+            message: "$name received $amount",
+            duration: const Duration(seconds: 7),
             onTap: () {
-              AppLogger.instance.info("Toast tapped!");
+              final selector = _feds.firstWhere(
+                (element) => element.$1.federationName == name,
+              );
+              _setSelectedFederation(selector.$1, selector.$2);
             },
           );
+
+          balanceUpdateNotifier.notify();
         }
       }
     });
