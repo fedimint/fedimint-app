@@ -10,7 +10,8 @@ use fedimint_core::config::ClientConfig;
 /* AUTO INJECTED BY flutter_rust_bridge. This line may not be accurate, and you can change it according to your needs. */
 use flutter_rust_bridge::frb;
 use multimint::{
-    FederationMeta, FederationSelector, Multimint, MultimintCreation, PaymentPreview, Transaction,
+    FederationMeta, FederationSelector, Multimint, MultimintCreation, MultimintEvent,
+    PaymentPreview, Transaction,
 };
 use nostr::{NWCConnectionInfo, NostrClient, PublicFederation};
 use tokio::sync::{OnceCell, RwLock};
@@ -33,7 +34,7 @@ use lightning_invoice::Bolt11Invoice;
 
 use crate::db::{FederationConfig, FederationConfigKey, FederationConfigKeyPrefix};
 use crate::frb_generated::StreamSink;
-use crate::multimint::DepositEvent;
+use crate::multimint::DepositEventKind;
 
 static MULTIMINT: OnceCell<Multimint> = OnceCell::const_new();
 static DATABASE: OnceCell<Database> = OnceCell::const_new();
@@ -262,7 +263,7 @@ pub async fn await_send(
 pub async fn await_receive(
     federation_id: &FederationId,
     operation_id: OperationId,
-) -> anyhow::Result<FinalReceiveOperationState> {
+) -> anyhow::Result<(FinalReceiveOperationState, u64)> {
     let multimint = get_multimint().await;
     multimint.await_receive(federation_id, operation_id).await
 }
@@ -409,12 +410,9 @@ pub async fn word_list() -> Vec<String> {
 }
 
 #[frb]
-pub async fn subscribe_deposits(
-    sink: StreamSink<DepositEvent>,
-    federation_id: FederationId,
-) -> anyhow::Result<()> {
+pub async fn subscribe_deposits(sink: StreamSink<DepositEventKind>, federation_id: FederationId) {
     let multimint = get_multimint().await;
-    multimint.subscribe_deposits(federation_id, sink).await
+    multimint.subscribe_deposits(federation_id, sink).await;
 }
 
 #[frb]
@@ -456,4 +454,15 @@ pub async fn get_relays() -> Vec<String> {
     let nostr_client = get_nostr_client().await;
     let nostr = nostr_client.read().await;
     nostr.get_relays().await
+}
+
+#[frb]
+pub async fn subscribe_multimint_events(sink: StreamSink<MultimintEvent>) {
+    let multimint = get_multimint().await;
+    multimint.subscribe_multimint_events(sink).await
+}
+
+#[frb]
+pub async fn federation_id_to_string(federation_id: FederationId) -> String {
+    federation_id.to_string()
 }

@@ -26,13 +26,13 @@ class TransactionsList extends StatefulWidget {
 
 class _TransactionsListState extends State<TransactionsList> {
   final List<Transaction> _transactions = [];
-  final Map<String, DepositEvent> _depositMap = {};
+  final Map<String, DepositEventKind> _depositMap = {};
   bool _isLoading = true;
   bool _hasMore = true;
   Transaction? _lastTransaction;
   bool _isFetchingMore = false;
-  late final StreamSubscription<DepositEvent> _claimSubscription;
-  late final StreamSubscription<DepositEvent> _depositSubscription;
+  late final StreamSubscription<DepositEventKind> _claimSubscription;
+  late final StreamSubscription<DepositEventKind> _depositSubscription;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -51,7 +51,7 @@ class _TransactionsListState extends State<TransactionsList> {
         ).asBroadcastStream();
 
     _claimSubscription = depositEvents.listen((e) {
-      if (e.eventKind is DepositEventKind_Claimed) {
+      if (e is DepositEventKind_Claimed) {
         widget.onClaimed();
         // this timeout is necessary to ensure the claimed on-chain deposit
         // is in the operation log
@@ -63,7 +63,7 @@ class _TransactionsListState extends State<TransactionsList> {
 
     _depositSubscription = depositEvents.listen((e) {
       String txid;
-      switch (e.eventKind) {
+      switch (e) {
         case DepositEventKind_Mempool(field0: final mempoolEvt):
           txid = mempoolEvt.txid;
           break;
@@ -161,20 +161,20 @@ class _TransactionsListState extends State<TransactionsList> {
     final pending =
         widget.selectedPaymentType == PaymentType.onchain
             ? _depositMap.values.toList()
-            : <DepositEvent>[];
+            : <DepositEventKind>[];
 
     pending.sort((a, b) {
-      final aM = a.eventKind is DepositEventKind_Mempool;
-      final bM = b.eventKind is DepositEventKind_Mempool;
+      final aM = a is DepositEventKind_Mempool;
+      final bM = b is DepositEventKind_Mempool;
       if (aM && !bM) return -1;
       if (!aM && bM) return 1;
       final na =
-          a.eventKind is DepositEventKind_AwaitingConfs
-              ? (a.eventKind as DepositEventKind_AwaitingConfs).field0.needed
+          a is DepositEventKind_AwaitingConfs
+              ? a.field0.needed
               : BigInt.zero;
       final nb =
-          b.eventKind is DepositEventKind_AwaitingConfs
-              ? (b.eventKind as DepositEventKind_AwaitingConfs).field0.needed
+          b is DepositEventKind_AwaitingConfs
+              ? b.field0.needed
               : BigInt.zero;
       return nb.compareTo(na);
     });
