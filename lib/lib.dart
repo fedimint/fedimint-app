@@ -3,12 +3,16 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import 'event_bus.dart';
 import 'frb_generated.dart';
 import 'multimint.dart';
 import 'nostr.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `create_nostr_client`, `get_database`, `get_multimint`, `get_nostr_client`
+// These functions are ignored because they are not marked as `pub`: `create_event_bus`, `create_nostr_client`, `get_database`, `get_multimint`, `get_nostr_client`, `log_to_flutter_str`, `log_to_flutter`
+
+Future<EventBusMultimintEvent> getEventBus() =>
+    RustLib.instance.api.crateGetEventBus();
 
 Future<void> createNewMultimint({required String path}) =>
     RustLib.instance.api.crateCreateNewMultimint(path: path);

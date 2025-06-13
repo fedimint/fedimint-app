@@ -47,53 +47,62 @@ class _MyAppState extends State<MyApp> {
 
     events = subscribeMultimintEvents().asBroadcastStream();
     _subscription = events.listen((event) async {
-      if (event.eventKind is MultimintEventKind_Lightning) {
-        final ln = event.eventKind as MultimintEventKind_Lightning;
-        if (ln.field0 is LightningEventKind_InvoicePaid) {
-          if (!invoicePaidToastVisible.value) {
-            AppLogger.instance.info("Request modal visible — skipping toast.");
-            return;
-          }
-
-          final lnEvent = ln.field0 as LightningEventKind_InvoicePaid;
-          final amountMsats = lnEvent.field0.amountMsats;
-          final amount = formatBalance(amountMsats, false);
-          final federationIdString = await federationIdToString(
-            federationId: event.federationId,
-          );
-          FederationSelector? selector;
-          bool? recovering;
-          for (var sel in _feds) {
-            final idString = await federationIdToString(
-              federationId: sel.$1.federationId,
-            );
-            if (idString == federationIdString) {
-              selector = sel.$1;
-              recovering = sel.$2;
-              break;
+      switch (event) {
+        case MultimintEvent_Lightning(field0: final event):
+          final ln = event.$2;
+          if (ln.field0 is LightningEventKind_InvoicePaid) {
+            if (!invoicePaidToastVisible.value) {
+              AppLogger.instance.info(
+                "Request modal visible — skipping toast.",
+              );
+              return;
             }
+
+            final lnEvent = ln.field0 as LightningEventKind_InvoicePaid;
+            final amountMsats = lnEvent.field0.amountMsats;
+            final amount = formatBalance(amountMsats, false);
+            final federationIdString = await federationIdToString(
+              federationId: event.$1,
+            );
+            FederationSelector? selector;
+            bool? recovering;
+            for (var sel in _feds) {
+              final idString = await federationIdToString(
+                federationId: sel.$1.federationId,
+              );
+              if (idString == federationIdString) {
+                selector = sel.$1;
+                recovering = sel.$2;
+                break;
+              }
+            }
+
+            if (selector == null) {
+              return;
+            }
+
+            final name = selector.federationName;
+            AppLogger.instance.info("$name received $amount");
+
+            setState(() {
+              _dashboardReloadTrigger++;
+            });
+
+            ToastService().show(
+              message: "$name received $amount",
+              duration: const Duration(seconds: 7),
+              onTap: () {
+                _navigatorKey.currentState?.popUntil((route) => route.isFirst);
+                _setSelectedFederation(selector!, recovering!);
+              },
+            );
           }
-
-          if (selector == null) {
-            return;
-          }
-
-          final name = selector.federationName;
-          AppLogger.instance.info("$name received $amount");
-
-          setState(() {
-            _dashboardReloadTrigger++;
-          });
-
-          ToastService().show(
-            message: "$name received $amount",
-            duration: const Duration(seconds: 7),
-            onTap: () {
-              _navigatorKey.currentState?.popUntil((route) => route.isFirst);
-              _setSelectedFederation(selector!, recovering!);
-            },
-          );
-        }
+          break;
+        case MultimintEvent_Log(field0: final message):
+          AppLogger.instance.rustLog(message);
+          break;
+        default:
+          break;
       }
     });
   }

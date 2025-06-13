@@ -600,7 +600,7 @@ as List<String>,
 }
 
 /// @nodoc
-mixin _$MultimintEventKind {
+mixin _$MultimintEvent {
 
  Object get field0;
 
@@ -608,7 +608,7 @@ mixin _$MultimintEventKind {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEventKind&&const DeepCollectionEquality().equals(other.field0, field0));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEvent&&const DeepCollectionEquality().equals(other.field0, field0));
 }
 
 
@@ -617,38 +617,38 @@ int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(
 
 @override
 String toString() {
-  return 'MultimintEventKind(field0: $field0)';
+  return 'MultimintEvent(field0: $field0)';
 }
 
 
 }
 
 /// @nodoc
-class $MultimintEventKindCopyWith<$Res>  {
-$MultimintEventKindCopyWith(MultimintEventKind _, $Res Function(MultimintEventKind) __);
+class $MultimintEventCopyWith<$Res>  {
+$MultimintEventCopyWith(MultimintEvent _, $Res Function(MultimintEvent) __);
 }
 
 
 /// @nodoc
 
 
-class MultimintEventKind_Deposit extends MultimintEventKind {
-  const MultimintEventKind_Deposit(this.field0): super._();
+class MultimintEvent_Deposit extends MultimintEvent {
+  const MultimintEvent_Deposit(this.field0): super._();
   
 
-@override final  DepositEventKind field0;
+@override final  (FederationId, DepositEventKind) field0;
 
-/// Create a copy of MultimintEventKind
+/// Create a copy of MultimintEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MultimintEventKind_DepositCopyWith<MultimintEventKind_Deposit> get copyWith => _$MultimintEventKind_DepositCopyWithImpl<MultimintEventKind_Deposit>(this, _$identity);
+$MultimintEvent_DepositCopyWith<MultimintEvent_Deposit> get copyWith => _$MultimintEvent_DepositCopyWithImpl<MultimintEvent_Deposit>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEventKind_Deposit&&(identical(other.field0, field0) || other.field0 == field0));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEvent_Deposit&&(identical(other.field0, field0) || other.field0 == field0));
 }
 
 
@@ -657,73 +657,64 @@ int get hashCode => Object.hash(runtimeType,field0);
 
 @override
 String toString() {
-  return 'MultimintEventKind.deposit(field0: $field0)';
+  return 'MultimintEvent.deposit(field0: $field0)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MultimintEventKind_DepositCopyWith<$Res> implements $MultimintEventKindCopyWith<$Res> {
-  factory $MultimintEventKind_DepositCopyWith(MultimintEventKind_Deposit value, $Res Function(MultimintEventKind_Deposit) _then) = _$MultimintEventKind_DepositCopyWithImpl;
+abstract mixin class $MultimintEvent_DepositCopyWith<$Res> implements $MultimintEventCopyWith<$Res> {
+  factory $MultimintEvent_DepositCopyWith(MultimintEvent_Deposit value, $Res Function(MultimintEvent_Deposit) _then) = _$MultimintEvent_DepositCopyWithImpl;
 @useResult
 $Res call({
- DepositEventKind field0
+ (FederationId, DepositEventKind) field0
 });
 
 
-$DepositEventKindCopyWith<$Res> get field0;
+
 
 }
 /// @nodoc
-class _$MultimintEventKind_DepositCopyWithImpl<$Res>
-    implements $MultimintEventKind_DepositCopyWith<$Res> {
-  _$MultimintEventKind_DepositCopyWithImpl(this._self, this._then);
+class _$MultimintEvent_DepositCopyWithImpl<$Res>
+    implements $MultimintEvent_DepositCopyWith<$Res> {
+  _$MultimintEvent_DepositCopyWithImpl(this._self, this._then);
 
-  final MultimintEventKind_Deposit _self;
-  final $Res Function(MultimintEventKind_Deposit) _then;
+  final MultimintEvent_Deposit _self;
+  final $Res Function(MultimintEvent_Deposit) _then;
 
-/// Create a copy of MultimintEventKind
+/// Create a copy of MultimintEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
-  return _then(MultimintEventKind_Deposit(
+  return _then(MultimintEvent_Deposit(
 null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
-as DepositEventKind,
+as (FederationId, DepositEventKind),
   ));
 }
 
-/// Create a copy of MultimintEventKind
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$DepositEventKindCopyWith<$Res> get field0 {
-  
-  return $DepositEventKindCopyWith<$Res>(_self.field0, (value) {
-    return _then(_self.copyWith(field0: value));
-  });
-}
+
 }
 
 /// @nodoc
 
 
-class MultimintEventKind_Lightning extends MultimintEventKind {
-  const MultimintEventKind_Lightning(this.field0): super._();
+class MultimintEvent_Lightning extends MultimintEvent {
+  const MultimintEvent_Lightning(this.field0): super._();
   
 
-@override final  LightningEventKind field0;
+@override final  (FederationId, LightningEventKind) field0;
 
-/// Create a copy of MultimintEventKind
+/// Create a copy of MultimintEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MultimintEventKind_LightningCopyWith<MultimintEventKind_Lightning> get copyWith => _$MultimintEventKind_LightningCopyWithImpl<MultimintEventKind_Lightning>(this, _$identity);
+$MultimintEvent_LightningCopyWith<MultimintEvent_Lightning> get copyWith => _$MultimintEvent_LightningCopyWithImpl<MultimintEvent_Lightning>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEventKind_Lightning&&(identical(other.field0, field0) || other.field0 == field0));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEvent_Lightning&&(identical(other.field0, field0) || other.field0 == field0));
 }
 
 
@@ -732,51 +723,108 @@ int get hashCode => Object.hash(runtimeType,field0);
 
 @override
 String toString() {
-  return 'MultimintEventKind.lightning(field0: $field0)';
+  return 'MultimintEvent.lightning(field0: $field0)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MultimintEventKind_LightningCopyWith<$Res> implements $MultimintEventKindCopyWith<$Res> {
-  factory $MultimintEventKind_LightningCopyWith(MultimintEventKind_Lightning value, $Res Function(MultimintEventKind_Lightning) _then) = _$MultimintEventKind_LightningCopyWithImpl;
+abstract mixin class $MultimintEvent_LightningCopyWith<$Res> implements $MultimintEventCopyWith<$Res> {
+  factory $MultimintEvent_LightningCopyWith(MultimintEvent_Lightning value, $Res Function(MultimintEvent_Lightning) _then) = _$MultimintEvent_LightningCopyWithImpl;
 @useResult
 $Res call({
- LightningEventKind field0
+ (FederationId, LightningEventKind) field0
 });
 
 
-$LightningEventKindCopyWith<$Res> get field0;
+
 
 }
 /// @nodoc
-class _$MultimintEventKind_LightningCopyWithImpl<$Res>
-    implements $MultimintEventKind_LightningCopyWith<$Res> {
-  _$MultimintEventKind_LightningCopyWithImpl(this._self, this._then);
+class _$MultimintEvent_LightningCopyWithImpl<$Res>
+    implements $MultimintEvent_LightningCopyWith<$Res> {
+  _$MultimintEvent_LightningCopyWithImpl(this._self, this._then);
 
-  final MultimintEventKind_Lightning _self;
-  final $Res Function(MultimintEventKind_Lightning) _then;
+  final MultimintEvent_Lightning _self;
+  final $Res Function(MultimintEvent_Lightning) _then;
 
-/// Create a copy of MultimintEventKind
+/// Create a copy of MultimintEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
-  return _then(MultimintEventKind_Lightning(
+  return _then(MultimintEvent_Lightning(
 null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
-as LightningEventKind,
+as (FederationId, LightningEventKind),
   ));
 }
 
-/// Create a copy of MultimintEventKind
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$LightningEventKindCopyWith<$Res> get field0 {
-  
-  return $LightningEventKindCopyWith<$Res>(_self.field0, (value) {
-    return _then(_self.copyWith(field0: value));
-  });
+
 }
+
+/// @nodoc
+
+
+class MultimintEvent_Log extends MultimintEvent {
+  const MultimintEvent_Log(this.field0): super._();
+  
+
+@override final  String field0;
+
+/// Create a copy of MultimintEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MultimintEvent_LogCopyWith<MultimintEvent_Log> get copyWith => _$MultimintEvent_LogCopyWithImpl<MultimintEvent_Log>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MultimintEvent_Log&&(identical(other.field0, field0) || other.field0 == field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,field0);
+
+@override
+String toString() {
+  return 'MultimintEvent.log(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MultimintEvent_LogCopyWith<$Res> implements $MultimintEventCopyWith<$Res> {
+  factory $MultimintEvent_LogCopyWith(MultimintEvent_Log value, $Res Function(MultimintEvent_Log) _then) = _$MultimintEvent_LogCopyWithImpl;
+@useResult
+$Res call({
+ String field0
+});
+
+
+
+
+}
+/// @nodoc
+class _$MultimintEvent_LogCopyWithImpl<$Res>
+    implements $MultimintEvent_LogCopyWith<$Res> {
+  _$MultimintEvent_LogCopyWithImpl(this._self, this._then);
+
+  final MultimintEvent_Log _self;
+  final $Res Function(MultimintEvent_Log) _then;
+
+/// Create a copy of MultimintEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
+  return _then(MultimintEvent_Log(
+null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
 }
 
 // dart format on
