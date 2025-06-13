@@ -110,7 +110,7 @@ class _ToastWidgetState extends State<_ToastWidget>
     final theme = Theme.of(context);
 
     return Positioned(
-      bottom: 50,
+      top: 50,
       left: 20,
       right: 20,
       child: SlideTransition(
@@ -144,12 +144,20 @@ class _ToastWidgetState extends State<_ToastWidget>
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.message,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        const Icon(Icons.flash_on, color: Colors.amber),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            widget.message,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     ValueListenableBuilder<double>(
