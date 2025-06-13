@@ -214,6 +214,9 @@ Future<NWCConnectionInfo> setNwcConnectionInfo({
 
 Future<List<String>> getRelays() => RustLib.instance.api.crateGetRelays();
 
+Future<List<Utxo>> walletSummary({required String invite}) =>
+    RustLib.instance.api.crateWalletSummary(invite: invite);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientConfig>>
 abstract class ClientConfig implements RustOpaqueInterface {}
 

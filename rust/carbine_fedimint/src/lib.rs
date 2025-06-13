@@ -11,6 +11,7 @@ use fedimint_core::config::ClientConfig;
 use flutter_rust_bridge::frb;
 use multimint::{
     FederationMeta, FederationSelector, Multimint, MultimintCreation, PaymentPreview, Transaction,
+    Utxo,
 };
 use nostr::{NWCConnectionInfo, NostrClient, PublicFederation};
 use tokio::sync::{OnceCell, RwLock};
@@ -456,4 +457,10 @@ pub async fn get_relays() -> Vec<String> {
     let nostr_client = get_nostr_client().await;
     let nostr = nostr_client.read().await;
     nostr.get_relays().await
+}
+
+#[frb]
+pub async fn wallet_summary(invite: String) -> anyhow::Result<Vec<Utxo>> {
+    let multimint = get_multimint().await;
+    multimint.wallet_summary(invite).await
 }
