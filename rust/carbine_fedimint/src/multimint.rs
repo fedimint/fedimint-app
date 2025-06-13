@@ -40,8 +40,8 @@ use fedimint_mint_client::{
     MintClientInit, MintClientModule, MintOperationMeta, MintOperationMetaVariant, OOBNotes,
     ReissueExternalNotesState, SelectNotesWithAtleastAmount, SpendOOBState,
 };
-use fedimint_wallet_client::api::WalletFederationApi;
 use fedimint_wallet_client::client_db::TweakIdx;
+use fedimint_wallet_client::{api::WalletFederationApi, TxOutputSummary};
 use fedimint_wallet_client::{
     DepositStateV2, WalletClientInit, WalletClientModule, WalletOperationMeta,
     WalletOperationMetaVariant, WithdrawState,
@@ -117,6 +117,23 @@ pub struct Transaction {
     pub module: String,
     pub timestamp: u64,
     pub operation_id: Vec<u8>,
+}
+
+#[derive(Debug, Serialize, Clone, Eq, PartialEq)]
+pub struct Utxo {
+    pub txid: String,
+    pub index: u32,
+    pub amount: u64,
+}
+
+impl From<TxOutputSummary> for Utxo {
+    fn from(value: TxOutputSummary) -> Self {
+        Self {
+            txid: value.outpoint.txid.to_string(),
+            index: value.outpoint.vout,
+            amount: value.amount.to_sat() * 1000,
+        }
+    }
 }
 
 pub enum MultimintCreation {
@@ -533,11 +550,10 @@ impl Multimint {
         dbtx.commit_tx().await;
     }
 
-    // TODO: Need to add caching for this
-    pub async fn get_federation_meta(
+    async fn get_or_build_temp_client(
         &self,
         invite: String,
-    ) -> anyhow::Result<(FederationMeta, FederationSelector)> {
+    ) -> anyhow::Result<(ClientHandleArc, FederationId)> {
         // Sometimes we want to get the federation meta before we've joined (i.e to show a preview).
         // In this case, we create a temprorary client and retrieve all the data
         let invite_code = InviteCode::from_str(&invite)?;
@@ -545,10 +561,8 @@ impl Multimint {
         let maybe_client = self.clients.read().await.get(&federation_id).cloned();
         let client = if let Some(client) = maybe_client {
             if !client.has_pending_recoveries() {
-                println!("Federation Meta: Using cached client");
                 client
             } else {
-                println!("Federation Meta: Building temporary client because we are recovering");
                 self.build_client(
                     &federation_id,
                     &invite_code,
@@ -558,7 +572,6 @@ impl Multimint {
                 .await?
             }
         } else {
-            println!("Federation Meta: Building temporary client");
             self.build_client(
                 &federation_id,
                 &invite_code,
@@ -567,6 +580,16 @@ impl Multimint {
             )
             .await?
         };
+
+        Ok((client, federation_id))
+    }
+
+    // TODO: Need to add caching for this
+    pub async fn get_federation_meta(
+        &self,
+        invite: String,
+    ) -> anyhow::Result<(FederationMeta, FederationSelector)> {
+        let (client, federation_id) = self.get_or_build_temp_client(invite.clone()).await?;
 
         let config = client.config().await;
         let wallet = client.get_first_module::<fedimint_wallet_client::WalletClientModule>()?;
@@ -586,7 +609,7 @@ impl Multimint {
             federation_name: config.global.federation_name().unwrap_or("").to_string(),
             federation_id,
             network: Some(network),
-            invite_code: invite_code.to_string(),
+            invite_code: invite,
         };
 
         let meta = client.get_first_module::<fedimint_meta_client::MetaClientModule>();
@@ -1846,6 +1869,18 @@ impl Multimint {
         }
 
         Ok(())
+    }
+
+    pub async fn wallet_summary(&self, invite: String) -> anyhow::Result<Vec<Utxo>> {
+        let (client, _) = self.get_or_build_temp_client(invite).await?;
+        let wallet_module = client.get_first_module::<WalletClientModule>()?;
+        let wallet_summary = wallet_module.get_wallet_summary().await?;
+        let utxos = wallet_summary
+            .spendable_utxos
+            .into_iter()
+            .map(Utxo::from)
+            .collect();
+        Ok(utxos)
     }
 }
 

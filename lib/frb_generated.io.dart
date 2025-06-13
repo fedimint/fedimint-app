@@ -479,6 +479,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<Transaction> dco_decode_list_transaction(dynamic raw);
 
   @protected
+  List<Utxo> dco_decode_list_utxo(dynamic raw);
+
+  @protected
   MempoolEvent dco_decode_mempool_event(dynamic raw);
 
   @protected
@@ -551,6 +554,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Transaction dco_decode_transaction(dynamic raw);
 
   @protected
+  int dco_decode_u_32(dynamic raw);
+
+  @protected
   BigInt dco_decode_u_64(dynamic raw);
 
   @protected
@@ -561,6 +567,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt dco_decode_usize(dynamic raw);
+
+  @protected
+  Utxo dco_decode_utxo(dynamic raw);
 
   @protected
   AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
@@ -962,6 +971,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<Transaction> sse_decode_list_transaction(SseDeserializer deserializer);
 
   @protected
+  List<Utxo> sse_decode_list_utxo(SseDeserializer deserializer);
+
+  @protected
   MempoolEvent sse_decode_mempool_event(SseDeserializer deserializer);
 
   @protected
@@ -1038,6 +1050,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Transaction sse_decode_transaction(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_u_32(SseDeserializer deserializer);
+
+  @protected
   BigInt sse_decode_u_64(SseDeserializer deserializer);
 
   @protected
@@ -1048,6 +1063,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt sse_decode_usize(SseDeserializer deserializer);
+
+  @protected
+  Utxo sse_decode_utxo(SseDeserializer deserializer);
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
@@ -1531,6 +1549,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_utxo(List<Utxo> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_mempool_event(MempoolEvent self, SseSerializer serializer);
 
   @protected
@@ -1628,6 +1649,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_transaction(Transaction self, SseSerializer serializer);
 
   @protected
+  void sse_encode_u_32(int self, SseSerializer serializer);
+
+  @protected
   void sse_encode_u_64(BigInt self, SseSerializer serializer);
 
   @protected
@@ -1638,6 +1662,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_usize(BigInt self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_utxo(Utxo self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
