@@ -49,6 +49,7 @@ class AppLogger {
   void warn(String message) => _log("WARN", message);
   void error(String message) => _log("ERROR", message);
   void debug(String message) => _log("DEBUG", message);
+  void rustLog(String message) => _log("RUST", message);
 }
 
 int threshold(int totalPeers) {

@@ -3,12 +3,16 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import 'event_bus.dart';
 import 'frb_generated.dart';
 import 'multimint.dart';
 import 'nostr.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `create_nostr_client`, `get_database`, `get_multimint`, `get_nostr_client`
+// These functions are ignored because they are not marked as `pub`: `create_event_bus`, `create_nostr_client`, `get_database`, `get_multimint`, `get_nostr_client`, `log_to_flutter_str`, `log_to_flutter`
+
+Future<EventBusMultimintEvent> getEventBus() =>
+    RustLib.instance.api.crateGetEventBus();
 
 Future<void> createNewMultimint({required String path}) =>
     RustLib.instance.api.crateCreateNewMultimint(path: path);
@@ -98,7 +102,7 @@ Future<(FinalSendOperationState, String)> awaitSend({
   operationId: operationId,
 );
 
-Future<FinalReceiveOperationState> awaitReceive({
+Future<(FinalReceiveOperationState, BigInt)> awaitReceive({
   required FederationId federationId,
   required OperationId operationId,
 }) => RustLib.instance.api.crateAwaitReceive(
@@ -185,8 +189,9 @@ Future<void> ackSeedPhrase() => RustLib.instance.api.crateAckSeedPhrase();
 
 Future<List<String>> wordList() => RustLib.instance.api.crateWordList();
 
-Stream<DepositEvent> subscribeDeposits({required FederationId federationId}) =>
-    RustLib.instance.api.crateSubscribeDeposits(federationId: federationId);
+Stream<DepositEventKind> subscribeDeposits({
+  required FederationId federationId,
+}) => RustLib.instance.api.crateSubscribeDeposits(federationId: federationId);
 
 Future<void> monitorDepositAddress({
   required FederationId federationId,
@@ -213,6 +218,12 @@ Future<NWCConnectionInfo> setNwcConnectionInfo({
 );
 
 Future<List<String>> getRelays() => RustLib.instance.api.crateGetRelays();
+
+Stream<MultimintEvent> subscribeMultimintEvents() =>
+    RustLib.instance.api.crateSubscribeMultimintEvents();
+
+Future<String> federationIdToString({required FederationId federationId}) =>
+    RustLib.instance.api.crateFederationIdToString(federationId: federationId);
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientConfig>>
 abstract class ClientConfig implements RustOpaqueInterface {}

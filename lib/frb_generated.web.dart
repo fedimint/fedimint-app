@@ -9,6 +9,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'db.dart';
+import 'event_bus.dart';
 import 'frb_generated.dart';
 import 'lib.dart';
 import 'multimint.dart';
@@ -41,8 +42,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDatabase;
 
   CrossPlatformFinalizerArg
-  get rust_arc_decrement_strong_count_DepositEventPtr =>
-      wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent;
+  get rust_arc_decrement_strong_count_EventBusMultimintEventPtr =>
+      wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent;
 
   CrossPlatformFinalizerArg
   get rust_arc_decrement_strong_count_FederationConfigPtr =>
@@ -127,8 +128,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  DepositEvent
-  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+  EventBusMultimintEvent
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
     dynamic raw,
   );
 
@@ -211,12 +212,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  DepositEvent
-  dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    dynamic raw,
-  );
-
-  @protected
   FederationConfig
   dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     dynamic raw,
@@ -243,12 +238,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   PublicFederation
   dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPublicFederation(
-    dynamic raw,
-  );
-
-  @protected
-  DepositEvent
-  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
     dynamic raw,
   );
 
@@ -319,8 +308,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  DepositEvent
-  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+  EventBusMultimintEvent
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
     dynamic raw,
   );
 
@@ -403,8 +392,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  RustStreamSink<DepositEvent>
-  dco_decode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent_Sse(
+  RustStreamSink<DepositEventKind> dco_decode_StreamSink_deposit_event_kind_Sse(
+    dynamic raw,
+  );
+
+  @protected
+  RustStreamSink<MultimintEvent> dco_decode_StreamSink_multimint_event_Sse(
     dynamic raw,
   );
 
@@ -427,10 +420,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ConfirmedEvent dco_decode_box_autoadd_confirmed_event(dynamic raw);
 
   @protected
+  InvoicePaidEvent dco_decode_box_autoadd_invoice_paid_event(dynamic raw);
+
+  @protected
   MempoolEvent dco_decode_box_autoadd_mempool_event(dynamic raw);
 
   @protected
   MultimintCreation dco_decode_box_autoadd_multimint_creation(dynamic raw);
+
+  @protected
+  (FederationId, DepositEventKind)
+  dco_decode_box_autoadd_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_deposit_event_kind(
+    dynamic raw,
+  );
+
+  @protected
+  (FederationId, LightningEventKind)
+  dco_decode_box_autoadd_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_lightning_event_kind(
+    dynamic raw,
+  );
 
   @protected
   BigInt dco_decode_box_autoadd_u_64(dynamic raw);
@@ -449,6 +457,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Guardian dco_decode_guardian(dynamic raw);
+
+  @protected
+  InvoicePaidEvent dco_decode_invoice_paid_event(dynamic raw);
+
+  @protected
+  LightningEventKind dco_decode_lightning_event_kind(dynamic raw);
 
   @protected
   List<PublicFederation>
@@ -487,6 +501,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MultimintCreation dco_decode_multimint_creation(dynamic raw);
 
   @protected
+  MultimintEvent dco_decode_multimint_event(dynamic raw);
+
+  @protected
   NWCConnectionInfo dco_decode_nwc_connection_info(dynamic raw);
 
   @protected
@@ -508,6 +525,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  (FederationId, DepositEventKind)
+  dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_deposit_event_kind(
+    dynamic raw,
+  );
+
+  @protected
+  (FederationId, LightningEventKind)
+  dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_lightning_event_kind(
+    dynamic raw,
+  );
+
+  @protected
   (FederationSelector, bool)
   dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector_bool(
     dynamic raw,
@@ -516,6 +545,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   (FederationSelector, NWCConnectionInfo)
   dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector_nwc_connection_info(
+    dynamic raw,
+  );
+
+  @protected
+  (FinalReceiveOperationState, BigInt)
+  dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_receive_operation_state_u_64(
     dynamic raw,
   );
 
@@ -598,8 +633,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  DepositEvent
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+  EventBusMultimintEvent
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
     SseDeserializer deserializer,
   );
 
@@ -682,12 +717,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  DepositEvent
-  sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    SseDeserializer deserializer,
-  );
-
-  @protected
   FederationConfig
   sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     SseDeserializer deserializer,
@@ -714,12 +743,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   PublicFederation
   sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPublicFederation(
-    SseDeserializer deserializer,
-  );
-
-  @protected
-  DepositEvent
-  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
     SseDeserializer deserializer,
   );
 
@@ -790,8 +813,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  DepositEvent
-  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+  EventBusMultimintEvent
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
     SseDeserializer deserializer,
   );
 
@@ -874,8 +897,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  RustStreamSink<DepositEvent>
-  sse_decode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent_Sse(
+  RustStreamSink<DepositEventKind> sse_decode_StreamSink_deposit_event_kind_Sse(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  RustStreamSink<MultimintEvent> sse_decode_StreamSink_multimint_event_Sse(
     SseDeserializer deserializer,
   );
 
@@ -906,12 +933,29 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  InvoicePaidEvent sse_decode_box_autoadd_invoice_paid_event(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   MempoolEvent sse_decode_box_autoadd_mempool_event(
     SseDeserializer deserializer,
   );
 
   @protected
   MultimintCreation sse_decode_box_autoadd_multimint_creation(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  (FederationId, DepositEventKind)
+  sse_decode_box_autoadd_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_deposit_event_kind(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  (FederationId, LightningEventKind)
+  sse_decode_box_autoadd_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_lightning_event_kind(
     SseDeserializer deserializer,
   );
 
@@ -932,6 +976,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Guardian sse_decode_guardian(SseDeserializer deserializer);
+
+  @protected
+  InvoicePaidEvent sse_decode_invoice_paid_event(SseDeserializer deserializer);
+
+  @protected
+  LightningEventKind sse_decode_lightning_event_kind(
+    SseDeserializer deserializer,
+  );
 
   @protected
   List<PublicFederation>
@@ -970,6 +1022,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MultimintCreation sse_decode_multimint_creation(SseDeserializer deserializer);
 
   @protected
+  MultimintEvent sse_decode_multimint_event(SseDeserializer deserializer);
+
+  @protected
   NWCConnectionInfo sse_decode_nwc_connection_info(
     SseDeserializer deserializer,
   );
@@ -993,6 +1048,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  (FederationId, DepositEventKind)
+  sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_deposit_event_kind(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  (FederationId, LightningEventKind)
+  sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_lightning_event_kind(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   (FederationSelector, bool)
   sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector_bool(
     SseDeserializer deserializer,
@@ -1001,6 +1068,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   (FederationSelector, NWCConnectionInfo)
   sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector_nwc_connection_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  (FinalReceiveOperationState, BigInt)
+  sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_receive_operation_state_u_64(
     SseDeserializer deserializer,
   );
 
@@ -1097,8 +1170,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    DepositEvent self,
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
+    EventBusMultimintEvent self,
     SseSerializer serializer,
   );
 
@@ -1195,13 +1268,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-  sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    DepositEvent self,
-    SseSerializer serializer,
-  );
-
-  @protected
-  void
   sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationConfig(
     FederationConfig self,
     SseSerializer serializer,
@@ -1232,13 +1298,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
   sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPublicFederation(
     PublicFederation self,
-    SseSerializer serializer,
-  );
-
-  @protected
-  void
-  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    DepositEvent self,
     SseSerializer serializer,
   );
 
@@ -1321,8 +1380,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
-    DepositEvent self,
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
+    EventBusMultimintEvent self,
     SseSerializer serializer,
   );
 
@@ -1418,9 +1477,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void
-  sse_encode_StreamSink_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent_Sse(
-    RustStreamSink<DepositEvent> self,
+  void sse_encode_StreamSink_deposit_event_kind_Sse(
+    RustStreamSink<DepositEventKind> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_StreamSink_multimint_event_Sse(
+    RustStreamSink<MultimintEvent> self,
     SseSerializer serializer,
   );
 
@@ -1455,6 +1519,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_box_autoadd_invoice_paid_event(
+    InvoicePaidEvent self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_mempool_event(
     MempoolEvent self,
     SseSerializer serializer,
@@ -1463,6 +1533,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_multimint_creation(
     MultimintCreation self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_box_autoadd_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_deposit_event_kind(
+    (FederationId, DepositEventKind) self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_box_autoadd_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_lightning_event_kind(
+    (FederationId, LightningEventKind) self,
     SseSerializer serializer,
   );
 
@@ -1492,6 +1576,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_guardian(Guardian self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_invoice_paid_event(
+    InvoicePaidEvent self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_lightning_event_kind(
+    LightningEventKind self,
+    SseSerializer serializer,
+  );
 
   @protected
   void
@@ -1542,6 +1638,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_multimint_event(
+    MultimintEvent self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_nwc_connection_info(
     NWCConnectionInfo self,
     SseSerializer serializer,
@@ -1574,6 +1676,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+  sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_deposit_event_kind(
+    (FederationId, DepositEventKind) self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_id_lightning_event_kind(
+    (FederationId, LightningEventKind) self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
   sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector_bool(
     (FederationSelector, bool) self,
     SseSerializer serializer,
@@ -1583,6 +1699,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
   sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector_nwc_connection_info(
     (FederationSelector, NWCConnectionInfo) self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_receive_operation_state_u_64(
+    (FinalReceiveOperationState, BigInt) self,
     SseSerializer serializer,
   );
 
@@ -1731,18 +1854,18 @@ class RustLibWire implements BaseWire {
       );
 
   void
-  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
     int ptr,
   ) => wasmModule
-      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
         ptr,
       );
 
   void
-  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
     int ptr,
   ) => wasmModule
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
         ptr,
       );
 
@@ -2012,12 +2135,12 @@ extension type RustLibWasmModule._(JSObject _) implements JSObject {
   );
 
   external void
-  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
     int ptr,
   );
 
   external void
-  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDepositEvent(
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerEventBusMultimintEvent(
     int ptr,
   );
 
