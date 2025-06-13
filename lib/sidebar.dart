@@ -256,7 +256,7 @@ class _FederationListItemState extends State<FederationListItem> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.qr_code),
+                  icon: const Icon(Icons.groups_outlined),
                   color: Colors.greenAccent,
                   onPressed: () {
                     showCarbineModalBottomSheet(

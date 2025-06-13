@@ -64,9 +64,9 @@ class _NumberPadState extends State<NumberPad> {
   }
 
   String _formatAmount(String value) {
-    if (value.isEmpty) return '0';
+    if (value.isEmpty) return '₿0';
     final number = int.tryParse(value) ?? 0;
-    final formatter = NumberFormat('#,###', 'en_US');
+    final formatter = NumberFormat('₿#,###', 'en_US');
     return formatter.format(number).replaceAll(',', ' ');
   }
 
@@ -213,14 +213,6 @@ class _NumberPadState extends State<NumberPad> {
                     style: const TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  TextSpan(
-                    text: ' sats',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white70,
                     ),
                   ),
                 ],

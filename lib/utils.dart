@@ -57,19 +57,19 @@ int threshold(int totalPeers) {
 }
 
 String formatBalance(BigInt? msats, bool showMsats) {
-  if (msats == null) return showMsats ? '0 msats' : '0 sats';
+  if (msats == null) return showMsats ? '₿0.000' : '₿0';
 
   if (showMsats) {
-    final formatter = NumberFormat('#,##0', 'en_US');
-    var formatted = formatter.format(msats.toInt());
-    formatted = formatted.replaceAll(',', ' ');
-    return '$formatted msats';
+    final btcAmount =
+        msats.toDouble() / 1000; // convert to sats with msat precision
+    final formatter = NumberFormat('#,##0.000', 'en_US');
+    var formatted = formatter.format(btcAmount).replaceAll(',', ' ');
+    return '₿$formatted';
   } else {
     final sats = msats.toSats;
     final formatter = NumberFormat('#,##0', 'en_US');
-    var formatted = formatter.format(sats.toInt());
-    formatted = formatted.replaceAll(',', ' ');
-    return '$formatted sats';
+    var formatted = formatter.format(sats.toInt()).replaceAll(',', ' ');
+    return '₿$formatted';
   }
 }
 
