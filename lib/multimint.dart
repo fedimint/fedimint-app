@@ -9,26 +9,15 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'multimint.freezed.dart';
 
-// These functions are ignored because they are not marked as `pub`: `_has_federation`, `await_receive_lnv1`, `await_receive_lnv2`, `await_send_lnv1`, `await_send_lnv2`, `build_client`, `compute_receive_amount`, `compute_send_amount`, `derive_federation_secret`, `finish_active_subscriptions`, `get_client_database`, `invoice_routes_back_to_federation`, `lnv1_select_gateway`, `lnv1_update_gateway_cache`, `lnv2_select_gateway`, `load_clients`, `monitor_all_unused_pegin_addresses`, `pay_lnv1`, `pay_lnv2`, `receive_amount_after_fees`, `receive_lnv1`, `receive_lnv2`, `spawn_await_ecash_reissue`, `spawn_await_ecash_send`, `spawn_await_receive`, `spawn_await_send`, `spawn_pegin_address_watcher`, `spawn_recovery_progress`, `watch_pegin_address`
+// These functions are ignored because they are not marked as `pub`: `_has_federation`, `await_receive_lnv1`, `await_receive_lnv2`, `await_send_lnv1`, `await_send_lnv2`, `build_client`, `compute_receive_amount`, `compute_send_amount`, `derive_federation_secret`, `finish_active_subscriptions`, `get_client_database`, `get_lnv1_amount_from_meta`, `get_lnv2_amount_from_meta`, `invoice_routes_back_to_federation`, `lnv1_select_gateway`, `lnv1_update_gateway_cache`, `lnv2_select_gateway`, `load_clients`, `monitor_all_unused_pegin_addresses`, `pay_lnv1`, `pay_lnv2`, `receive_amount_after_fees`, `receive_lnv1`, `receive_lnv2`, `spawn_await_ecash_reissue`, `spawn_await_ecash_send`, `spawn_await_receive`, `spawn_await_send`, `spawn_pegin_address_watcher`, `spawn_recovery_progress`, `watch_pegin_address`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `ClientType`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Amount>>
 abstract class Amount implements RustOpaqueInterface {}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Bolt11Invoice>>
 abstract class Bolt11Invoice implements RustOpaqueInterface {}
-
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DepositEvent>>
-abstract class DepositEvent implements RustOpaqueInterface {
-  DepositEventKind get eventKind;
-
-  FederationId get federationId;
-
-  set eventKind(DepositEventKind eventKind);
-
-  set federationId(FederationId federationId);
-}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FederationSelector>>
 abstract class FederationSelector implements RustOpaqueInterface {
@@ -71,7 +60,7 @@ abstract class Multimint implements RustOpaqueInterface {
     required OperationId operationId,
   });
 
-  Future<FinalReceiveOperationState> awaitReceive({
+  Future<(FinalReceiveOperationState, BigInt)> awaitReceive({
     required FederationId federationId,
     required OperationId operationId,
   });
@@ -161,7 +150,11 @@ abstract class Multimint implements RustOpaqueInterface {
     required BigInt amountMsats,
   });
 
-  Stream<DepositEvent> subscribeDeposits({required FederationId federationId});
+  Stream<DepositEventKind> subscribeDeposits({
+    required FederationId federationId,
+  });
+
+  Stream<MultimintEvent> subscribeMultimintEvents();
 
   Future<List<Transaction>> transactions({
     required FederationId federationId,
@@ -171,6 +164,17 @@ abstract class Multimint implements RustOpaqueInterface {
   });
 
   Future<FederationSelector> waitForRecovery({required String inviteCode});
+}
+
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MultimintEvent>>
+abstract class MultimintEvent implements RustOpaqueInterface {
+  MultimintEventKind get eventKind;
+
+  FederationId get federationId;
+
+  set eventKind(MultimintEventKind eventKind);
+
+  set federationId(FederationId federationId);
 }
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OperationId>>
@@ -301,6 +305,30 @@ class Guardian {
           version == other.version;
 }
 
+class InvoicePaidEvent {
+  final BigInt amountMsats;
+
+  const InvoicePaidEvent({required this.amountMsats});
+
+  @override
+  int get hashCode => amountMsats.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InvoicePaidEvent &&
+          runtimeType == other.runtimeType &&
+          amountMsats == other.amountMsats;
+}
+
+@freezed
+sealed class LightningEventKind with _$LightningEventKind {
+  const LightningEventKind._();
+
+  const factory LightningEventKind.invoicePaid(InvoicePaidEvent field0) =
+      LightningEventKind_InvoicePaid;
+}
+
 class MempoolEvent {
   final BigInt amount;
   final String txid;
@@ -329,6 +357,16 @@ sealed class MultimintCreation with _$MultimintCreation {
   const factory MultimintCreation.newFromMnemonic({
     required List<String> words,
   }) = MultimintCreation_NewFromMnemonic;
+}
+
+@freezed
+sealed class MultimintEventKind with _$MultimintEventKind {
+  const MultimintEventKind._();
+
+  const factory MultimintEventKind.deposit(DepositEventKind field0) =
+      MultimintEventKind_Deposit;
+  const factory MultimintEventKind.lightning(LightningEventKind field0) =
+      MultimintEventKind_Lightning;
 }
 
 class PaymentPreview {

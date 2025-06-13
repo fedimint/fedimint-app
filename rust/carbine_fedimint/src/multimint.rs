@@ -11,8 +11,9 @@ use bitcoin::key::rand::{seq::SliceRandom, thread_rng};
 use fedimint_api_client::api::net::Connector;
 use fedimint_bip39::{Bip39RootSecretStrategy, Language, Mnemonic};
 use fedimint_client::{
-    db::ChronologicalOperationLogKey, module_init::ClientModuleInitRegistry,
-    secret::RootSecretStrategy, Client, ClientHandleArc, OperationId,
+    db::ChronologicalOperationLogKey, module::oplog::OperationLogEntry,
+    module_init::ClientModuleInitRegistry, secret::RootSecretStrategy, Client, ClientHandleArc,
+    OperationId,
 };
 use fedimint_core::{
     config::{ClientConfig, FederationId},
@@ -94,7 +95,7 @@ pub struct Multimint {
     clients: Arc<RwLock<BTreeMap<FederationId, ClientHandleArc>>>,
     task_group: TaskGroup,
     pegin_address_monitor_tx: UnboundedSender<(FederationId, TweakIdx)>,
-    event_bus: EventBus<DepositEvent>,
+    event_bus: EventBus<MultimintEvent>,
 }
 
 #[derive(Debug, Serialize)]
@@ -167,9 +168,25 @@ pub enum DepositEventKind {
 }
 
 #[derive(Clone, Eq, PartialEq, Serialize, Debug)]
-pub struct DepositEvent {
+pub struct InvoicePaidEvent {
+    pub amount_msats: u64,
+}
+
+#[derive(Clone, Eq, PartialEq, Serialize, Debug)]
+pub enum LightningEventKind {
+    InvoicePaid(InvoicePaidEvent),
+}
+
+#[derive(Clone, Eq, PartialEq, Serialize, Debug)]
+pub enum MultimintEventKind {
+    Deposit(DepositEventKind),
+    Lightning(LightningEventKind),
+}
+
+#[derive(Clone, Eq, PartialEq, Serialize, Debug)]
+pub struct MultimintEvent {
     pub federation_id: FederationId,
-    pub event_kind: DepositEventKind,
+    pub event_kind: MultimintEventKind,
 }
 
 impl Multimint {
@@ -332,7 +349,7 @@ impl Multimint {
         federation_id: FederationId,
         client: ClientHandleArc,
         tweak_idx: TweakIdx,
-        event_bus: EventBus<DepositEvent>,
+        event_bus: EventBus<MultimintEvent>,
     ) -> anyhow::Result<()> {
         let wallet_module = client.get_first_module::<WalletClientModule>()?;
 
@@ -354,12 +371,14 @@ impl Multimint {
                     btc_deposited,
                     btc_out_point,
                 } => {
-                    let deposit_event = DepositEvent {
+                    let deposit_event = MultimintEvent {
                         federation_id,
-                        event_kind: DepositEventKind::Mempool(MempoolEvent {
-                            amount: Amount::from_sats(btc_deposited.to_sat()).msats,
-                            txid: btc_out_point.txid.to_string(),
-                        }),
+                        event_kind: MultimintEventKind::Deposit(DepositEventKind::Mempool(
+                            MempoolEvent {
+                                amount: Amount::from_sats(btc_deposited.to_sat()).msats,
+                                txid: btc_out_point.txid.to_string(),
+                            },
+                        )),
                     };
 
                     event_bus.publish(deposit_event).await;
@@ -417,14 +436,16 @@ impl Multimint {
 
                         let needed = tx_height.saturating_sub(consensus_height);
 
-                        let deposit_event = DepositEvent {
+                        let deposit_event = MultimintEvent {
                             federation_id,
-                            event_kind: DepositEventKind::AwaitingConfs(AwaitingConfsEvent {
-                                amount: Amount::from_sats(btc_deposited.to_sat()).msats,
-                                txid: btc_out_point.txid.to_string(),
-                                block_height: tx_height,
-                                needed,
-                            }),
+                            event_kind: MultimintEventKind::Deposit(
+                                DepositEventKind::AwaitingConfs(AwaitingConfsEvent {
+                                    amount: Amount::from_sats(btc_deposited.to_sat()).msats,
+                                    txid: btc_out_point.txid.to_string(),
+                                    block_height: tx_height,
+                                    needed,
+                                }),
+                            ),
                         };
 
                         event_bus.publish(deposit_event).await;
@@ -442,12 +463,14 @@ impl Multimint {
                     btc_deposited,
                     btc_out_point,
                 } => {
-                    let deposit_event = DepositEvent {
+                    let deposit_event = MultimintEvent {
                         federation_id,
-                        event_kind: DepositEventKind::Confirmed(ConfirmedEvent {
-                            amount: Amount::from_sats(btc_deposited.to_sat()).msats,
-                            txid: btc_out_point.txid.to_string(),
-                        }),
+                        event_kind: MultimintEventKind::Deposit(DepositEventKind::Confirmed(
+                            ConfirmedEvent {
+                                amount: Amount::from_sats(btc_deposited.to_sat()).msats,
+                                txid: btc_out_point.txid.to_string(),
+                            },
+                        )),
                     };
 
                     event_bus.publish(deposit_event).await;
@@ -456,12 +479,14 @@ impl Multimint {
                     btc_deposited,
                     btc_out_point,
                 } => {
-                    let deposit_event = DepositEvent {
+                    let deposit_event = MultimintEvent {
                         federation_id,
-                        event_kind: DepositEventKind::Claimed(ClaimedEvent {
-                            amount: Amount::from_sats(btc_deposited.to_sat()).msats,
-                            txid: btc_out_point.txid.to_string(),
-                        }),
+                        event_kind: MultimintEventKind::Deposit(DepositEventKind::Claimed(
+                            ClaimedEvent {
+                                amount: Amount::from_sats(btc_deposited.to_sat()).msats,
+                                txid: btc_out_point.txid.to_string(),
+                            },
+                        )),
                     };
 
                     event_bus.publish(deposit_event).await;
@@ -942,7 +967,18 @@ impl Multimint {
         self.task_group
             .spawn_cancellable("await receive", async move {
                 match self_copy.await_receive(&federation_id, operation_id).await {
-                    Ok(final_state) => println!("Receive completed: {final_state:?}"),
+                    Ok((final_state, amount_msats)) => {
+                        let lightning_event =
+                            LightningEventKind::InvoicePaid(InvoicePaidEvent { amount_msats });
+                        println!("Receive completed: {final_state:?}");
+                        self_copy
+                            .event_bus
+                            .publish(MultimintEvent {
+                                federation_id,
+                                event_kind: MultimintEventKind::Lightning(lightning_event),
+                            })
+                            .await;
+                    }
                     Err(e) => println!("Could not await receive {operation_id:?} {e:?}"),
                 }
             });
@@ -1266,7 +1302,7 @@ impl Multimint {
         &self,
         federation_id: &FederationId,
         operation_id: OperationId,
-    ) -> anyhow::Result<FinalReceiveOperationState> {
+    ) -> anyhow::Result<(FinalReceiveOperationState, u64)> {
         let client = self
             .clients
             .read()
@@ -1274,18 +1310,18 @@ impl Multimint {
             .get(federation_id)
             .expect("No federation exists")
             .clone();
-        let receive_state = match Self::await_receive_lnv2(&client, operation_id).await {
+        let (receive_state, amount) = match Self::await_receive_lnv2(&client, operation_id).await {
             Ok(lnv2_final_state) => lnv2_final_state,
             Err(_) => Self::await_receive_lnv1(&client, operation_id).await?,
         };
 
-        Ok(receive_state)
+        Ok((receive_state, amount))
     }
 
     async fn await_receive_lnv2(
         client: &ClientHandleArc,
         operation_id: OperationId,
-    ) -> anyhow::Result<FinalReceiveOperationState> {
+    ) -> anyhow::Result<(FinalReceiveOperationState, u64)> {
         let lnv2 = client.get_first_module::<fedimint_lnv2_client::LightningClientModule>()?;
         let mut updates = lnv2
             .subscribe_receive_operation_state_updates(operation_id)
@@ -1306,13 +1342,31 @@ impl Multimint {
                 _ => {}
             }
         }
-        Ok(final_state)
+
+        let operation = client.operation_log().get_operation(operation_id).await;
+        let amount = Self::get_lnv2_amount_from_meta(operation);
+        Ok((final_state, amount))
+    }
+
+    fn get_lnv2_amount_from_meta(op_log_val: Option<OperationLogEntry>) -> u64 {
+        let Some(op_log_val) = op_log_val else {
+            return 0;
+        };
+        let meta = op_log_val.meta::<LightningOperationMeta>();
+        match meta {
+            LightningOperationMeta::Receive(receive) => {
+                serde_json::from_value::<Amount>(receive.custom_meta)
+                    .expect("Could not deserialize amount")
+                    .msats
+            }
+            LightningOperationMeta::Send(send) => send.contract.amount.msats,
+        }
     }
 
     async fn await_receive_lnv1(
         client: &ClientHandleArc,
         operation_id: OperationId,
-    ) -> anyhow::Result<FinalReceiveOperationState> {
+    ) -> anyhow::Result<(FinalReceiveOperationState, u64)> {
         let lnv1 = client.get_first_module::<LightningClientModule>()?;
         let mut updates = lnv1.subscribe_ln_receive(operation_id).await?.into_stream();
         let mut final_state = FinalReceiveOperationState::Failure;
@@ -1325,7 +1379,32 @@ impl Multimint {
             }
         }
 
-        Ok(final_state)
+        let operation = client.operation_log().get_operation(operation_id).await;
+        let amount = Self::get_lnv1_amount_from_meta(operation);
+        Ok((final_state, amount))
+    }
+
+    fn get_lnv1_amount_from_meta(op_log_val: Option<OperationLogEntry>) -> u64 {
+        let Some(op_log_val) = op_log_val else {
+            return 0;
+        };
+
+        let meta = op_log_val.meta::<fedimint_ln_client::LightningOperationMeta>();
+        match meta.variant {
+            LightningOperationMetaVariant::Pay(send) => send
+                .invoice
+                .amount_milli_satoshis()
+                .expect("Cannot pay amountless invoice"),
+            LightningOperationMetaVariant::Receive { invoice, .. } => invoice
+                .amount_milli_satoshis()
+                .expect("Cannot receive amountless invoice"),
+            LightningOperationMetaVariant::RecurringPaymentReceive(recurring) => recurring
+                .invoice
+                .amount_milli_satoshis()
+                .expect("Cannot receive amountless invoice"),
+            // Claim is covered by send
+            _ => 0,
+        }
     }
 
     async fn lnv1_update_gateway_cache(&self, client: &ClientHandleArc) -> anyhow::Result<()> {
@@ -1833,19 +1912,29 @@ impl Multimint {
     pub async fn subscribe_deposits(
         &self,
         federation_id: FederationId,
-        sink: StreamSink<DepositEvent>,
-    ) -> anyhow::Result<()> {
+        sink: StreamSink<DepositEventKind>,
+    ) {
         let mut stream = self.event_bus.subscribe();
 
         while let Some(evt) = stream.next().await {
             if evt.federation_id == federation_id {
-                if sink.add(evt).is_err() {
-                    break;
+                if let MultimintEventKind::Deposit(deposit) = evt.event_kind {
+                    if sink.add(deposit).is_err() {
+                        break;
+                    }
                 }
             }
         }
+    }
 
-        Ok(())
+    pub async fn subscribe_multimint_events(&self, sink: StreamSink<MultimintEvent>) {
+        let mut stream = self.event_bus.subscribe();
+
+        while let Some(mm_event) = stream.next().await {
+            if sink.add(mm_event).is_err() {
+                break;
+            }
+        }
     }
 }
 

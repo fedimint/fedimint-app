@@ -3,7 +3,7 @@ import 'package:carbine/multimint.dart';
 import 'package:carbine/utils.dart';
 
 class PendingDepositItem extends StatelessWidget {
-  final DepositEvent event;
+  final DepositEventKind event;
 
   const PendingDepositItem({super.key, required this.event});
 
@@ -12,7 +12,7 @@ class PendingDepositItem extends StatelessWidget {
     String msg;
     BigInt amount;
 
-    switch (event.eventKind) {
+    switch (event) {
       case DepositEventKind_Mempool(field0: final e):
         msg = 'Tx in mempool';
         amount = e.amount;
