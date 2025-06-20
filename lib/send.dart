@@ -1,6 +1,8 @@
+import 'package:carbine/failure.dart';
 import 'package:carbine/lib.dart';
 import 'package:carbine/multimint.dart';
 import 'package:carbine/success.dart';
+import 'package:carbine/utils.dart';
 import 'package:flutter/material.dart';
 
 class SendPayment extends StatefulWidget {
@@ -62,40 +64,56 @@ class _SendPaymentState extends State<SendPayment> {
         operationId: operationId,
       );
 
-      debugPrint('FinalState: $finalState');
-
       if (!mounted) return;
 
-      setState(() {
-        _isSending = false;
-      });
+      if (finalState is LightningSendOutcome_Success) {
+        // Navigate to Success screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => Success(
+                  lightning: true,
+                  received: false,
+                  amountMsats: widget.amountMsats,
+                ),
+          ),
+        );
 
-      // Navigate to Success screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => Success(
-                lightning: true,
-                received: false,
-                amountMsats: widget.amountMsats,
-              ),
-        ),
-      );
+        await Future.delayed(const Duration(seconds: 4));
 
-      await Future.delayed(const Duration(seconds: 4));
+        if (mounted) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }
+      } else {
+        AppLogger.instance.error('Payment was unsuccessful');
 
-      if (mounted) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        // Navigate to Failure screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Failure(amountMsats: widget.amountMsats),
+          ),
+        );
+
+        await Future.delayed(const Duration(seconds: 4));
+
+        if (mounted) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }
       }
     } catch (e) {
-      debugPrint('Error while sending payment: $e');
+      AppLogger.instance.error('Error while sending payment: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Failed to send payment')));
       Navigator.of(context).pop(); // Close modal on failure
     }
+
+    setState(() {
+      _isSending = false;
+    });
   }
 
   @override

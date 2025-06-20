@@ -94,7 +94,7 @@ Future<OperationId> send({
   isLnv2: isLnv2,
 );
 
-Future<(FinalSendOperationState, String)> awaitSend({
+Future<LightningSendOutcome> awaitSend({
   required FederationId federationId,
   required OperationId operationId,
 }) => RustLib.instance.api.crateAwaitSend(

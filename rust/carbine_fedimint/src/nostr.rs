@@ -4,7 +4,7 @@ use crate::{
     anyhow, await_send, balance,
     db::{NostrWalletConnectConfig, NostrWalletConnectKey, NostrWalletConnectKeyPrefix},
     federations, log_to_flutter,
-    multimint::FederationSelector,
+    multimint::{FederationSelector, LightningSendOutcome},
     payment_preview, send,
 };
 use bitcoin::Network;
@@ -18,7 +18,6 @@ use fedimint_core::{
     util::{retry, FmtCompact, SafeUrl},
 };
 use fedimint_derive_secret::ChildId;
-use fedimint_lnv2_client::FinalSendOperationState;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio::sync::{oneshot, RwLock};
@@ -367,19 +366,22 @@ impl NostrClient {
                     payment_preview.is_lnv2,
                 )
                 .await?;
-                let (final_state, preimage) = await_send(federation_id, operation_id).await?;
-                if final_state == FinalSendOperationState::Success {
-                    let response = WalletConnectResponse::PayInvoice { preimage };
-                    Self::broadcast_response(
-                        response,
-                        nostr_client,
-                        keys,
-                        &sender_pubkey,
-                        request_event_id,
-                    )
-                    .await?;
-                } else {
-                    log_to_flutter(format!("NWC Payment Failure: {final_state:?}")).await;
+                let final_state = await_send(federation_id, operation_id).await;
+                match final_state {
+                    LightningSendOutcome::Success(preimage) => {
+                        let response = WalletConnectResponse::PayInvoice { preimage };
+                        Self::broadcast_response(
+                            response,
+                            nostr_client,
+                            keys,
+                            &sender_pubkey,
+                            request_event_id,
+                        )
+                        .await?;
+                    }
+                    LightningSendOutcome::Failure => {
+                        log_to_flutter(format!("NWC Payment Failure")).await;
+                    }
                 }
             }
         }

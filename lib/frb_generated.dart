@@ -220,7 +220,7 @@ abstract class RustLibApi extends BaseApi {
     required OperationId operationId,
   });
 
-  Future<(FinalSendOperationState, String)> crateMultimintMultimintAwaitSend({
+  Future<LightningSendOutcome> crateMultimintMultimintAwaitSend({
     required Multimint that,
     required FederationId federationId,
     required OperationId operationId,
@@ -445,7 +445,7 @@ abstract class RustLibApi extends BaseApi {
     required OperationId operationId,
   });
 
-  Future<(FinalSendOperationState, String)> crateAwaitSend({
+  Future<LightningSendOutcome> crateAwaitSend({
     required FederationId federationId,
     required OperationId operationId,
   });
@@ -659,15 +659,6 @@ abstract class RustLibApi extends BaseApi {
 
   CrossPlatformFinalizerArg
   get rust_arc_decrement_strong_count_FinalReceiveOperationStatePtr;
-
-  RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_FinalSendOperationState;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_FinalSendOperationState;
-
-  CrossPlatformFinalizerArg
-  get rust_arc_decrement_strong_count_FinalSendOperationStatePtr;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_InviteCode;
@@ -1849,7 +1840,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<(FinalSendOperationState, String)> crateMultimintMultimintAwaitSend({
+  Future<LightningSendOutcome> crateMultimintMultimintAwaitSend({
     required Multimint that,
     required FederationId federationId,
     required OperationId operationId,
@@ -1878,9 +1869,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
         },
         codec: SseCodec(
-          decodeSuccessData:
-              sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_send_operation_state_string,
-          decodeErrorData: sse_decode_AnyhowException,
+          decodeSuccessData: sse_decode_lightning_send_outcome,
+          decodeErrorData: null,
         ),
         constMeta: kCrateMultimintMultimintAwaitSendConstMeta,
         argValues: [that, federationId, operationId],
@@ -3607,7 +3597,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
-  Future<(FinalSendOperationState, String)> crateAwaitSend({
+  Future<LightningSendOutcome> crateAwaitSend({
     required FederationId federationId,
     required OperationId operationId,
   }) {
@@ -3631,9 +3621,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
         },
         codec: SseCodec(
-          decodeSuccessData:
-              sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_send_operation_state_string,
-          decodeErrorData: sse_decode_AnyhowException,
+          decodeSuccessData: sse_decode_lightning_send_outcome,
+          decodeErrorData: null,
         ),
         constMeta: kCrateAwaitSendConstMeta,
         argValues: [federationId, operationId],
@@ -4823,14 +4812,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalReceiveOperationState;
 
   RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_FinalSendOperationState =>
-      wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState;
-
-  RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_FinalSendOperationState =>
-      wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState;
-
-  RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_InviteCode =>
       wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInviteCode;
 
@@ -4999,17 +4980,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return FinalReceiveOperationStateImpl.frbInternalDcoDecode(
-      raw as List<dynamic>,
-    );
-  }
-
-  @protected
-  FinalSendOperationState
-  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return FinalSendOperationStateImpl.frbInternalDcoDecode(
       raw as List<dynamic>,
     );
   }
@@ -5309,17 +5279,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FinalSendOperationState
-  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return FinalSendOperationStateImpl.frbInternalDcoDecode(
-      raw as List<dynamic>,
-    );
-  }
-
-  @protected
   InviteCode
   dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInviteCode(
     dynamic raw,
@@ -5573,6 +5532,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return LightningEventKind_InvoicePaid(
           dco_decode_box_autoadd_invoice_paid_event(raw[1]),
         );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  LightningSendOutcome dco_decode_lightning_send_outcome(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return LightningSendOutcome_Success(dco_decode_String(raw[1]));
+      case 1:
+        return LightningSendOutcome_Failure();
       default:
         throw Exception("unreachable");
     }
@@ -5858,24 +5830,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  (FinalSendOperationState, String)
-  dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_send_operation_state_string(
-    dynamic raw,
-  ) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2) {
-      throw Exception('Expected 2 elements, got ${arr.length}');
-    }
-    return (
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-        arr[0],
-      ),
-      dco_decode_String(arr[1]),
-    );
-  }
-
-  @protected
   (OperationId, String, BigInt)
   dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_operation_id_string_u_64(
     dynamic raw,
@@ -6131,18 +6085,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return FinalReceiveOperationStateImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
-  FinalSendOperationState
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return FinalSendOperationStateImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -6533,18 +6475,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FinalSendOperationState
-  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return FinalSendOperationStateImpl.frbInternalSseDecode(
-      sse_decode_usize(deserializer),
-      sse_decode_i_32(deserializer),
-    );
-  }
-
-  @protected
   InviteCode
   sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInviteCode(
     SseDeserializer deserializer,
@@ -6831,6 +6761,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           deserializer,
         );
         return LightningEventKind_InvoicePaid(var_field0);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  LightningSendOutcome sse_decode_lightning_send_outcome(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_field0 = sse_decode_String(deserializer);
+        return LightningSendOutcome_Success(var_field0);
+      case 1:
+        return LightningSendOutcome_Failure();
       default:
         throw UnimplementedError('');
     }
@@ -7159,20 +7107,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  (FinalSendOperationState, String)
-  sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_send_operation_state_string(
-    SseDeserializer deserializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_field0 =
-        sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-          deserializer,
-        );
-    var var_field1 = sse_decode_String(deserializer);
-    return (var_field0, var_field1);
-  }
-
-  @protected
   (OperationId, String, BigInt)
   sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_operation_id_string_u_64(
     SseDeserializer deserializer,
@@ -7432,19 +7366,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as FinalReceiveOperationStateImpl).frbInternalSseEncode(move: true),
-      serializer,
-    );
-  }
-
-  @protected
-  void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-    FinalSendOperationState self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as FinalSendOperationStateImpl).frbInternalSseEncode(move: true),
       serializer,
     );
   }
@@ -7867,19 +7788,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-    FinalSendOperationState self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as FinalSendOperationStateImpl).frbInternalSseEncode(move: null),
-      serializer,
-    );
-  }
-
-  @protected
-  void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInviteCode(
     InviteCode self,
     SseSerializer serializer,
@@ -8195,6 +8103,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_lightning_send_outcome(
+    LightningSendOutcome self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case LightningSendOutcome_Success(field0: final field0):
+        sse_encode_i_32(0, serializer);
+        sse_encode_String(field0, serializer);
+      case LightningSendOutcome_Failure():
+        sse_encode_i_32(1, serializer);
+    }
+  }
+
+  @protected
   void
   sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPublicFederation(
     List<PublicFederation> self,
@@ -8484,20 +8407,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       serializer,
     );
     sse_encode_u_64(self.$2, serializer);
-  }
-
-  @protected
-  void
-  sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_final_send_operation_state_string(
-    (FinalSendOperationState, String) self,
-    SseSerializer serializer,
-  ) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFinalSendOperationState(
-      self.$1,
-      serializer,
-    );
-    sse_encode_String(self.$2, serializer);
   }
 
   @protected
@@ -8981,38 +8890,6 @@ class FinalReceiveOperationStateImpl extends RustOpaque
 }
 
 @sealed
-class FinalSendOperationStateImpl extends RustOpaque
-    implements FinalSendOperationState {
-  // Not to be used by end users
-  FinalSendOperationStateImpl.frbInternalDcoDecode(List<dynamic> wire)
-    : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  FinalSendOperationStateImpl.frbInternalSseDecode(
-    BigInt ptr,
-    int externalSizeOnNative,
-  ) : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib
-            .instance
-            .api
-            .rust_arc_increment_strong_count_FinalSendOperationState,
-    rustArcDecrementStrongCount:
-        RustLib
-            .instance
-            .api
-            .rust_arc_decrement_strong_count_FinalSendOperationState,
-    rustArcDecrementStrongCountPtr:
-        RustLib
-            .instance
-            .api
-            .rust_arc_decrement_strong_count_FinalSendOperationStatePtr,
-  );
-}
-
-@sealed
 class InviteCodeImpl extends RustOpaque implements InviteCode {
   // Not to be used by end users
   InviteCodeImpl.frbInternalDcoDecode(List<dynamic> wire)
@@ -9087,7 +8964,7 @@ class MultimintImpl extends RustOpaque implements Multimint {
     operationId: operationId,
   );
 
-  Future<(FinalSendOperationState, String)> awaitSend({
+  Future<LightningSendOutcome> awaitSend({
     required FederationId federationId,
     required OperationId operationId,
   }) => RustLib.instance.api.crateMultimintMultimintAwaitSend(

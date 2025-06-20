@@ -58,9 +58,9 @@ class _Discover extends State<Discover> {
             children: [
               _buildHeader(theme),
               const SizedBox(height: 16),
-              ...federations
-                  .map((federation) => _buildFederationCard(federation, theme))
-                  ,
+              ...federations.map(
+                (federation) => _buildFederationCard(federation, theme),
+              ),
               const SizedBox(height: 24),
               _buildObserverLink(theme),
             ],

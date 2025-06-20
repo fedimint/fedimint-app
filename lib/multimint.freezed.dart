@@ -434,6 +434,134 @@ as InvoicePaidEvent,
 }
 
 /// @nodoc
+mixin _$LightningSendOutcome {
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LightningSendOutcome);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LightningSendOutcome()';
+}
+
+
+}
+
+/// @nodoc
+class $LightningSendOutcomeCopyWith<$Res>  {
+$LightningSendOutcomeCopyWith(LightningSendOutcome _, $Res Function(LightningSendOutcome) __);
+}
+
+
+/// @nodoc
+
+
+class LightningSendOutcome_Success extends LightningSendOutcome {
+  const LightningSendOutcome_Success(this.field0): super._();
+  
+
+ final  String field0;
+
+/// Create a copy of LightningSendOutcome
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LightningSendOutcome_SuccessCopyWith<LightningSendOutcome_Success> get copyWith => _$LightningSendOutcome_SuccessCopyWithImpl<LightningSendOutcome_Success>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LightningSendOutcome_Success&&(identical(other.field0, field0) || other.field0 == field0));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,field0);
+
+@override
+String toString() {
+  return 'LightningSendOutcome.success(field0: $field0)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LightningSendOutcome_SuccessCopyWith<$Res> implements $LightningSendOutcomeCopyWith<$Res> {
+  factory $LightningSendOutcome_SuccessCopyWith(LightningSendOutcome_Success value, $Res Function(LightningSendOutcome_Success) _then) = _$LightningSendOutcome_SuccessCopyWithImpl;
+@useResult
+$Res call({
+ String field0
+});
+
+
+
+
+}
+/// @nodoc
+class _$LightningSendOutcome_SuccessCopyWithImpl<$Res>
+    implements $LightningSendOutcome_SuccessCopyWith<$Res> {
+  _$LightningSendOutcome_SuccessCopyWithImpl(this._self, this._then);
+
+  final LightningSendOutcome_Success _self;
+  final $Res Function(LightningSendOutcome_Success) _then;
+
+/// Create a copy of LightningSendOutcome
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? field0 = null,}) {
+  return _then(LightningSendOutcome_Success(
+null == field0 ? _self.field0 : field0 // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class LightningSendOutcome_Failure extends LightningSendOutcome {
+  const LightningSendOutcome_Failure(): super._();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LightningSendOutcome_Failure);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LightningSendOutcome.failure()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
 mixin _$MultimintCreation {
 
 

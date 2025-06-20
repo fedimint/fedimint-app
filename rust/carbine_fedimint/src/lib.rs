@@ -12,8 +12,8 @@ use fedimint_core::config::ClientConfig;
 use flutter_rust_bridge::frb;
 use futures_util::StreamExt;
 use multimint::{
-    FederationMeta, FederationSelector, Multimint, MultimintCreation, MultimintEvent,
-    PaymentPreview, Transaction, Utxo,
+    FederationMeta, FederationSelector, LightningSendOutcome, Multimint, MultimintCreation,
+    MultimintEvent, PaymentPreview, Transaction, Utxo,
 };
 use nostr::{NWCConnectionInfo, NostrClient, PublicFederation};
 use tokio::sync::{OnceCell, RwLock};
@@ -29,7 +29,7 @@ use fedimint_core::{
     config::FederationId, db::Database, encoding::Encodable, invite_code::InviteCode,
     util::SafeUrl, Amount,
 };
-use fedimint_lnv2_client::{FinalReceiveOperationState, FinalSendOperationState};
+use fedimint_lnv2_client::FinalReceiveOperationState;
 use fedimint_mint_client::{ReissueExternalNotesState, SpendOOBState};
 use fedimint_rocksdb::RocksDb;
 use lightning_invoice::Bolt11Invoice;
@@ -279,7 +279,7 @@ pub async fn send(
 pub async fn await_send(
     federation_id: &FederationId,
     operation_id: OperationId,
-) -> anyhow::Result<(FinalSendOperationState, String)> {
+) -> LightningSendOutcome {
     let multimint = get_multimint();
     multimint.await_send(federation_id, operation_id).await
 }
