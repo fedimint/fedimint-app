@@ -5,6 +5,8 @@ mod event_bus;
 mod frb_generated;
 mod multimint;
 mod nostr;
+use bitcoin_payment_instructions::http_resolver::HTTPHrnResolver;
+use bitcoin_payment_instructions::{PaymentInstructions, PaymentMethod};
 use db::SeedPhraseAckKey;
 use event_bus::EventBus;
 use fedimint_client::module::module::recovery::RecoveryProgress;
@@ -18,6 +20,7 @@ use multimint::{
     MultimintCreation, MultimintEvent, PaymentPreview, Transaction, Utxo, WithdrawFeesResponse,
 };
 use nostr::{NWCConnectionInfo, NostrClient, PublicFederation};
+use serde::Serialize;
 use tokio::sync::{OnceCell, RwLock};
 
 use std::path::PathBuf;
@@ -605,4 +608,55 @@ pub async fn subscribe_recovery_progress(
             }
         }
     }
+}
+
+#[derive(Clone, Eq, PartialEq, Serialize, Debug)]
+pub enum ParsedText {
+    InviteCode(String),
+    LightningInvoice(FederationSelector, String),
+    BitcoinAddress(FederationSelector, String),
+    Ecash(FederationSelector, u64),
+}
+
+#[frb]
+pub async fn parse_scanned_text(
+    text: String,
+    federation: Option<FederationSelector>,
+) -> anyhow::Result<ParsedText> {
+    // First try to parse the text as an invite code
+    if InviteCode::from_str(&text).is_ok() {
+        return Ok(ParsedText::InviteCode(text));
+    }
+
+    let resolver = HTTPHrnResolver;
+    // TODO: Loop over all networks if not specified
+    if let Ok(instructions) = bitcoin_payment_instructions::PaymentInstructions::parse(
+        &text,
+        bitcoin::Network::Regtest,
+        &resolver,
+        false,
+    )
+    .await
+    {
+        match instructions {
+            // We cannot currently pay configuable payment instructions
+            PaymentInstructions::ConfigurableAmount(configurable) => {}
+            PaymentInstructions::FixedAmount(fixed) => {
+                // Find a payment method that we support
+                for method in fixed.methods() {
+                    match method {
+                        PaymentMethod::LightningBolt11(invoice) => {
+                            //return Ok(ParsedText::LightningInvoice(invoice.to_string()));
+                        }
+                        PaymentMethod::OnChain(address) => {}
+                        _ => {}
+                    }
+                }
+            }
+        }
+    }
+
+    // TODO: Try to parse as ecash
+
+    Err(anyhow!("Payment method not supported"))
 }
