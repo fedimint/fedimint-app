@@ -5,6 +5,8 @@ mod event_bus;
 mod frb_generated;
 mod multimint;
 mod nostr;
+use bitcoin_payment_instructions::http_resolver::HTTPHrnResolver;
+use bitcoin_payment_instructions::{PaymentInstructions, PaymentMethod};
 use db::SeedPhraseAckKey;
 use event_bus::EventBus;
 use fedimint_client::module::module::recovery::RecoveryProgress;
@@ -18,8 +20,10 @@ use multimint::{
     MultimintCreation, MultimintEvent, PaymentPreview, Transaction, Utxo, WithdrawFeesResponse,
 };
 use nostr::{NWCConnectionInfo, NostrClient, PublicFederation};
+use serde::Serialize;
 use tokio::sync::{OnceCell, RwLock};
 
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 use std::{str::FromStr, sync::Arc};
 
@@ -605,4 +609,158 @@ pub async fn subscribe_recovery_progress(
             }
         }
     }
+}
+
+#[derive(Clone, Eq, PartialEq, Serialize, Debug)]
+pub enum ParsedText {
+    InviteCode(String),
+    LightningInvoice(String),
+    BitcoinAddress(String, u64),
+    Ecash(u64),
+}
+
+#[frb]
+pub async fn parse_scanned_text_for_federation(
+    text: String,
+    federation: &FederationSelector,
+) -> anyhow::Result<(ParsedText, FederationSelector)> {
+    let network =
+        bitcoin::Network::from_str(&federation.network.clone().ok_or(anyhow!("No network"))?)?;
+
+    let instructions = bitcoin_payment_instructions::PaymentInstructions::parse(
+        &text,
+        network,
+        &HTTPHrnResolver,
+        false,
+    )
+    .await;
+
+    match instructions {
+        Ok(instructions) => {
+            if let Ok((parsed_text, fed)) =
+                handle_parsed_payment_instructions(&federation, &instructions).await
+            {
+                return Ok((parsed_text, fed));
+            }
+        }
+        Err(e) => {
+            error_to_flutter(format!("Error parsing payment instructions: {e:?}")).await;
+        }
+    }
+
+    if let Ok(amount) = parse_ecash(&federation.federation_id, text).await {
+        return Ok((ParsedText::Ecash(amount), federation.clone()));
+    }
+
+    Err(anyhow!("Payment method not supported"))
+}
+
+#[frb]
+pub async fn parsed_scanned_text(
+    text: String,
+) -> anyhow::Result<(ParsedText, Option<FederationSelector>)> {
+    // First try to parse as a federation invite code
+    if InviteCode::from_str(&text).is_ok() {
+        return Ok((ParsedText::InviteCode(text), None));
+    }
+
+    // Next try to parse the text as LN or Bitcoin payment instructions
+    // We need to loop over all networks and find the first federation that has a sufficient balance
+    let group_by_network: BTreeMap<bitcoin::Network, Vec<FederationSelector>> = federations()
+        .await
+        .into_iter()
+        .fold(BTreeMap::new(), |mut acc, (selector, _flag)| {
+            acc.entry(
+                bitcoin::Network::from_str(&selector.network.clone().expect("Invalid network"))
+                    .expect("Could not convert network"),
+            )
+            .or_default()
+            .push(selector);
+            acc
+        });
+
+    for (network, federations) in group_by_network {
+        let instructions = bitcoin_payment_instructions::PaymentInstructions::parse(
+            &text,
+            network,
+            &HTTPHrnResolver,
+            false,
+        )
+        .await;
+        match instructions {
+            Ok(instructions) => {
+                // Find the first federation that has a sufficient balance
+                for fed in federations {
+                    if let Ok((parsed_text, fed)) =
+                        handle_parsed_payment_instructions(&fed, &instructions).await
+                    {
+                        return Ok((parsed_text, Some(fed)));
+                    }
+                }
+            }
+            Err(e) => {
+                error_to_flutter(format!("Error parsing payment instructions: {e:?}")).await;
+            }
+        }
+    }
+
+    // Try to find a federation that can parse the ecash
+    for (federation, _) in federations().await {
+        if let Ok(amount) = parse_ecash(&federation.federation_id, text.clone()).await {
+            return Ok((ParsedText::Ecash(amount), Some(federation)));
+        }
+    }
+
+    Err(anyhow!("Payment method not supported"))
+}
+
+async fn handle_parsed_payment_instructions(
+    fed: &FederationSelector,
+    instructions: &PaymentInstructions,
+) -> anyhow::Result<(ParsedText, FederationSelector)> {
+    match &instructions {
+        // We cannot currently pay configuable payment instructions
+        PaymentInstructions::ConfigurableAmount(_) => {
+            error_to_flutter("Configurable amount BIP321 is not supported").await;
+        }
+        PaymentInstructions::FixedAmount(fixed) => {
+            let balance = balance(&fed.federation_id).await;
+            // Find a payment method that we support
+            for method in fixed.methods() {
+                match method {
+                    PaymentMethod::LightningBolt11(invoice) => {
+                        // Verify that the federation's balance is sufficient to pay the invoice
+                        if let Some(lightning_amount) = fixed.ln_payment_amount() {
+                            if balance >= lightning_amount.milli_sats() {
+                                return Ok((
+                                    ParsedText::LightningInvoice(invoice.to_string()),
+                                    fed.clone(),
+                                ));
+                            }
+                        }
+                    }
+                    PaymentMethod::OnChain(address) => {
+                        // Verify that the federation's balance is sufficient to pay the onchain address
+                        if let Some(onchain_amount) = fixed.onchain_payment_amount() {
+                            if balance >= onchain_amount.milli_sats() {
+                                return Ok((
+                                    ParsedText::BitcoinAddress(
+                                        address.to_string(),
+                                        onchain_amount.milli_sats(),
+                                    ),
+                                    fed.clone(),
+                                ));
+                            }
+                        }
+                    }
+                    method => {
+                        info_to_flutter(format!("Payment method not supported: {:?}", method))
+                            .await;
+                    }
+                }
+            }
+        }
+    }
+
+    Err(anyhow!("Cannot find payment method"))
 }

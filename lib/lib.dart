@@ -8,8 +8,11 @@ import 'frb_generated.dart';
 import 'multimint.dart';
 import 'nostr.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
+part 'lib.freezed.dart';
 
-// These functions are ignored because they are not marked as `pub`: `create_event_bus`, `create_nostr_client`, `error_to_flutter`, `get_database`, `get_multimint`, `get_nostr_client`, `info_to_flutter`
+// These functions are ignored because they are not marked as `pub`: `create_event_bus`, `create_nostr_client`, `error_to_flutter`, `get_database`, `get_multimint`, `get_nostr_client`, `handle_parsed_payment_instructions`, `info_to_flutter`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `eq`, `fmt`
 
 Future<EventBusMultimintEvent> getEventBus() =>
     RustLib.instance.api.crateGetEventBus();
@@ -283,6 +286,18 @@ Stream<(int, int)> subscribeRecoveryProgress({
   moduleId: moduleId,
 );
 
+Future<(ParsedText, FederationSelector)> parseScannedTextForFederation({
+  required String text,
+  required FederationSelector federation,
+}) => RustLib.instance.api.crateParseScannedTextForFederation(
+  text: text,
+  federation: federation,
+);
+
+Future<(ParsedText, FederationSelector?)> parsedScannedText({
+  required String text,
+}) => RustLib.instance.api.crateParsedScannedText(text: text);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientConfig>>
 abstract class ClientConfig implements RustOpaqueInterface {}
 
@@ -300,3 +315,15 @@ abstract class InviteCode implements RustOpaqueInterface {}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PegOutFees>>
 abstract class PegOutFees implements RustOpaqueInterface {}
+
+@freezed
+sealed class ParsedText with _$ParsedText {
+  const ParsedText._();
+
+  const factory ParsedText.inviteCode(String field0) = ParsedText_InviteCode;
+  const factory ParsedText.lightningInvoice(String field0) =
+      ParsedText_LightningInvoice;
+  const factory ParsedText.bitcoinAddress(String field0, BigInt field1) =
+      ParsedText_BitcoinAddress;
+  const factory ParsedText.ecash(BigInt field0) = ParsedText_Ecash;
+}

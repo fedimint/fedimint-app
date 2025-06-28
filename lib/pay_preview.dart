@@ -62,10 +62,11 @@ class PaymentPreviewWidget extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
-            icon: const Icon(Icons.send, color: Colors.white),
+            icon: const Icon(Icons.send, color: Colors.black),
             label: const Text('Send Payment'),
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
+              foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),

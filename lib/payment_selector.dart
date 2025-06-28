@@ -1,3 +1,4 @@
+import 'package:carbine/models.dart';
 import 'package:carbine/multimint.dart';
 import 'package:carbine/scan.dart';
 import 'package:carbine/send.dart';
@@ -144,7 +145,11 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ScanQRPage(selectedFed: widget.fed),
+          builder:
+              (context) => ScanQRPage(
+                selectedFed: widget.fed,
+                paymentType: PaymentType.lightning,
+              ),
         ),
       );
     }
