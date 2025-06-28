@@ -2,7 +2,10 @@ import 'dart:convert';
 
 import 'package:carbine/fed_preview.dart';
 import 'package:carbine/lib.dart';
+import 'package:carbine/models.dart';
 import 'package:carbine/multimint.dart';
+import 'package:carbine/number_pad.dart';
+import 'package:carbine/onchain_send.dart';
 import 'package:carbine/pay_preview.dart';
 import 'package:carbine/redeem_ecash.dart';
 import 'package:carbine/theme.dart';
@@ -13,7 +16,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScanQRPage extends StatefulWidget {
   final FederationSelector? selectedFed;
-  const ScanQRPage({super.key, this.selectedFed});
+  final PaymentType? paymentType;
+  const ScanQRPage({super.key, this.selectedFed, this.paymentType});
 
   @override
   State<ScanQRPage> createState() => _ScanQRPageState();
@@ -25,90 +29,98 @@ class _ScanQRPageState extends State<ScanQRPage> {
 
   _QrLoopSession? _currentSession;
 
-  Future<void> _processText(String text) async {
-    if (text.startsWith("fed") &&
-        !text.startsWith("fedimint") &&
-        widget.selectedFed == null) {
-      final meta = await getFederationMeta(inviteCode: text);
-
-      final fed = await showCarbineModalBottomSheet(
-        context: context,
-        child: FederationPreview(
-          federationName: meta.selector.federationName,
-          inviteCode: meta.selector.inviteCode,
-          welcomeMessage: meta.welcome,
-          imageUrl: meta.picture,
-          joinable: true,
-          guardians: meta.guardians,
-          network: meta.selector.network!,
-        ),
-      );
-
-      if (fed != null) {
-        await Future.delayed(const Duration(milliseconds: 400));
-        Navigator.pop(context, fed);
-      }
-    } else if (text.startsWith("ln")) {
+  Future<void> _handleText(String text) async {
+    try {
+      ParsedText action;
+      FederationSelector? chosenFederation;
       if (widget.selectedFed != null) {
-        final preview = await paymentPreview(
-          federationId: widget.selectedFed!.federationId,
-          bolt11: text,
+        final result = await parseScannedTextForFederation(
+          text: text,
+          federation: widget.selectedFed!,
         );
-        if (widget.selectedFed!.network != preview.network) {
-          AppLogger.instance.warn(
-            "Widget network: ${widget.selectedFed!.network} Preview: ${preview.network}",
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Cannot pay invoice from different network."),
-            ),
-          );
-          return;
-        }
-        final bal = await balance(
-          federationId: widget.selectedFed!.federationId,
-        );
-        if (bal < preview.amountMsats) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "This federation does not have enough funds to pay this invoice",
-              ),
-            ),
-          );
-          return;
-        }
-
-        showCarbineModalBottomSheet(
-          context: context,
-          child: PaymentPreviewWidget(
-            fed: widget.selectedFed!,
-            paymentPreview: preview,
-          ),
-        );
-      }
-    } else {
-      if (widget.selectedFed != null) {
-        try {
-          final amountMsats = await parseEcash(
-            federationId: widget.selectedFed!.federationId,
-            ecash: text,
-          );
-          showCarbineModalBottomSheet(
-            context: context,
-            child: EcashRedeemPrompt(
-              fed: widget.selectedFed!,
-              ecash: text,
-              amount: amountMsats,
-            ),
-            heightFactor: 0.33,
-          );
-        } catch (_) {
-          AppLogger.instance.error('Could not parse text as ecash');
-        }
+        action = result.$1;
+        chosenFederation = result.$2;
       } else {
-        AppLogger.instance.warn("Scanned unknown Text");
+        final result = await parsedScannedText(text: text);
+        action = result.$1;
+        chosenFederation = result.$2;
       }
+
+      switch (action) {
+        case ParsedText_InviteCode(field0: String inviteCode):
+          if (widget.paymentType == null) {
+            final meta = await getFederationMeta(inviteCode: inviteCode);
+
+            final fed = await showCarbineModalBottomSheet(
+              context: context,
+              child: FederationPreview(
+                federationName: meta.selector.federationName,
+                inviteCode: meta.selector.inviteCode,
+                welcomeMessage: meta.welcome,
+                imageUrl: meta.picture,
+                joinable: true,
+                guardians: meta.guardians,
+                network: meta.selector.network!,
+              ),
+            );
+
+            if (fed != null) {
+              await Future.delayed(const Duration(milliseconds: 400));
+              Navigator.pop(context, fed);
+            }
+          }
+          break;
+        case ParsedText_LightningInvoice(field0: String invoice):
+          if (widget.paymentType == null ||
+              widget.paymentType! == PaymentType.lightning) {
+            final preview = await paymentPreview(
+              federationId: chosenFederation!.federationId,
+              bolt11: invoice,
+            );
+
+            showCarbineModalBottomSheet(
+              context: context,
+              child: PaymentPreviewWidget(
+                fed: chosenFederation,
+                paymentPreview: preview,
+              ),
+            );
+          }
+          break;
+        case ParsedText_BitcoinAddress(
+          field0: String address,
+          field1: BigInt amountMsats,
+        ):
+          if (widget.paymentType == null ||
+              widget.paymentType! == PaymentType.onchain) {
+            showCarbineModalBottomSheet(
+              context: context,
+              child: OnchainSend(
+                fed: chosenFederation!,
+                amountSats: amountMsats.toSats,
+                withdrawalMode: WithdrawalMode.specificAmount,
+                defaultAddress: address,
+              ),
+            );
+          }
+          break;
+        case ParsedText_Ecash(field0: BigInt amountMsats):
+          if (widget.paymentType == null ||
+              widget.paymentType! == PaymentType.ecash) {
+            showCarbineModalBottomSheet(
+              context: context,
+              child: EcashRedeemPrompt(
+                fed: chosenFederation!,
+                ecash: text,
+                amount: amountMsats,
+              ),
+              heightFactor: 0.33,
+            );
+          }
+          break;
+      }
+    } catch (e) {
+      AppLogger.instance.warn("No available action for scanned text: $text");
     }
   }
 
@@ -145,10 +157,9 @@ class _ScanQRPageState extends State<ScanQRPage> {
         _scanned = true;
         final merged =
             List.generate(total, (i) => session.receivedChunks[i] ?? '').join();
-        _processText(merged);
+        _handleText(merged);
       }
     } catch (_) {
-      AppLogger.instance.info("NOT A CHUNKED QR: $jsonChunk");
       if (!_scanned) _onQRCodeScanned(jsonChunk);
     }
   }
@@ -156,7 +167,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   void _onQRCodeScanned(String code) async {
     if (_scanned) return;
     _scanned = true;
-    await _processText(code);
+    await _handleText(code);
   }
 
   Future<void> _pasteFromClipboard() async {
@@ -175,7 +186,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
       return;
     }
 
-    await _processText(text);
+    await _handleText(text);
     setState(() => _isPasting = false);
   }
 

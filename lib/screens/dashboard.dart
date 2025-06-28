@@ -161,7 +161,7 @@ class _DashboardState extends State<Dashboard> {
     } else if (_selectedPaymentType == PaymentType.ecash) {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => ScanQRPage(selectedFed: widget.fed)),
+        MaterialPageRoute(builder: (_) => ScanQRPage(selectedFed: widget.fed, paymentType: _selectedPaymentType)),
       );
     }
     _loadBalance();
@@ -180,7 +180,7 @@ class _DashboardState extends State<Dashboard> {
       }
 
       AppLogger.instance.info(
-        "${_selectedPaymentType} progress: $_recoveryProgress complete: ${progress.$1} total: ${progress.$2}",
+        "$_selectedPaymentType progress: $_recoveryProgress complete: ${progress.$1} total: ${progress.$2}",
       );
     }
   }

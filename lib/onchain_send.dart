@@ -13,6 +13,7 @@ class OnchainSend extends StatefulWidget {
   final BigInt amountSats;
   final WithdrawalMode withdrawalMode;
   final VoidCallback? onWithdrawCompleted;
+  final String? defaultAddress;
 
   const OnchainSend({
     super.key,
@@ -20,6 +21,7 @@ class OnchainSend extends StatefulWidget {
     required this.amountSats,
     required this.withdrawalMode,
     this.onWithdrawCompleted,
+    this.defaultAddress,
   });
 
   @override
@@ -27,7 +29,7 @@ class OnchainSend extends StatefulWidget {
 }
 
 class _OnchainSendState extends State<OnchainSend> {
-  final TextEditingController _addressController = TextEditingController();
+  late TextEditingController _addressController;
   String? _feeQuote;
   BigInt? _feeAmountSats;
   double? _feeRateSatsPerVbyte;
@@ -42,6 +44,9 @@ class _OnchainSendState extends State<OnchainSend> {
   @override
   void initState() {
     super.initState();
+    _addressController = TextEditingController(
+      text: widget.defaultAddress ?? '',
+    );
     _addressController.addListener(_onAddressChanged);
   }
 

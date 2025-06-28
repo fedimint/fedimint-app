@@ -1161,42 +1161,6 @@ impl Multimint {
         client.get_balance().await.msats
     }
 
-    pub async fn get_federation_with_at_least_balance(
-        &self,
-        network: bitcoin::Network,
-        threshold_balance: u64,
-        selector: Option<FederationSelector>,
-    ) -> anyhow::Result<FederationSelector> {
-        let federations = self
-            .federations()
-            .await
-            .iter()
-            .filter_map(|(fed, recovering)| {
-                if !recovering {
-                    Some((fed.federation_id, fed.clone()))
-                } else {
-                    None
-                }
-            })
-            .collect::<BTreeMap<_, _>>();
-
-        if let Some(selector) = selector {
-            let balance = self.balance(&selector.federation_id).await;
-            // TODO: verify network here
-            if balance >= threshold_balance {
-                if let Some(selector) = federations.get(&selector.federation_id) {
-                    return Ok(selector.clone());
-                }
-            }
-        } else {
-            // TODO: Search for a federation that has an acceptable balance
-        }
-
-        Err(anyhow!(
-            "Could not select a federation with a balance of at least: {threshold_balance}"
-        ))
-    }
-
     pub async fn receive(
         &self,
         federation_id: &FederationId,

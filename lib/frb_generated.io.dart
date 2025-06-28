@@ -485,6 +485,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
+  FederationSelector
+  dco_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationSelector(
+    dynamic raw,
+  );
+
+  @protected
   AwaitingConfsEvent dco_decode_box_autoadd_awaiting_confs_event(dynamic raw);
 
   @protected
@@ -596,10 +602,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
+  FederationSelector?
+  dco_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationSelector(
+    dynamic raw,
+  );
+
+  @protected
   BigInt? dco_decode_opt_box_autoadd_u_64(dynamic raw);
 
   @protected
   Uint8List? dco_decode_opt_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  ParsedText dco_decode_parsed_text(dynamic raw);
 
   @protected
   PaymentPreview dco_decode_payment_preview(dynamic raw);
@@ -643,6 +658,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   (OperationId, String, BigInt)
   dco_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_operation_id_string_u_64(
+    dynamic raw,
+  );
+
+  @protected
+  (ParsedText, FederationSelector)
+  dco_decode_record_parsed_text_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector(
+    dynamic raw,
+  );
+
+  @protected
+  (ParsedText, FederationSelector?)
+  dco_decode_record_parsed_text_opt_box_autoadd_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector(
     dynamic raw,
   );
 
@@ -1066,6 +1093,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  FederationSelector
+  sse_decode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationSelector(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   AwaitingConfsEvent sse_decode_box_autoadd_awaiting_confs_event(
     SseDeserializer deserializer,
   );
@@ -1195,10 +1228,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
+  FederationSelector?
+  sse_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationSelector(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   BigInt? sse_decode_opt_box_autoadd_u_64(SseDeserializer deserializer);
 
   @protected
   Uint8List? sse_decode_opt_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  ParsedText sse_decode_parsed_text(SseDeserializer deserializer);
 
   @protected
   PaymentPreview sse_decode_payment_preview(SseDeserializer deserializer);
@@ -1242,6 +1284,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   (OperationId, String, BigInt)
   sse_decode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_operation_id_string_u_64(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  (ParsedText, FederationSelector)
+  sse_decode_record_parsed_text_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  (ParsedText, FederationSelector?)
+  sse_decode_record_parsed_text_opt_box_autoadd_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector(
     SseDeserializer deserializer,
   );
 
@@ -1733,6 +1787,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
+  void
+  sse_encode_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationSelector(
+    FederationSelector self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_awaiting_confs_event(
     AwaitingConfsEvent self,
     SseSerializer serializer,
@@ -1897,6 +1958,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
+  void
+  sse_encode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFederationSelector(
+    FederationSelector? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_opt_box_autoadd_u_64(BigInt? self, SseSerializer serializer);
 
   @protected
@@ -1904,6 +1972,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     Uint8List? self,
     SseSerializer serializer,
   );
+
+  @protected
+  void sse_encode_parsed_text(ParsedText self, SseSerializer serializer);
 
   @protected
   void sse_encode_payment_preview(
@@ -1957,6 +2028,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
   sse_encode_record_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_operation_id_string_u_64(
     (OperationId, String, BigInt) self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_record_parsed_text_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector(
+    (ParsedText, FederationSelector) self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_record_parsed_text_opt_box_autoadd_auto_owned_rust_opaque_flutter_rust_bridgefor_generated_rust_auto_opaque_inner_federation_selector(
+    (ParsedText, FederationSelector?) self,
     SseSerializer serializer,
   );
 
