@@ -126,38 +126,46 @@ class _ScanQRPageState extends State<ScanQRPage> {
 
   void _handleQrLoopChunk(String jsonChunk) {
     try {
-      final Map<String, dynamic> parsed = json.decode(jsonChunk);
-      final id = parsed['id'];
-      final total = parsed['total'];
-      final index = parsed['index'];
-      final payload = parsed['payload'];
+      if (widget.paymentType == null ||
+          widget.paymentType! == PaymentType.ecash) {
+        final Map<String, dynamic> parsed = json.decode(jsonChunk);
+        final id = parsed['id'];
+        final total = parsed['total'];
+        final index = parsed['index'];
+        final payload = parsed['payload'];
 
-      if (id is! String ||
-          total is! int ||
-          index is! int ||
-          payload is! String) {
-        AppLogger.instance.warn("Scanned QR has invalid data: $jsonChunk");
-        return;
-      }
+        if (id is! String ||
+            total is! int ||
+            index is! int ||
+            payload is! String) {
+          AppLogger.instance.warn("Scanned QR has invalid data: $jsonChunk");
+          return;
+        }
 
-      AppLogger.instance.info("Scanned: index: $index / $total");
+        AppLogger.instance.info("Scanned: index: $index / $total");
 
-      // Reset if new session
-      if (_currentSession == null || _currentSession!.id != id) {
-        _currentSession = _QrLoopSession(id: id, total: total);
-      }
+        // Reset if new session
+        if (_currentSession == null || _currentSession!.id != id) {
+          _currentSession = _QrLoopSession(id: id, total: total);
+        }
 
-      final session = _currentSession!;
-      if (!session.receivedChunks.containsKey(index)) {
-        session.receivedChunks[index] = payload;
-        setState(() {}); // Triggers progress bar update
-      }
+        final session = _currentSession!;
+        if (!session.receivedChunks.containsKey(index)) {
+          session.receivedChunks[index] = payload;
+          setState(() {}); // Triggers progress bar update
+        }
 
-      if (session.isComplete && !_scanned) {
-        _scanned = true;
-        final merged =
-            List.generate(total, (i) => session.receivedChunks[i] ?? '').join();
-        _handleText(merged);
+        if (session.isComplete && !_scanned) {
+          _scanned = true;
+          final merged =
+              List.generate(
+                total,
+                (i) => session.receivedChunks[i] ?? '',
+              ).join();
+          _handleText(merged);
+        }
+      } else {
+        if (!_scanned) _onQRCodeScanned(jsonChunk);
       }
     } catch (_) {
       if (!_scanned) _onQRCodeScanned(jsonChunk);
