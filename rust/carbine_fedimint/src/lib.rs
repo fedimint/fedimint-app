@@ -792,3 +792,15 @@ pub async fn remove_relay(relay_uri: String) -> anyhow::Result<()> {
     let nostr = nostr_client.read().await;
     nostr.remove_relay(relay_uri).await
 }
+
+#[frb]
+pub async fn get_addresses(federation_id: &FederationId) -> Vec<(String, u64, Option<u64>)> {
+    let multimint = get_multimint();
+    multimint.get_addresses(federation_id).await
+}
+
+#[frb]
+pub async fn recheck_address(federation_id: &FederationId, tweak_idx: u64) -> anyhow::Result<()> {
+    let multimint = get_multimint();
+    multimint.recheck_address(federation_id, tweak_idx).await
+}

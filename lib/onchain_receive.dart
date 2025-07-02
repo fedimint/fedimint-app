@@ -3,16 +3,16 @@ import 'package:carbine/multimint.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class OnChainReceive extends StatefulWidget {
+class OnChainReceiveContent extends StatefulWidget {
   final FederationSelector fed;
 
-  const OnChainReceive({super.key, required this.fed});
+  const OnChainReceiveContent({super.key, required this.fed});
 
   @override
-  State<OnChainReceive> createState() => _OnChainReceiveState();
+  State<OnChainReceiveContent> createState() => _OnChainReceiveContentState();
 }
 
-class _OnChainReceiveState extends State<OnChainReceive> {
+class _OnChainReceiveContentState extends State<OnChainReceiveContent> {
   String? _address;
   bool _isLoading = true;
 
@@ -26,6 +26,7 @@ class _OnChainReceiveState extends State<OnChainReceive> {
     final address = await allocateDepositAddress(
       federationId: widget.fed.federationId,
     );
+    if (!mounted) return;
     setState(() {
       _address = address;
       _isLoading = false;
@@ -44,51 +45,53 @@ class _OnChainReceiveState extends State<OnChainReceive> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Receive On-Chain'),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
-        ),
-        body: Center(
-          child:
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'You can use this address to deposit funds to the federation:',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        const SizedBox(height: 20),
-                        SelectableText(
-                          _address!,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton.icon(
-                          onPressed: () => _copyToClipboard(_address!),
-                          icon: const Icon(Icons.copy, size: 20),
-                          label: const Text('Copy address'),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                          ),
-                        ),
-                      ],
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment:
+                    CrossAxisAlignment.stretch, // Stretch children
+                children: [
+                  Text(
+                    'You can use this address to deposit funds to the federation:',
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 20),
+                  SelectableText(
+                    _address!,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-        ),
-      ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _copyToClipboard(_address!);
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.copy, size: 20),
+                      label: const Text('Copy address'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
     );
   }
 }

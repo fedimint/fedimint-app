@@ -4,8 +4,10 @@ import 'package:carbine/lib.dart';
 import 'package:carbine/models.dart';
 import 'package:carbine/multimint.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 extension MilliSats on BigInt {
   BigInt get toSats => this ~/ BigInt.from(1000);
@@ -111,6 +113,7 @@ String formatBalance(BigInt? msats, bool showMsats) {
   }
 }
 
+// TODO: Change name
 String getAbbreviatedInvoice(String invoice) {
   if (invoice.length <= 14) return invoice;
   return '${invoice.substring(0, 7)}...${invoice.substring(invoice.length - 7)}';
@@ -144,4 +147,33 @@ Future<double?> fetchBtcPrice() async {
   }
 
   return null;
+}
+
+Future<void> showExplorerConfirmation(BuildContext context, Uri url) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder:
+        (context) => AlertDialog(
+          title: const Text('External Link Warning'),
+          content: const Text(
+            'You are about to navigate to an external block explorer. '
+            'Before accepting, please consider the privacy implications '
+            'and consider using a self hosted block explorer.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Confirm'),
+            ),
+          ],
+        ),
+  );
+
+  if (confirmed == true && await canLaunchUrl(url)) {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
 }

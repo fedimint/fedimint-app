@@ -111,6 +111,8 @@ pub struct Multimint {
     pegin_address_monitor_tx: UnboundedSender<(FederationId, TweakIdx)>,
     recovery_progress: Arc<RwLock<BTreeMap<FederationId, BTreeMap<u16, RecoveryProgress>>>>,
     internal_ecash_spends: Arc<RwLock<BTreeSet<OperationId>>>,
+    allocated_bitcoin_addresses:
+        Arc<RwLock<BTreeMap<FederationId, BTreeMap<TweakIdx, (String, Option<u64>)>>>>,
 }
 
 #[derive(Debug, Serialize, Encodable, Decodable, Clone)]
@@ -294,6 +296,7 @@ impl Multimint {
             pegin_address_monitor_tx: pegin_address_monitor_tx.clone(),
             recovery_progress: Arc::new(RwLock::new(BTreeMap::new())),
             internal_ecash_spends: Arc::new(RwLock::new(BTreeSet::new())),
+            allocated_bitcoin_addresses: Arc::new(RwLock::new(BTreeMap::new())),
         };
 
         multimint.load_clients().await?;
@@ -381,6 +384,7 @@ impl Multimint {
         let event_bus_clone = get_event_bus();
         let task_group_clone = self.task_group.clone();
         let clients_clone = self.clients.clone();
+        let addresses_clone = self.allocated_bitcoin_addresses.clone();
 
         self.task_group
             .spawn_cancellable("pegin address watcher", async move {
@@ -395,9 +399,16 @@ impl Multimint {
                         .expect("No federation exists")
                         .clone();
 
+                    let addresses_clone = addresses_clone.clone();
                     task_group_clone.spawn_cancellable("tweak index watcher", async move {
-                        if let Err(e) =
-                            Self::watch_pegin_address(fed_id, client, tweak_idx, event_bus).await
+                        if let Err(e) = Self::watch_pegin_address(
+                            fed_id,
+                            client,
+                            tweak_idx,
+                            event_bus,
+                            addresses_clone,
+                        )
+                        .await
                         {
                             info_to_flutter(format!(
                                 "watch_pegin_address({}) failed: {:?}",
@@ -417,6 +428,7 @@ impl Multimint {
         client: ClientHandleArc,
         tweak_idx: TweakIdx,
         event_bus: EventBus<MultimintEvent>,
+        addresses: Arc<RwLock<BTreeMap<FederationId, BTreeMap<TweakIdx, (String, Option<u64>)>>>>,
     ) -> anyhow::Result<()> {
         let wallet_module = client.get_first_module::<WalletClientModule>()?;
 
@@ -526,6 +538,14 @@ impl Multimint {
                     btc_deposited,
                     btc_out_point,
                 } => {
+                    let mut addresses = addresses.write().await;
+                    if let Some(fed_addresses) = addresses.get_mut(&federation_id) {
+                        if let Some((address, _)) = fed_addresses.remove(&tweak_idx) {
+                            fed_addresses
+                                .insert(tweak_idx, (address, Some(btc_deposited.to_sat())));
+                        }
+                    }
+
                     let deposit_event = MultimintEvent::Deposit((
                         federation_id,
                         DepositEventKind::Confirmed(ConfirmedEvent {
@@ -568,6 +588,7 @@ impl Multimint {
             .map(|(fed, _)| fed.federation_id);
         let pegin_address_monitor_tx_clone = self.pegin_address_monitor_tx.clone();
         let clients_clone = self.clients.clone();
+        let addresses_clone = self.allocated_bitcoin_addresses.clone();
 
         self.task_group
             .spawn_cancellable("unused address monitor", async move {
@@ -581,6 +602,8 @@ impl Multimint {
                     let wallet_module = client
                         .get_first_module::<WalletClientModule>()
                         .expect("No wallet module exists");
+
+                    let operation_log = client.operation_log();
 
                     let mut tweak_idx = TweakIdx(0);
                     while let Ok(data) = wallet_module.get_pegin_tweak_idx(tweak_idx).await {
@@ -596,6 +619,37 @@ impl Multimint {
                             }
                         }
                         tweak_idx = tweak_idx.next();
+
+                        let operation = operation_log.get_operation(data.operation_id).await;
+                        if let Some(wallet_op) = operation {
+                            let wallet_meta = wallet_op.meta::<WalletOperationMeta>();
+                            if let WalletOperationMetaVariant::Deposit {
+                                address,
+                                tweak_idx,
+                                expires_at: _,
+                            } = wallet_meta.variant
+                            {
+                                let mut addresses = addresses_clone.write().await;
+                                let fed_addresses =
+                                    addresses.entry(fed_id).or_insert(BTreeMap::new());
+                                if let Some(DepositStateV2::Claimed { btc_deposited, .. }) =
+                                    wallet_op.outcome()
+                                {
+                                    fed_addresses.insert(
+                                        tweak_idx.expect("Tweak cannot be None"),
+                                        (
+                                            address.assume_checked().to_string(),
+                                            Some(btc_deposited.to_sat()),
+                                        ),
+                                    );
+                                } else {
+                                    fed_addresses.insert(
+                                        tweak_idx.expect("Tweak cannot be None"),
+                                        (address.assume_checked().to_string(), None),
+                                    );
+                                }
+                            }
+                        }
                     }
                 }
             });
@@ -2348,7 +2402,12 @@ impl Multimint {
 
         let wallet_module = client.get_first_module::<WalletClientModule>()?;
         let address = bitcoin::Address::from_str(&address)?;
-        let tweak_idx = wallet_module.find_tweak_idx_by_address(address).await?;
+        let tweak_idx = wallet_module
+            .find_tweak_idx_by_address(address.clone())
+            .await?;
+        let mut addresses = self.allocated_bitcoin_addresses.write().await;
+        let fed_addresses = addresses.entry(federation_id).or_insert(BTreeMap::new());
+        fed_addresses.insert(tweak_idx, (address.assume_checked().to_string(), None));
 
         self.pegin_address_monitor_tx
             .send((federation_id, tweak_idx))
@@ -2395,6 +2454,44 @@ impl Multimint {
     pub async fn get_btc_price(&self) -> Option<u64> {
         let mut dbtx = self.db.begin_transaction_nc().await;
         dbtx.get_value(&BtcPriceKey).await.map(|p| p.price)
+    }
+
+    pub async fn get_addresses(
+        &self,
+        federation_id: &FederationId,
+    ) -> Vec<(String, u64, Option<u64>)> {
+        let addresses = self.allocated_bitcoin_addresses.read().await;
+        if let Some(fed_addresses) = addresses.get(federation_id) {
+            let mut res: Vec<_> = fed_addresses
+                .iter()
+                .map(|(k, v)| (v.0.clone(), k.0, v.1))
+                .collect();
+            res.sort_by_key(|entry| entry.1);
+            res
+        } else {
+            Vec::new()
+        }
+    }
+
+    pub async fn recheck_address(
+        &self,
+        federation_id: &FederationId,
+        tweak_idx: u64,
+    ) -> anyhow::Result<()> {
+        let client = self
+            .clients
+            .read()
+            .await
+            .get(federation_id)
+            .context("No federation exists")?
+            .clone();
+        let wallet_module =
+            client.get_first_module::<fedimint_wallet_client::WalletClientModule>()?;
+
+        wallet_module
+            .recheck_pegin_address(TweakIdx(tweak_idx))
+            .await?;
+        Ok(())
     }
 }
 

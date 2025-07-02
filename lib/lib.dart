@@ -305,6 +305,18 @@ Future<void> insertRelay({required String relayUri}) =>
 Future<void> removeRelay({required String relayUri}) =>
     RustLib.instance.api.crateRemoveRelay(relayUri: relayUri);
 
+Future<List<(String, BigInt, BigInt?)>> getAddresses({
+  required FederationId federationId,
+}) => RustLib.instance.api.crateGetAddresses(federationId: federationId);
+
+Future<void> recheckAddress({
+  required FederationId federationId,
+  required BigInt tweakIdx,
+}) => RustLib.instance.api.crateRecheckAddress(
+  federationId: federationId,
+  tweakIdx: tweakIdx,
+);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientConfig>>
 abstract class ClientConfig implements RustOpaqueInterface {}
 

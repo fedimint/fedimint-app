@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:carbine/recovery_progress.dart';
 import 'package:carbine/utils.dart';
+import 'package:carbine/widgets/addresses.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -16,7 +17,6 @@ import 'package:carbine/models.dart';
 
 import 'package:carbine/widgets/dashboard_header.dart';
 import 'package:carbine/widgets/dashboard_balance.dart';
-import 'package:carbine/widgets/recent_transactions_header.dart';
 import 'package:carbine/widgets/transactions_list.dart';
 
 class Dashboard extends StatefulWidget {
@@ -157,9 +157,10 @@ class _DashboardState extends State<Dashboard> {
         ),
       );
     } else if (_selectedPaymentType == PaymentType.onchain) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => OnChainReceive(fed: widget.fed)),
+      await showCarbineModalBottomSheet(
+        context: context,
+        child: OnChainReceiveContent(fed: widget.fed),
+        heightFactor: 0.33,
       );
     } else if (_selectedPaymentType == PaymentType.ecash) {
       await Navigator.push(
@@ -251,21 +252,45 @@ class _DashboardState extends State<Dashboard> {
                 initialProgress: _recoveryProgress,
               )
             ] else...[
-              const RecentTransactionsHeader(),
-              // Expanded is necessary so only the tx list is scrollable, not the
-              // entire dashboard
               Expanded(
-                child: TransactionsList(
-                        key: ValueKey(balanceMsats),
-                        fed: widget.fed,
-                        selectedPaymentType: _selectedPaymentType,
-                        recovering: recovering,
-                        onClaimed: _loadBalance,
-                        onWithdrawCompleted: _refreshTransactions,
-                        onRefreshRequested: (refreshCallback) {
-                          _refreshTransactionsList = refreshCallback;
-                        },
-                      ), 
+                child: DefaultTabController(
+                  length: _selectedPaymentType == PaymentType.onchain ? 2 : 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TabBar(
+                        indicatorColor: Theme.of(context).colorScheme.primary,
+                        labelColor: Theme.of(context).colorScheme.primary,
+                        unselectedLabelColor: Colors.grey,
+                        tabs: [
+                          const Tab(text: 'Recent Transactions'),
+                          if (_selectedPaymentType == PaymentType.onchain)
+                            const Tab(text: 'Addresses'),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            TransactionsList(
+                              key: ValueKey(balanceMsats),
+                              fed: widget.fed,
+                              selectedPaymentType: _selectedPaymentType,
+                              recovering: recovering,
+                              onClaimed: _loadBalance,
+                              onWithdrawCompleted: _refreshTransactions,
+                              onRefreshRequested: (refreshCallback) {
+                                _refreshTransactionsList = refreshCallback;
+                              },
+                            ),
+                            if (_selectedPaymentType == PaymentType.onchain)
+                              OnchainAddressesList(fed: widget.fed, updateBalance: _loadBalance),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ]
           ],
