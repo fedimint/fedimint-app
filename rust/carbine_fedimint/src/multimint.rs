@@ -65,8 +65,8 @@ use tokio::{
 use crate::{
     anyhow,
     db::{
-        BtcPrice, BtcPriceKey, FederationMetaKey, LightningAddressConfig, LightningAddressKey,
-        LightningAddressKeyPrefix,
+        BtcPrice, BtcPriceKey, DisplaySetting, DisplaySettingKey, FederationMetaKey,
+        LightningAddressConfig, LightningAddressKey, LightningAddressKeyPrefix,
     },
     error_to_flutter, info_to_flutter, FederationConfig, FederationConfigKey,
     FederationConfigKeyPrefix, SeedPhraseAckKey,
@@ -3293,6 +3293,20 @@ impl Multimint {
             .await
             .ok_or(anyhow!("Peer does not exist"))?
             .to_string())
+    }
+
+    pub async fn get_display_setting(&self) -> DisplaySetting {
+        let mut dbtx = self.db.begin_transaction_nc().await;
+        dbtx.get_value(&DisplaySettingKey)
+            .await
+            .unwrap_or(DisplaySetting::Bip177)
+    }
+
+    pub async fn set_display_setting(&self, display_setting: DisplaySetting) {
+        let mut dbtx = self.db.begin_transaction().await;
+        dbtx.insert_entry(&DisplaySettingKey, &display_setting)
+            .await;
+        dbtx.commit_tx().await;
     }
 }
 

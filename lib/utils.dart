@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:carbine/db.dart';
 import 'package:carbine/lib.dart';
 import 'package:carbine/models.dart';
 import 'package:carbine/multimint.dart';
@@ -95,20 +96,51 @@ int threshold(int totalPeers) {
   return totalPeers - maxEvil;
 }
 
+DisplaySetting? _cachedDisplaySetting;
+
+Future<void> initDisplaySetting() async {
+  _cachedDisplaySetting = await getDisplaySetting();
+}
+
+DisplaySetting? getCachedDisplaySetting() {
+  return _cachedDisplaySetting;
+}
+
+Future<void> saveDisplaySetting(DisplaySetting setting) async {
+  await setDisplaySetting(displaySetting: setting);
+  _cachedDisplaySetting = setting;
+}
+
 String formatBalance(BigInt? msats, bool showMsats) {
-  if (msats == null) return showMsats ? '₿0.000' : '₿0';
+  final setting =
+      _cachedDisplaySetting ?? DisplaySetting.bip177; // default if not set
+
+  if (msats == null) {
+    return switch (setting) {
+      DisplaySetting.bip177 => showMsats ? '₿0.000' : '₿0',
+      DisplaySetting.sats => showMsats ? '0.000 sats' : '0 sats',
+      DisplaySetting.nothing => showMsats ? '0.000' : '0',
+    };
+  }
 
   if (showMsats) {
-    final btcAmount =
-        msats.toDouble() / 1000; // convert to sats with msat precision
+    final btcAmount = msats.toDouble() / 1000;
     final formatter = NumberFormat('#,##0.000', 'en_US');
     var formatted = formatter.format(btcAmount).replaceAll(',', ' ');
-    return '₿$formatted';
+    return switch (setting) {
+      DisplaySetting.bip177 => '₿$formatted',
+      DisplaySetting.sats => '$formatted sats',
+      DisplaySetting.nothing => '$formatted',
+    };
   } else {
     final sats = msats.toSats;
     final formatter = NumberFormat('#,##0', 'en_US');
     var formatted = formatter.format(sats.toInt()).replaceAll(',', ' ');
-    return '₿$formatted';
+    return switch (setting) {
+      DisplaySetting.bip177 => '₿$formatted',
+      DisplaySetting.sats => '$formatted sats',
+      DisplaySetting.nothing => '$formatted',
+    };
   }
 }
 

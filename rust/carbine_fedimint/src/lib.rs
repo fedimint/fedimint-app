@@ -43,7 +43,8 @@ use fedimint_rocksdb::RocksDb;
 use lightning_invoice::Bolt11Invoice;
 
 use crate::db::{
-    FederationConfig, FederationConfigKey, FederationConfigKeyPrefix, LightningAddressConfig,
+    DisplaySetting, FederationConfig, FederationConfigKey, FederationConfigKeyPrefix,
+    LightningAddressConfig,
 };
 use crate::frb_generated::StreamSink;
 use crate::multimint::{DepositEventKind, FedimintGateway, LNAddressStatus};
@@ -912,4 +913,16 @@ pub async fn register_ln_address(
 pub async fn get_invite_code(federation_id: &FederationId, peer: u16) -> anyhow::Result<String> {
     let multimint = get_multimint();
     multimint.get_invite_code(federation_id, peer).await
+}
+
+#[frb]
+pub async fn get_display_setting() -> DisplaySetting {
+    let multimint = get_multimint();
+    multimint.get_display_setting().await
+}
+
+#[frb]
+pub async fn set_display_setting(display_setting: DisplaySetting) {
+    let multimint = get_multimint();
+    multimint.set_display_setting(display_setting).await;
 }

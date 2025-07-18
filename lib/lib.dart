@@ -389,6 +389,12 @@ Future<String> getInviteCode({
   peer: peer,
 );
 
+Future<DisplaySetting> getDisplaySetting() =>
+    RustLib.instance.api.crateGetDisplaySetting();
+
+Future<void> setDisplaySetting({required DisplaySetting displaySetting}) =>
+    RustLib.instance.api.crateSetDisplaySetting(displaySetting: displaySetting);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ClientConfig>>
 abstract class ClientConfig implements RustOpaqueInterface {}
 

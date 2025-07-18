@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    initDisplaySetting();
     _feds = widget.initialFederations;
 
     if (_feds.isNotEmpty) {

@@ -594,6 +594,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   DepositEventKind dco_decode_deposit_event_kind(dynamic raw);
 
   @protected
+  DisplaySetting dco_decode_display_setting(dynamic raw);
+
+  @protected
   double dco_decode_f_64(dynamic raw);
 
   @protected
@@ -1323,6 +1326,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   DepositEventKind sse_decode_deposit_event_kind(SseDeserializer deserializer);
+
+  @protected
+  DisplaySetting sse_decode_display_setting(SseDeserializer deserializer);
 
   @protected
   double sse_decode_f_64(SseDeserializer deserializer);
@@ -2158,6 +2164,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_deposit_event_kind(
     DepositEventKind self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_display_setting(
+    DisplaySetting self,
     SseSerializer serializer,
   );
 

@@ -4,7 +4,8 @@ use fedimint_api_client::api::net::Connector;
 use fedimint_core::{
     config::{ClientConfig, FederationId},
     encoding::{Decodable, Encodable},
-    impl_db_lookup, impl_db_record, util::SafeUrl,
+    impl_db_lookup, impl_db_record,
+    util::SafeUrl,
 };
 use serde::{Deserialize, Serialize};
 
@@ -21,6 +22,7 @@ pub(crate) enum DbKeyPrefix {
     BtcPrice = 0x05,
     NostrRelays = 0x06,
     LightningAddress = 0x07,
+    Display = 0x08,
 }
 
 #[derive(Debug, Clone, Encodable, Decodable, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -153,4 +155,20 @@ impl_db_record!(
 impl_db_lookup!(
     key = LightningAddressKey,
     query_prefix = LightningAddressKeyPrefix,
+);
+
+#[derive(Debug, Clone, Encodable, Decodable, Serialize)]
+pub enum DisplaySetting {
+    Bip177,
+    Sats,
+    Nothing,
+}
+
+#[derive(Debug, Encodable, Decodable)]
+pub struct DisplaySettingKey;
+
+impl_db_record!(
+    key = DisplaySettingKey,
+    value = DisplaySetting,
+    db_prefix = DbKeyPrefix::Display,
 );

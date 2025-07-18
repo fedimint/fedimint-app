@@ -1,3 +1,4 @@
+import 'package:carbine/db.dart';
 import 'package:carbine/discover.dart';
 import 'package:carbine/lib.dart';
 import 'package:carbine/mnemonic.dart';
@@ -5,6 +6,8 @@ import 'package:carbine/multimint.dart';
 import 'package:carbine/nwc.dart';
 import 'package:carbine/relays.dart';
 import 'package:carbine/theme.dart';
+import 'package:carbine/toast.dart';
+import 'package:carbine/utils.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -108,6 +111,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           _SettingsOption(
+            icon: Icons.display_settings,
+            title: 'Display',
+            subtitle: 'Configure display settings',
+            onTap: () {
+              _showDisplaySettingDialog(context);
+            },
+          ),
+          _SettingsOption(
             icon: Icons.vpn_key,
             title: 'Mnemonic',
             subtitle: 'View your seed phrase',
@@ -200,4 +211,63 @@ class _SettingsOption extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDisplaySettingDialog(BuildContext context) {
+  DisplaySetting selected = getCachedDisplaySetting() ?? DisplaySetting.bip177;
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Select Display Setting'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RadioListTile<DisplaySetting>(
+                  title: const Text('Bip177 (₿1,234)'),
+                  value: DisplaySetting.bip177,
+                  groupValue: selected,
+                  onChanged: (value) => setState(() => selected = value!),
+                ),
+                RadioListTile<DisplaySetting>(
+                  title: const Text('Sats are the Standard (1,234 sats)'),
+                  value: DisplaySetting.sats,
+                  groupValue: selected,
+                  onChanged: (value) => setState(() => selected = value!),
+                ),
+                RadioListTile<DisplaySetting>(
+                  title: const Text('No label (1,234)'),
+                  value: DisplaySetting.nothing,
+                  groupValue: selected,
+                  onChanged: (value) => setState(() => selected = value!),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await saveDisplaySetting(selected);
+                  Navigator.of(context).pop();
+                  ToastService().show(
+                    message: "Display setting set!",
+                    duration: const Duration(seconds: 3),
+                    onTap: () {},
+                    icon: Icon(Icons.info),
+                  );
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
 }
